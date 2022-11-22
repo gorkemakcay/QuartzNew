@@ -1,0 +1,961 @@
+﻿<link href="~/css/site.css" rel="stylesheet" />
+<link href="~/css/ol.css" rel="stylesheet" />
+
+<!-- #region Home Page -->
+<div class="container-fluid">
+    <!-- #region List Panel | Quartz Panel | Search Panel -->
+    <div class="row text-light" style="background: #373a3e; height: 25px;">
+        <div id="listPanelHeader" class="col-lg-2" style="border-right: 1px solid #212529; height: 100%;">
+            <div class="row">
+                <div class="col-lg-1">
+
+                </div>
+
+                <div class="col-lg-10">
+                    <p class="text-center"><strong>LIST PANEL</strong></p>
+                </div>
+
+                <div class="col-lg-1">
+                    <i class="fa-solid fa-circle-chevron-left float-end my-1" id="hideListPanelIcon" data-bs-toggle="tooltip" data-bs-placement="left" title="Hide List Panel"></i>
+                </div>
+            </div>
+        </div>
+
+        <div id="mainHeader" class="col-lg-8" height: 25px;">
+            <div class="row">
+                <div class="col-lg-1 px-0" style="display: none;" id="showListPanel">
+                    <i class="fa-solid fa-circle-chevron-right" id="showListPanelIcon" style="margin-left: 10px;" data-bs-toggle="tooltip" data-bs-placement="right" title="Show List Panel"></i>
+                </div>
+
+                <div class="col-lg-10">
+                    <ul class="breadCrumb p-0 m-0">
+                    </ul>
+                </div>
+
+                <div class="col-lg-1 px-0" style="display: none;" id="showSearchPanel">
+                    <i class="fa-solid fa-circle-chevron-left float-end my-1" id="showSearchPanelIcon" style="margin-right: 10px;" data-bs-toggle="tooltip" data-bs-placement="left" title="Show Search Panel"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="searchPanelHeader" class="col-lg-2" style="border-left: 1px solid #212529; height: 100%;">
+            <div class="row">
+                <div class="col-lg-1">
+                    <i class="fa-solid fa-circle-chevron-right my-1" id="hideSearchPanelIcon" data-bs-toggle="tooltip" data-bs-placement="right" title="Hide Search Panel"></i>
+                </div>
+
+                <div class="col-lg-10">
+                    <p class="text-center"><strong>SEARCH PANEL</strong></p>
+                </div>
+
+                <div class="col-lg-1">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #endregion -->
+    <!-- #region List Panel | Quartz Panel | Search Panel : Partail Views -->
+    <div class="row">
+        <div class="col-lg-2 px-0" id="listPanel" style="border: none; max-height: 85vh; overflow-x: hidden;">
+            @await Html.PartialAsync("/Views/Shared/Partial/HomePage/ListPanelPartial.cshtml")
+        </div>
+
+        <div class="col-lg-8 px-0" id="main">
+            <div style="height: 85vh"></div>
+            @*@await Html.PartialAsync("/Views/Shared/Partial/HomePage/QuartzPartial.cshtml")*@
+        </div>
+
+        <div class="col-lg-2 px-0" id="searchPanel">
+            @await Html.PartialAsync("/Views/Shared/Partial/HomePage/SearchPanelPartial.cshtml")
+        </div>
+    </div>
+    <!-- #endregion -->
+</div>
+<!-- #endregion -->
+<!-- #region Link Modal -->
+<div class="modal fade" id="linkModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+            <div class="modal-header" style="background-color: #F3F5F7;">
+                <h5 class="modal-title" id="linkModalName">Link Modal</h5>
+                <button type="button" class="btn-close closeButton" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="card-body" style="display: block;">
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Tag No</span>
+                                <input type="text" id="addLinkTagNo" class="form-control">
+                            </div>
+
+                            <div class="col-lg-6">
+                                <span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Select Drawing</span>
+                                <select id="addLinkSelectDrawing" class="form-select" onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                                </select>
+                            </div>
+                        </div>
+
+                        <br />
+                        <hr />
+                        <br />
+
+                        @* --- CLICKED LINK AREA --- *@
+
+                        <div class="row" id="clickedLinkMode">
+                            <div class="text-center col-lg-6" style="border-right: 1px solid #8F8F95;">
+                                <button id="addLinkGoCurrentLinkButton" type="button" class="btn btn-dark" style="border: none; border-radius: 20px;" onclick="goCurrentLink()" data-bs-dismiss="modal"><i class="fa fa-rocket">&nbsp;</i> Go Current Link</button>
+                            </div>
+
+                            <div class="text-center col-lg-6">
+                                <span style="color: #8F8F95; font-size: 1em; font-weight:500 "></span>
+                                <button id="btnAddLinkUploadDrawing" type="button" class="btn btn-dark" style="border: none; border-radius: 20px;"><i class="fa fa-images"></i>&nbsp; Upload Drawing</button>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: -2px;" id="AddLinkUploadDrawingArea" hidden>
+                            <div class="text-center col-lg-6">
+                            </div>
+
+                            <div class="text-center col-lg-6">
+                                <br />
+                                <div class="row">
+                                    <br>
+                                    <div class="col-lg-12">
+                                        <label for="addLinkUploadDrawing" style="border-radius: 20px;" class="btn btn-dark">Choose</label>
+                                        <input id="addLinkUploadDrawing" type="file" oninput="if (this.files[0].type == 'image/jpeg') { linkModalSelectedImage.src = window.URL.createObjectURL(this.files[0]); $('#linkModalSelectedImage').removeAttr('hidden'); }" hidden>
+                                        <button type="button" class="btn btn-dark" style="border-radius: 20px; color: white;" onclick="uploadFile('link')">Upload</button>
+                                    </div>
+                                </div>
+
+                                <div class="row text-center">
+                                    <p class="linkModalSelectedDrawing"></p>
+                                    <img class="mx-auto" id="linkModalSelectedImage" style="width: 150px; height: 100px;" hidden />
+                                </div>
+                            </div>
+                        </div>
+                        @* --- CLICKED LINK AREA --- *@
+
+                        @* --- CREATED LINK AREA --- *@
+                        <div class="row" id="createdLinkMode" hidden>
+                            <div class="text-center col-lg-12">
+                                <span style="color: #8F8F95; font-size: 1em; font-weight:500 "></span>
+                                <button id="btnAddLinkUploadDrawingCreatedMode" type="button" class="btn btn-dark" style="border: none; border-radius: 20px;"><i class="fa fa-images"></i>&nbsp; Upload Drawing</button>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: -2px;" id="AddLinkUploadDrawingAreaCreatedMode" hidden>
+                            <div class="text-center col-lg-12">
+                                <br />
+                                <div class="row">
+                                    <br>
+                                    <div class="col-lg-12">
+                                        <label for="addLinkUploadDrawing" style="border-radius: 20px;" class="btn btn-dark">Choose</label>
+                                        <input id="addLinkUploadDrawing" type="file" hidden>
+                                        <button type="button" class="btn btn-dark" style="border-radius: 20px; color: white;" onclick="uploadFile('link')">Upload</button>
+                                    </div>
+                                </div>
+
+                                <div class="row text-center">
+                                    <p class="linkModalSelectedDrawing"></p>
+                                </div>
+                            </div>
+                        </div>
+                        @* --- CREATED LINK AREA --- *@
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer" style="background-color: #F3F5F7;">
+                @*<span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Show Label</span>*@
+                <label for="linkShowLabel" style="color: #8F8F95; font-size: 1em; font-weight:500 ">Show Label</label>
+                <input id="linkShowLabel" type="checkbox" name="showLabel" /> &nbsp;&nbsp;
+                <i class="fa-solid fa-trash-can fa-2xl deleteButton" id="deleteLink" data-bs-toggle="modal" data-bs-target="#areYouSureModal" onclick="$('#linkModal').modal('hide');"></i>
+                <button type="button" class="btn btn-dark closeButton" data-bs-dismiss="modal" style="border: none; border-radius: 0px;">Close</button>
+                <button type="button" class="btn btn-dark" style="border: none; border-radius: 0px;" onclick="linkModalSaveButton()" data-bs-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Item Modal -->
+<div class="modal fade" id="itemModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+            <div class="modal-header" style="background-color: #F3F5F7;">
+                <div class="col-lg-1">
+                    <img src="~/lib/icons/left-arrow.png" id="itemModalBackButton" onclick="loadItemModalHomePage()" />
+                </div>
+                <div class="col-lg-8">
+                    <h4 class="modal-title" id="itemModalTitle">Item Modal</h4>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" class="btn-close float-end mx-1 closeButton" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+
+                </div>
+
+                <div class="row" id="itemModalPartialArea">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #F3F5F7;">
+                <label id="showlabelSpan" for="itemShowLabel" style="color: #8F8F95; font-size: 1em; font-weight:500 ">Show Label</label>
+                <input id="itemShowLabel" type="checkbox" name="showLabel" /> &nbsp;&nbsp;
+                <i class="fa-solid fa-trash-can fa-2xl deleteButton" id="deleteItem" data-bs-toggle="modal" data-bs-target="#areYouSureModal" onclick="$('#itemModal').modal('hide');"></i>
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" style="border:none; border-radius:0px;">Close</button>
+                <button type="button" class="btn btn-dark" id="itemModalSaveButton" style="border:none; border-radius:0px;" onclick="itemModalSaveButton()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #region Inspection Add (Button) Modal -->
+<div class="modal fade" id="AddInspectionData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+
+            <div class="modal-header" style="background-color: #F3F5F7;">
+                <h4 class="modal-title" id="InspectionAddModalTitle">Inspection</h4>
+
+                <div class="col-lg-6">
+                    <ul class="spec nav bg-white" style="border-radius: 20px; width: 220px;" role="tablist" id="inspectionModalNav" hidden>
+                        <li class="active nav-item"><a class="nav-link text-dark" href="#inspectionModalDatas" data-toggle="tab">Data</a></li>
+                        <li class="nav-item disabled"><a class="nav-link" href="#" data-toggle="tab" style="color: gray;">|</a></li>
+                        <li class="nav-item"><a role="tab" class="nav-link text-dark" href="#inspectionModalAttachments" data-toggle="tab">Attachment</a></li>
+                    </ul>
+                </div>
+
+                <button type="button" class="btn-close float-end mx-1" data-bs-dismiss="modal" aria-label="Close" onclick="$('#itemModal').modal('toggle');"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="row">
+
+                </div>
+
+                <div class="row" id="inspectionAddModalPartialArea">
+
+                </div>
+            </div>
+
+            <div class="modal-footer" style="background-color: #F3F5F7;">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" style="border:none; border-radius:0px;" onclick="$('#itemModal').modal('toggle');">Close</button>
+                <button type="button" class="btn btn-dark" style="border:none; border-radius: 0px;" id="inspectionAddSaveButton" data-bs-dismiss="modal" onclick="$('#itemModal').modal('toggle');">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region User Add (Button) Modal -->
+<div class="modal fade" id="AddUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+
+            <div class="modal-header" style="background-color: #F3F5F7;">
+                <h4 class="modal-title" id="UserAddModalTitle">Add User</h4>
+                <button type="button" class="btn-close float-end mx-1" data-bs-dismiss="modal" aria-label="Close" onclick="$('#userListModal').modal('toggle');"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="row">
+
+                </div>
+
+                <div class="row" id="userAddModalPartialArea">
+
+                </div>
+            </div>
+
+            <div class="modal-footer" style="background-color: #F3F5F7;">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" style="border:none; border-radius:0px;" onclick="$('#userListModal').modal('toggle');">Close</button>
+                <button type="button" class="btn btn-dark" style="border:none; border-radius: 0px;" id="userAddandUpdateSaveButton" data-bs-dismiss="modal" onclick="$('#userListModal').modal('toggle');">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Valve Maintenance Add (Button) Modal -->
+<div class="modal fade" id="AddValveMaintenanceData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+
+            <div class="modal-header" style="background-color: #F3F5F7;">
+                <h4 class="modal-title" id="valveMaintenanceModalTitle">Valve Maintenance</h4>
+
+                <div class="col-lg-6">
+                    <ul class="spec nav bg-white" style="border-radius: 20px; width: 220px;" role="tablist" id="valveMaintenanceModalNav" hidden>
+                        <li class="active nav-item"><a class="nav-link text-dark" href="#valveMaintenanceModalDatas" data-toggle="tab">Data</a></li>
+                        <li class="nav-item disabled"><a class="nav-link" href="#" data-toggle="tab" style="color: gray;">|</a></li>
+                        <li class="nav-item"><a role="tab" class="nav-link text-dark" href="#valveMaintenanceModalAttachments" data-toggle="tab">Attachment</a></li>
+                    </ul>
+                </div>
+
+                <button type="button" class="btn-close float-end mx-1" data-bs-dismiss="modal" aria-label="Close" onclick="$('#itemModal').modal('toggle');"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="row">
+
+                </div>
+
+                <div class="row" id="valveMaintenanceAddModalPartialArea">
+
+                </div>
+            </div>
+
+            <div class="modal-footer" style="background-color: #F3F5F7;">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" style="border:none; border-radius:0px;" onclick="$('#itemModal').modal('toggle');">Close</button>
+                <button type="button" class="btn btn-dark" style="border:none; border-radius: 0px;" id="valveMaintenanceAddSaveButton" data-bs-dismiss="modal" onclick="$('#itemModal').modal('toggle');">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Thickness Measurement Add (Button) Modal -->
+<div class="modal fade" id="AddThicknessMeasurementData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+
+            <div class="modal-header" style="background-color: #F3F5F7;">
+                <h4 class="modal-title" id="thicknessMeasurementModalTitle">Thickness Measurement</h4>
+
+                <div class="col-lg-6">
+                    <ul class="spec nav bg-white" style="border-radius: 20px; width: 220px;" role="tablist" id="thicknessMeasurementModalNav" hidden>
+                        <li class="active nav-item"><a class="nav-link text-dark" href="#thicknessMeasurementModalDatas" data-toggle="tab">Data</a></li>
+                        <li class="nav-item disabled"><a class="nav-link" href="#" data-toggle="tab" style="color: gray;">|</a></li>
+                        <li class="nav-item"><a role="tab" class="nav-link text-dark" href="#thicknessMeasurementModalAttachments" data-toggle="tab">Attachment</a></li>
+                    </ul>
+                </div>
+
+                <button type="button" class="btn-close float-end mx-1" data-bs-dismiss="modal" aria-label="Close" onclick="$('#itemModal').modal('toggle');"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="row">
+
+                </div>
+
+                <div class="row" id="thicknessMeasurementAddModalPartialArea">
+
+                </div>
+            </div>
+
+            <div class="modal-footer" style="background-color: #F3F5F7;">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" style="border:none; border-radius:0px;" onclick="$('#itemModal').modal('toggle');">Close</button>
+                <button type="button" class="btn btn-dark" style="border:none; border-radius: 0px;" id="thicknessMeasurementAddSaveButton" data-bs-dismiss="modal" onclick="$('#itemModal').modal('toggle');">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #endregion -->
+<!-- #region Drawing Settings Modal (#DSM) -->
+<div class="modal fade" id="drawingSettingsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" , aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+            <div class="modal-header" style="background-color: #F3F5F7;">
+                <h4 class="modal-title" id="dsmTitle">Drawing Settings</h4>
+
+                <div class="col-lg-6">
+                    <ul class="spec nav bg-white" style="border-radius: 20px; width: 220px;" role="tablist" id="dsmNav">
+                        <li class="active nav-item"><a class="nav-link text-dark" href="#" data-toggle="tab">Data</a></li>
+                        <li class="nav-item disabled"><a class="nav-link" href="#" data-toggle="tab" style="color: gray;">|</a></li>
+                        <li class="nav-item"><a role="tab" class="nav-link text-dark" href="#" data-toggle="tab">Attachment</a></li>
+                    </ul>
+                </div>
+
+                <button type="button" class="btn-close float-end mx-1" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="row">
+
+                </div>
+
+                <div class="row" id="dsmPartialArea">
+
+                </div>
+            </div>
+
+            <!-- #region Footer -->
+            <div class="modal-footer" style="background-color: #F3F5F7;">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" style="border-radius: 0px;">Close</button>
+                <button type="button" class="btn btn-dark" id="btnDsmSave" data-bs-dismiss="modal" style="border-radius: 0px;">Save</button>
+            </div>
+            <!-- #endregion -->
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region User List Modal (#ULM) -->
+<div class="modal fade" id="userListModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" , aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+            <div class="modal-header" style="background-color: #F3F5F7;">
+                <h4 class="modal-title" id="ulmTitle">User List</h4>
+                <button type="button" class="btn-close float-end mx-1" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="row">
+
+                </div>
+
+                <div class="row" id="ulmPartialArea">
+
+                </div>
+            </div>
+
+            <!-- #region Footer -->
+            <div class="modal-footer" style="background-color: #F3F5F7;">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" style="border-radius: 0px;">Close</button>
+            </div>
+            <!-- #endregion -->
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Lookup Items Modal (#LIM) -->
+<!-- #region General Modal -->
+<div class="modal fade" id="lookupItemsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+            <div class="modal-header" style="background-color: #F3F5F7; border-bottom: 2px solid #dadcde">
+                <h5 id="limTitle" class="modal-title">Lookup Items</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-0">
+                    <div class="col-lg-2" style="padding-right: 0px;">
+                        <ul class="spec nav" role="tablist" id="limNav">
+                            <li class="active nav-item limListA"><a class="nav-link" href="#limStatus" data-toggle="tab">Status</a></li>
+                            <li class="nav-item limListB"><a role="tab" class="nav-link" href="#limPlantArea" data-toggle="tab">Plant Area</a></li>
+                            <li class="nav-item limListA"><a role="tab" class="nav-link" href="#limPlantSystem" data-toggle="tab">Plant System</a></li>
+                            <li class="nav-item limListB"><a role="tab" class="nav-link" href="#limOperator" data-toggle="tab">Operator</a></li>
+                            <li class="nav-item limListA"><a role="tab" class="nav-link" href="#limMethod" data-toggle="tab">Method</a></li>
+                            <li class="nav-item limListB"><a role="tab" class="nav-link" href="#limProcedure" data-toggle="tab">Procedure</a></li>
+                            <li class="nav-item limListA"><a role="tab" class="nav-link" href="#limTechnique" data-toggle="tab">Technique</a></li>
+                            <li class="nav-item limListB"><a role="tab" class="nav-link" href="#limComponentType" data-toggle="tab">Component Type</a></li>
+                            <li class="nav-item limListA"><a role="tab" class="nav-link" href="#limStandardStatement" data-toggle="tab">Stand. Statement</a></li>
+                            <li class="nav-item limListB"><a role="tab" class="nav-link" href="#limSpecification" data-toggle="tab">Specification</a></li>
+                            <li class="nav-item limListA"><a role="tab" class="nav-link" href="#limFittingType" data-toggle="tab">Fitting Type</a></li>
+                            <li class="nav-item limListB"><a role="tab" class="nav-link" href="#limWeldType" data-toggle="tab">Weld Type</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-10" style="padding-left: 0px;" id="limPartialArea">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Component Type Add Modal -->
+<div class="modal fade" id="limComponentTypeAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limComponentTypeAddModalName" type="text" class="form-control clear" placeholder="Enter New Component Type" style="border: none; background: #f3f5f7;">
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton()">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addComponentType()" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Fitting Type Add Modal -->
+<div class="modal fade" id="limFittingTypeAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limFittingTypeAddModalName" type="text" class="form-control clear" placeholder="Enter New Fitting Type" style="border: none; background: #f3f5f7;">
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton()">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addFittingType()" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Method Add Modal -->
+<div class="modal fade" id="limMethodAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limMethodAddModalName" type="text" class="form-control clear" placeholder="Enter New Method Name" style="border: none; background: #f3f5f7;">
+                <br />
+                <input id="limMethodAddModalCode" type="text" class="form-control clear" placeholder="Enter New Method Code" style="border: none; background: #f3f5f7;">
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton()">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addMethod()" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Operator Add Modal -->
+<div class="modal fade" id="limOperatorAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limOperatorAddModalName" type="text" class="form-control clear" placeholder="Enter New Operator" style="border: none; background: #f3f5f7;">
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton()">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addOperator()" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Plant Area Add Modal -->
+<div class="modal fade" id="limPlantAreaAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limPlantAreaAddModalName" type="text" class="form-control clear" placeholder="Enter New Plant Area Name" style="border: none; background: #f3f5f7;">
+                <br />
+                <input id="limPlantAreaAddModalCode" type="text" class="form-control clear" placeholder="Enter New Plant Area Code" style="border: none; background: #f3f5f7;">
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton()">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addPlantArea()" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Plant System Add Modal -->
+<div class="modal fade" id="limPlantSystemAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="z-index: 1050;">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limPlantSystemAddModalName" type="text" class="form-control clear" placeholder="Enter New Plant System " style="border: none; background: #f3f5f7;">
+
+                <br />
+
+                <select id="limPlantSystemAddModalLookUpItemsPlantAreas" multiple="" data-placeholder="Select Plant Area(s)" style="width: 100%;">
+                </select>
+
+                <br />
+                <br />
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton('plantSystem')">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addPlantSystem(); limCancelButton('plantSystem')" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Procedure Add Modal -->
+<div class="modal fade" id="limProcedureAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limProcedureAddModalName" type="text" class="form-control clear" placeholder="Enter New Procedure" style="border: none; background: #f3f5f7;">
+                <br />
+                <select id="limProcedureAddModalLookUpItemsMethod" class="form-select">
+                </select>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton('procedure')">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addProcedure(); limCancelButton('procedure')" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Specification Add Modal -->
+<div class="modal fade" id="limSpecificationAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limSpecificationAddModalName" type="text" class="form-control clear" placeholder="Enter New Specification" style="border: none; background: #f3f5f7;">
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton()">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addSpecification()" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Standard Statement Add Modal -->
+<div class="modal fade" id="limStandardStatementAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limStandardStatementAddModalName" type="text" class="form-control clear" placeholder="Enter New Standard Statement" style="border: none; background: #f3f5f7;">
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton()">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addStandardStatement()" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Status Add Modal -->
+<div class="modal fade" id="limStatusAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limStatusAddModalName" type="text" class="form-control clear" placeholder="Enter New Status" style="border: none; background: #f3f5f7;">
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton()">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addStatus()" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Technique Add Modal -->
+<div class="modal fade" id="limTechniqueAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limTechniqueAddModalName" type="text" class="form-control clear" placeholder="Enter New Technique" style="border: none; background: #f3f5f7;">
+                <br />
+                <select id="limTechniqueAddModalLookUpItemsProcedure" class="form-select">
+                </select>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton('technique')">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addTechnique(); limCancelButton('technique')" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Weld Type Add Modal -->
+<div class="modal fade" id="limWeldTypeAddModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input id="limWeldTypeAddModalName" type="text" class="form-control clear" placeholder="Enter New Weld" style="border: none; background: #f3f5f7;">
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-danger clearInput showLookupItemModal" style="width:100%;" data-bs-dismiss="modal" onclick="limCancelButton()">Cancel</button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary showLookupItemModal" style="width:100%;" onclick="addWeldType()" data-bs-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #endregion -->
+<!-- #region Are You Sure Modal -->
+<div class="modal animate__animated animate__jackInTheBox" id="areYouSureModal" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header border-0" style="max-height: 20px; ">
+                <img src="~/lib/icons8-delete-200.png" style="width: 50%; margin-top: -40px; transform: rotate(20deg);" class="mx-auto" />
+                @*<img src="https://img.icons8.com/bubbles/100/000000/trash.png" style="width: 50%; margin-top: -30px; transform: rotate(20deg); z-index: 1100;" class="mx-auto" />*@
+            </div>
+            <div class="modal-body">
+                <div class="row text-center">
+                    <p><strong>Are you sure you want to delete?</strong></p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="button" id="cancelDeleteButton" class="btn btn-danger" style="width:100%;" data-bs-dismiss="modal"><i class="fa-solid fa-xmark fa-2xl"></i></button>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-primary" style="width:100%;" data-bs-dismiss="modal" onclick="deleteThis(objectTypeToBeDeleted, objectIdToBeDeleted);"><i class="fa-solid fa-check fa-2xl"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*<div class="modal fade show" id="areyousuremodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticbackdroplabel" aria-modal="true" role="dialog" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header border-0" style="max-height: 20px;">
+                    <img src="/lib/icons8-delete-200.png" style="width: 50%; margin-top: -30px; transform: rotate(20deg);" class="mx-auto">
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center">
+                        <p><strong>Are you sure you want to delete?</strong></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-danger" style="width:100%;" data-bs-dismiss="modal">no</button>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-primary" style="width:100%;" data-bs-dismiss="modal">yes</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>*@
+<!-- #endregion -->
+<!-- #region Search Panel's Modal -->
+<div class="modal fade" id="searchPanelsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content minHeight">
+            <div class="modal-header" style="background-color: #F3F5F7;">
+                <div class="col-lg-9 modal-title">
+                    <h4 id="searchPanelsModalTitle"></h4>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" class="btn-close float-end mx-1 closeButton" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row">
+
+                </div>
+
+                <div class="row" id="searchPanelsModalPartialArea">
+
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #F3F5F7;">
+                <button class="btn bg-warning text-white" style="color: black !important; border: none; border-radius: 0px;" onclick="createPDF()"><strong>PDF</strong></button>
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" style="border:none; border-radius:0px;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Show File Modal -->
+<div class="modal fade" id="showFileModal" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="border-radius: 20px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close float-end closeButton" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @*<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*@
+            <div class="row" id="showFileModalPartialArea">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Show Pdf Modal -->
+<div class="modal fade" id="showPdfeModal" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="border-radius: 20px;">
+        <div class="modal-content">
+            <div class="row a4page" id="showPdfModalPartialArea">
+
+            </div>
+            <button onclick="createPDFs()">download</button>
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Inspection Menu -->
+<div id="inspectionMenu" class="context-menu" style="display: none">
+    <ul class="menu">
+        <li class="edit"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>Edit & Attachment</a></li>
+        <li class="trash"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+    </ul>
+</div>
+<!-- #endregion -->
+<!-- #region Valve Maintenance Menu -->
+<div id="valveMaintenanceMenu" class="context-menu" style="display: none">
+    <ul class="menu">
+        <li class="edit"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>Edit & Attachment</a></li>
+        <li class="delete"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+    </ul>
+</div>
+<!-- #endregion -->
+<!-- #region Thickness Measurement Menu -->
+<div id="thicknessMeasurement" class="context-menu" style="display: none">
+    <ul class="menu">
+        <li class="edit"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>Edit & Attachment</a></li>
+        <li class="delete"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+    </ul>
+</div>
+<!-- #endregion -->
+<!-- #region Lookup Item Menu -->
+<div id="lookupItemMenu" class="context-menu" style="display: none">
+    <ul class="menu">
+        <li class="edit"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>Edit & Attachment</a></li>
+        <li class="delete"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+    </ul>
+</div>
+<!-- #endregion -->
+<!-- #region Attachment Menu -->
+<div id="attachmentMenu" class="context-menu" style="display: none">
+    <ul class="menu">
+        <li class="edit"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>Edit & Attachment</a></li>
+        <li class="download"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
+        <li class="delete"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+    </ul>
+</div>
+<!-- #endregion -->
+<!-- #region Right Click Menu -->
+<div id="contextMenu" class="context-menu" style="display: none">
+    <ul class="menu">
+        <li class="share"><a href="#"><i class="fa fa-share" aria-hidden="true"></i> Share</a></li>
+        <li class="rename"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i> Rename</a></li>
+        <li class="link"><a href="#"><i class="fa fa-link" aria-hidden="true"></i> Copy Link Address</a></li>
+        <li class="copy"><a href="#"><i class="fa fa-copy" aria-hidden="true"></i> Copy to</a></li>
+        <li class="paste"><a href="#"><i class="fa fa-paste" aria-hidden="true"></i> Move to</a></li>
+        <li class="download"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
+        <li class="trash"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+    </ul>
+</div>
+<!-- #endregion -->
+
+<input value="@ViewBag.UserRoles" id="userRoles" hidden />
+
+@section Scripts {
+
+    <!-- #region Script Sources -->
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.18.3/minified.js"></script>*@
+    @*<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>*@
+
+    @* jsPDF *@
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>*@
+    <script src="~/lib/html2pdf/html2pdf.bundle.min.js"></script>
+
+    <script type="text/javascript" src="~/lib/jsPDF-1.3.2/libs/html2canvas/dist/html2canvas.js"></script>
+    <script type="text/javascript" src="~/lib/jsPDF-1.3.2/dist/jspdf.min.js"></script>
+    <script type="text/javascript" src="~/lib/jsPDF-1.3.2/dist/jspdf.debug.js"></script>
+
+    <script type="text/javascript" src="~/js/pdfCreator.js"></script>
+    <script type="text/javascript" src="~/js/ajaxUrlRouter.js"></script>
+    <script type="text/javascript" src="~/lib/ol.js"></script>
+    <script type="text/javascript" src="~/js/ol.js"></script>
+    <script type="text/javascript" src="~/js/index.js"></script>
+    <script type="text/javascript" src="~/js/quartz.js"></script>
+    <script type="text/javascript" src="~/js/quartzLink.js"></script>
+    <script type="text/javascript" src="~/js/quartzItem.js"></script>
+    <script type="text/javascript" src="~/js/drawingSettings.js"></script>
+    <script type="text/javascript" src="~/js/drawingFeatures.js"></script>
+    <script type="text/javascript" src="~/js/fileUpload.js"></script>
+    <script type="text/javascript" src="~/js/lookupItems.js"></script>
+    <script type="text/javascript" src="~/js/listPanel.js"></script>
+    <script type="text/javascript" src="~/js/searchPanel.js"></script>
+    <script type="text/javascript" src="~/js/userList.js"></script>
+    <!-- #endregion -->
+}

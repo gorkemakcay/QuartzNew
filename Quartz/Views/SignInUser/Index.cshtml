@@ -1,0 +1,139 @@
+﻿@model UserSignInViewModel
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Quartz - Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/fontawesome-free-6.1.2-web/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        .input {
+            height: 50px;
+            border: 0px;
+            border-radius: 25px;
+            padding: 20px;
+            width: 100%;
+            margin-bottom: 25px;
+            color: white;
+            background-color: #373a3e;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        #togglePSW {
+            position: absolute;
+            top: 15%;
+            right: 3%;
+            background-color: #c67610;
+            border: none;
+            border-radius: 50px;
+        }
+
+            #togglePSW:hover {
+                color: white;
+                background-color: #9e5e0c;
+            }
+
+            #sign-in {
+                background-color: #c67610;
+                width: 100%;
+                border: none;
+                height: 50px;
+                border-radius: 25px;
+                color: #212529;
+                font-weight: 600;
+                font-size: 20px;
+            }
+
+            #sign-in:hover {
+                color: white;
+                background-color: #9e5e0c;
+            }
+    </style>
+
+</head>
+<body style="background-color: #212529; height: 100vh;">
+
+    <div class="container" style="height: 100vh;">
+        <div class="row" style="height: 25vh;">
+
+        </div>
+
+        <div class="row justify-content-center align-items-center" style="height: 50vh;">
+            <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12">
+                    <div class="text-center w-100 mb-5" style="color: white; font-size: 28px;">
+                        @*<h2><strong>ＱＵＡＲＴＺ ＬＯＧＩＮ</strong></h2>*@
+                        <h3>ＱＵＡＲＴＺ ＬＯＧＩＮ</h3>
+                    </div>
+
+                <form method="post">
+                    <input type="text" class="input text-center" placeholder="Username" required id="username" asp-for="@Model.Username">
+
+                    <div class="password-container" onclick="showPSW()">
+                        <input id="password-field" type="password" class="input text-center" placeholder="Password" required asp-for="@Model.Password">
+                        <button type="button" id="togglePSW"><i id="pswEye" class="fa-solid fa-eye"></i></button>
+                    </div>
+
+                    <button type="submit" id="sign-in" class="btn"><i class="fa-solid fa-right-to-bracket"></i></button>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="row" style="height: 25vh;">
+
+        </div>
+
+    </div>
+
+    <script src="~/lib/libman/jQuery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        $(function () {
+            //$("#sign-in").on('click', function () {
+            //    var signInModel = {
+            //        Username: $("#username").val(),
+            //        Password: $("#password-field").val()
+            //    };
+
+            //    $.ajax({
+            //        type: "POST",
+            //        url: "Home/SignInUser",
+            //        data: { model: signInModel },
+            //        success: function (response) {
+
+            //        },
+            //        error: function (error) {
+            //            alert("error!");
+            //            console.log(error.responseText);
+            //        }
+            //    });
+            //});
+        });
+
+        function showPSW() {
+            var password = $("#password-field");
+            if (password.attr("type") == "password") {
+                password.attr("type", "text");
+                $("#pswEye").removeClass("fa-eye").addClass("fa-eye-slash");
+            }
+            else {
+                password.attr("type", "password");
+                $("#pswEye").removeClass("fa-eye-slash").addClass("fa-eye");
+            }
+        }
+    </script>
+
+</body>
+</html>

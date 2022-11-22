@@ -1,0 +1,527 @@
+﻿body {
+    /*
+        Cursor: url(); eklenebilir!
+    */
+}
+
+#main {
+    cursor: grab;
+}
+
+    #main:active {
+        cursor: grabbing;
+    }
+
+.map {
+    width: 100%;
+    height: 85vh;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+    text-decoration: none;
+    color: #ff6a00;
+    background-color: #ff0000;
+}
+
+.limListA {
+    width: 100%;
+    border: none;
+    background: #dadcde;
+    color: black;
+}
+
+    .limListA:hover {
+        background: #c2c4c5;
+    }
+
+    .limListA a {
+        color: black;
+        text-align: center;
+    }
+
+
+.limListB {
+    width: 100%;
+    border: none;
+    background: #f3f5f7;
+}
+
+    .limListB:hover {
+        background: #c2c4c5;
+    }
+
+    .limListB a {
+        color: black;
+        text-align: center;
+    }
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner:after {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+    margin-left: -20px;
+    border-radius: 50%;
+    border: 5px solid rgba(180, 180, 180, 0.6);
+    border-top-color: rgba(0, 0, 0, 0.6);
+    animation: spinner 0.6s linear infinite;
+}
+
+.listPanelButtons {
+    border: 1px solid white;
+    border-radius: 0px;
+    width: 100%;
+    background: #dadcde;
+    /*background: #373A3E;*/
+    text-align: left;
+    white-space: nowrap;
+}
+
+    .listPanelButtons:hover {
+        background: gray;
+        border: 3px solid white;
+        border-radius: 5px;
+    }
+
+.modal-body {
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.minHeight {
+    min-height: 50vh;
+}
+
+.maxHeight {
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#toastId {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1080;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #DADCDE;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+::-webkit-scrollbar-thumb {
+    border: 4px solid transparent;
+    border-radius: 8px;
+}
+
+.crumb {
+    transition: all 0.1s ease;
+}
+
+    .crumb:hover {
+        color: whitesmoke;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+.breadCrumb {
+    list-style: none;
+}
+
+    .breadCrumb li {
+        display: inline;
+        font-size: 15px;
+    }
+
+        .breadCrumb li + li:before {
+            padding: 5px;
+            color: green;
+            content: ">";
+        }
+
+.tableColumn {
+    cursor: help;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100px;
+}
+
+/******************************************************************/
+
+.card-box {
+    position: relative;
+    color: #fff;
+    padding: 20px 10px 40px;
+    margin: 20px 0px;
+    min-height: 170px;
+}
+
+.card-attachment {
+    position: relative;
+    color: #fff;
+    padding: 20px 10px 40px;
+    margin: 20px 0px;
+    min-height: 50px;
+}
+
+.card-box .itemModalP {
+    opacity: 0.75;
+    font-size: 20px;
+}
+
+.card-box .icon .img {
+    opacity: 0.5;
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+
+.card-box .viewMore {
+    visibility: hidden;
+}
+
+.card-box:hover {
+    text-decoration: none;
+    color: #f1f1f1;
+    cursor: pointer;
+}
+
+    .card-box:hover .viewMore {
+        visibility: visible;
+    }
+
+    .card-box:hover .icon .img {
+        font-size: 100px;
+        transition: 0.1s;
+        -webkit-transition: 0.1s;
+        /*margin-bottom: 20px;*/
+        opacity: 1;
+    }
+
+    .card-box:hover .itemModalP {
+        font-weight: 700;
+        font-size: 30px;
+        transition: .1s;
+        z-index: 1;
+        opacity: 1;
+    }
+
+.card-box .inner {
+    padding: 5px 10px 0 10px;
+}
+
+.card-box h3 {
+    font-size: 27px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    padding: 0;
+    text-align: left;
+}
+
+.card-box p {
+    font-size: 15px;
+}
+
+.card-box .icon {
+    position: absolute;
+    top: auto;
+    bottom: 30px;
+    right: 5px;
+    z-index: 0;
+    font-size: 72px;
+    color: rgba(0, 0, 0, 0.15);
+}
+
+.card-box .card-box-footer {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    text-align: center;
+    padding: 3px 0;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-decoration: none;
+}
+
+.card-box:hover .card-box-footer {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.bg-blue {
+    background-color: #00c0ef !important;
+}
+
+    .bg-blue:hover {
+        background-color: #0099bf !important;
+    }
+
+.bg-green {
+    background-color: #00a65a !important;
+}
+
+    .bg-green:hover {
+        background-color: #008448 !important;
+    }
+
+.bg-orange {
+    background-color: #f39c12 !important;
+}
+
+    .bg-orange:hover {
+        background-color: #c27c0e !important;
+    }
+
+.bg-red {
+    background-color: #d9534f !important;
+}
+
+    .bg-red:hover {
+        background-color: #ad423f !important;
+    }
+
+#itemAttachmentButton:hover {
+    font-size: 25px;
+    font-weight: 700;
+}
+/******************************************************************/
+#itemModalBackButton:hover {
+    cursor: pointer;
+}
+
+#showListPanelIcon:hover {
+    cursor: pointer;
+}
+
+#hideListPanelIcon:hover {
+    cursor: pointer;
+}
+
+#showSearchPanelIcon:hover {
+    cursor: pointer;
+}
+
+#hideSearchPanelIcon:hover {
+    cursor: pointer;
+}
+
+.deleteButton:hover {
+    cursor: pointer;
+}
+
+/*********************************************************************************/
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /*font-family: 'Montserrat', sans-serif;*/
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    overflow: hidden;
+}
+
+ul {
+    list-style: none;
+}
+
+.context-menu {
+    position: absolute;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgb(64 64 64 / 5%);
+    padding: 10px 0;
+}
+
+    .menu > li > a {
+        font: inherit;
+        border: 0;
+        padding: 10px 30px 10px 15px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        position: relative;
+        text-decoration: unset;
+        color: #000;
+        font-weight: 500;
+        transition: 0.5s linear;
+        -webkit-transition: 0.5s linear;
+        -moz-transition: 0.5s linear;
+        -ms-transition: 0.5s linear;
+        -o-transition: 0.5s linear;
+    }
+
+        .menu > li > a:hover {
+            background: #f1f3f7;
+            color: #4b00ff;
+        }
+
+        .menu > li > a > i {
+            padding-right: 10px;
+        }
+
+    .menu > li.trash > a:hover {
+        color: red;
+    }
+
+.deleteButton:hover {
+    background: #BB2D3B;
+}
+
+.editButton:hover {
+    background: #0B5ED7;
+}
+
+
+/*******************************************************************/
+/*ACCORDION*/
+/*******************************************************************/
+
+.accordion {
+    position: relative;
+}
+
+[id*="open-accordion"], [id*="close-accordion"] {
+    background: #373A3E;
+    border-bottom: 2px solid #fff;
+    line-height: 40px;
+    height: 40px;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+}
+
+[id*="close-accordion"] {
+    display: none;
+}
+
+.accordion a {
+    color: #fff;
+    font-weight: 600;
+    padding-left: 2%;
+    text-decoration: none;
+    text-shadow: none;
+}
+
+[id*="open-accordion"]:after, [id*="close-accordion"]:after {
+    content: "";
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgba(255, 255, 255, 0.6);
+    position: absolute;
+    right: 5px;
+    top: 15px;
+    z-index: 999;
+    transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+.target-fix {
+    display: block;
+    top: 0;
+    left: 0;
+    position: fixed;
+}
+
+.accordion-content {
+    background: #dadcde;
+    height: 0;
+    padding: 0 10%;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.1s ease;
+    -webkit-transition: all 0.1s ease;
+    -moz-transition: all 0.1s ease;
+}
+
+.accordion span:target ~ .accordion-content {
+    display: block;
+    height: auto;
+    padding-bottom: 25px;
+    padding-top: 10px;
+}
+
+.accordion span:target ~ [id*="close-accordion"] {
+    display: block;
+}
+
+.accordion span:target ~ [id*="open-accordion"] {
+    display: none;
+}
+
+.accordion span:target ~ [id*="close-accordion"]:after {
+    border-top: 10px solid rgba(255, 255, 255, 0.6);
+    -webkit-transform: rotate(0deg);
+}
+
+/*******************************************************************/
+
+.a4page {
+    background: rgb(204,204,204);
+}
+
+page {
+    background: white;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+    padding: 30px;
+}
+
+    page[size="A4"] {
+        width: 21cm;
+        /*height: 29.7cm;*/
+    }
+
+/*PDF'de tabloların düzgün çıkması için*/
+table {
+    page-break-inside: auto
+}
+
+tr {
+    page-break-inside: avoid;
+    page-break-after: auto
+}
+
+.pageBreak {
+    page-break-inside: avoid;
+    page-break-before: auto,
+}

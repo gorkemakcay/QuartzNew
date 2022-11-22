@@ -1,0 +1,61 @@
+﻿<div class="card-body p-0" style="display:block;">
+
+    <table id="plantSystemTable" class="table table-hover text-sm table-responsive-sm table-sm">
+        <thead class="no-border" style="background-color: #C9D6DF; color: #1B262C; font-weight: 600;">
+            <tr>
+                <th class="text-sm text-center" style="font-weight:500">Name</th>
+                <th class="text-sm text-center" style="font-weight:500">Plant Area(s)</th>
+                <th class="text-sm text-center" style="font-weight:500">Edit</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-md-12" style="text-align: center;">
+            <button type="button" class="addLookupItemButton" id="limPlantSystemAddButton" data-bs-toggle="modal" data-bs-target="#limPlantSystemAddModal" style="border: none; background: none;"><img src="~/lib/bootstrap-icons-1.9.1/plus-circle.svg" style="position: absolute; width: 32px; display: block; margin-top: -20px; margin-left: -16px;" /></button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+     $(".addLookupItemButton").on('click', function () {
+         $("#lookupItemsModal").modal('hide');
+     });
+
+    $.ajax({
+        type: "GET",
+        url: '@Url.Action("GetPlantAreaForOption", "LookUpItems")',
+        success: function (result) {
+            rModel = jQuery.parseJSON(result);
+
+            $("#limPlantSystemAddModalLookUpItemsPlantAreas").children().remove();
+
+            for (var i = 0; i < rModel.length; i++) {
+                $("#limPlantSystemAddModalLookUpItemsPlantAreas").append(
+                    $('<option>', {
+                        value: rModel[i].Name,
+                        text: rModel[i].Name
+                    })
+                );
+            }
+        },
+        error: function (error) {
+            alert("error!");
+            console.log(error.responseText);
+        }
+    });
+
+    $("#limPlantSystemAddButton").on('click', function () {
+        function wait() {
+            $('#limPlantSystemAddModalLookUpItemsPlantAreas').select2({
+                //closeOnSelect: false
+            });
+        }
+        setTimeout(wait, 175); // [TAMAMLANMADI]
+    });
+
+</script>

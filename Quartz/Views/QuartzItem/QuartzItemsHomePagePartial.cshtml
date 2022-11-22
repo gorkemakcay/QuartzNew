@@ -1,0 +1,87 @@
+﻿<div class="card-body p-0" style="display:block;">
+
+    <div class="container py-0">
+        <div class="row p-0">
+
+            <div class="col-lg-6 col-sm-6 p-0">
+                <div class="card-box bg-blue m-0" onclick="loadInformationPage()">
+                    <div class="inner">
+                        <h3 class="itemModalP" id="informationCount"></h3>
+                        <p class="itemModalP"> Information </p>
+                    </div>
+                    <div class="icon" style="margin-bottom: -10px;">
+                        <div class="img">
+                            @*<img src="https://img.icons8.com/clouds/80/000000/information.png" />*@
+                            <img src="~/lib/icons/information.png" />
+                        </div>
+                    </div>
+                    <a href="#" class="card-box-footer viewMore">View More</a>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-sm-6 p-0">
+                <div class="card-box bg-green m-0" onclick="loadInspectionPage()">
+                    <div class="inner">
+                        <h3 class="itemModalP" id="inspectionCount"></h3>
+                        <p class="itemModalP"> Inspections </p>
+                    </div>
+                    <div class="icon">
+                        <div class="img">
+                            @*<img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/80/000000/external-inspecting-plumbing-flaticons-lineal-color-flat-icons.png" />*@
+                            <img src="~/lib/icons/inspection.png" />
+                        </div>
+                    </div>
+                    <a href="#" class="card-box-footer viewMore">View More </a>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="row p-0">
+            <div class="col-lg-6 col-sm-6 p-0">
+                <div class="card-box bg-orange m-0" onclick="loadValveMaintenancePage()">
+                    <div class="inner">
+                        <h3 class="itemModalP" id="valveMaintenanceCount"></h3>
+                    </div>
+                    <p class="itemModalP"> Valve Maintenance </p>
+                    <div class="icon">
+                        @*<i class="bi bi-box-fill" aria-hidden="true"></i>*@
+                        <div class="img">
+                            @*<img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/80/000000/external-natural-gas-plumber-tools-itim2101-lineal-color-itim2101-2.png" />*@
+                            <img src="~/lib/icons/valve-maintenance.png" />
+                        </div>
+                    </div>
+                    <a href="#" class="card-box-footer viewMore">View More </a>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-sm-6 p-0">
+                <div class="card-box bg-red m-0" onclick="loadThicknessMeasurementPage()">
+                    <div class="inner">
+                        <h3 class="itemModalP" id="thicknessMeasurementCount"></h3>
+                        <p class="itemModalP"> Thickness Measurement </p>
+                    </div>
+                    <div class="icon">
+                        @*<i class="fa-solid fa-ruler"></i>*@
+                        <div class="img">
+                            @*<img src="https://img.icons8.com/office/80/000000/caliper.png" />*@
+                            <img src="~/lib/icons/thickness-measurement.png" />
+                        </div>
+                    </div>
+                    <a href="#" class="card-box-footer viewMore">View More </a>
+                </div>
+            </div>
+        </div>
+
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <button type="button" style="border-radius: 0px; width: 100%; height: 50px; font-size: 20px;" id="itemAttachmentButton" class="btn btn-success" onclick="loadAttachmentPage()">Attachments</button>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>

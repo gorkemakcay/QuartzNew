@@ -1,0 +1,66 @@
+﻿<div class="card-body" style="display:block;">
+    <div class="row">
+        <div class="col-lg-6">
+            <span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Name</span>
+            <input type="text" class="form-control" placeholder="Enter Name" required id="addUserFirstName" style="background-color: #F3F5F7;">
+        </div>
+
+        <div class="col-lg-6">
+            <span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Surname</span>
+            <input type="text" class="form-control" placeholder="Enter Surname" required id="addUserLastName" style="background-color: #F3F5F7;">
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-6">
+            <span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Username</span>
+            <input type="text" class="form-control" placeholder="Enter Username" required id="addUserUsername" style="background-color: #F3F5F7;">
+        </div>
+
+        <div class="col-6">
+            <span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Email</span>
+            <input type="email" class="form-control" placeholder="Enter Email" required id="addUserEmail" style="background-color: #F3F5F7;">
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-6">
+            <span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Password</span>
+            <input id="addUserPassword" type="password" class="form-control" placeholder="Create a Password" required style="background-color: #F3F5F7;">
+        </div>
+
+        <div class="col-6">
+            <span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Confirm Password</span>
+            <input id="addUserConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" required style="background-color: #F3F5F7;">
+        </div>
+    </div>
+    <br />
+    <hr />
+    @*<div class="row justify-content-center">
+            <span class="text-center" style="color: #8F8F95; font-size: 1em; font-weight:500 ">Role</span>
+            <div class="col-6 text-center">
+                <div class="text-center" style="background-color: #F3F5F7; border-radius: 5px; border: 1px solid gray;">
+                    <label class="form-text" for="operatorRole">Operator</label>
+                    <input name="role" type="radio" class="form-check mx-auto" required>
+                </div>
+            </div>
+            <div class="col-6 text-center">
+                <div style="background-color: #F3F5F7; border-radius: 5px; border: 1px solid gray;">
+                    <label class="form-text" for="adminRole">Admin</label>
+                    <input name="role" type="radio" class="form-check mx-auto" required>
+                </div>
+            </div>
+        </div>*@
+
+    <div class="row justify-content-center" style="background-color: #f3f5f7;">
+        <span class="text-center" style="color: #8F8F95; font-size: 1em; font-weight:500">Roles</span>
+        <div class="col-6 text-end">
+            <label class="form-text m-0" for="operatorRole">Operator</label>
+            <input id="userSignUpOperatorRole" type="checkbox" class="form-check-input">
+        </div>
+        <div class="col-6">
+            <label class="form-text m-0" for="adminRole">Admin</label>
+            <input id="userSignUpAdminRole"type="checkbox" class="form-check-input">
+        </div>
+    </div>
+</div>
