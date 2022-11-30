@@ -48,47 +48,75 @@
                             data: fileUpdate,
                             success: function (response) {
                                 var updatedFile = jQuery.parseJSON(response);
-                                link.CurrentDrawingId = updatedFile.Id;
-                                link.TagNo = $("#addLinkTagNo").val();
 
-                                // update link for currentDrawingId
+                                var drawingSettingsModel = {
+                                    DrawingNo: updatedFile.Name,
+                                    CurrentDrawingId: updatedFile.Id
+                                }
                                 $.ajax({
                                     type: "POST",
-                                    url: linkController.Link.Update,
-                                    data: { model: link },
+                                    url: linkController.DrawingSettings.Add,
+                                    data: { model: drawingSettingsModel },
                                     success: function (response) {
-                                        link = jQuery.parseJSON(response);
+                                        var drawingSettingsDetail = jQuery.parseJSON(response);
 
-                                        // clicked/created
-                                        if (clickedOrCreated == "clicked")
-                                            lastClickedLink = link;
-                                        if (clickedOrCreated == "created")
-                                            lastCreatedLink = link;
+                                        link.TagNo = $("#addLinkTagNo").val();
+                                        link.DrawingSettingsId = drawingSettingsDetail.Id;
 
-                                        loadLinkModal();
-                                        toast("Drawing Upload Successful!");
-                                    },
-                                    error: function (error) {
-                                        alert("error!");
-                                        console.log(error.responseText);
-                                    }
-                                });
-
-                                // update drawing settings
-                                $.ajax({
-                                    type: "GET",
-                                    url: linkController.DrawingSettings.Detail,
-                                    data: { quartzLinkId: link.Id },
-                                    success: function (response) {
-                                        linksDrawingSettings = jQuery.parseJSON(response);
-                                        linksDrawingSettings.DrawingNo = link.TagNo;
-                                        linksDrawingSettings.File = link.CurrentDrawingId;
-
+                                        // update link for currentDrawingId
                                         $.ajax({
                                             type: "POST",
-                                            url: linkController.DrawingSettings.Update,
-                                            data: { model: linksDrawingSettings },
+                                            url: linkController.Link.Update,
+                                            data: { model: link },
                                             success: function (response) {
+                                                link = jQuery.parseJSON(response);
+
+                                                // #region Get All Drawing Settings for Select Drawing (Select/Option)
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: linkController.DrawingSettings.List,
+                                                    success: function (response) {
+                                                        var allDrawingSettings = jQuery.parseJSON(response);
+
+                                                        // #region Create & Configure Select > Option
+                                                        $("#addLinkSelectDrawing").children().remove();
+
+                                                        $("#addLinkSelectDrawing").append(
+                                                            $('<option>', {
+                                                                value: drawingSettingsDetail.Id,
+                                                                text: drawingSettingsDetail.DrawingNo,
+                                                                id: "selectDrawing3"
+                                                            })
+                                                        );
+                                                        $("#selectDrawing3").attr("hidden", "");
+
+                                                        for (var i = 0; i < allDrawingSettings.length; i++) {
+                                                            var option = `<option value="` + allDrawingSettings[i].Id + `">` + allDrawingSettings[i].DrawingNo + `</option>`
+                                                            $("#addLinkSelectDrawing").append(option);
+                                                        }
+                                                        
+                                                        $("div.selectOpt select").val(link.DrawingSettingsId);
+                                                        $("#addLinkSelectDrawing option[value='1']").remove();
+                                                        // #endregion
+                                                    },
+                                                    error: function (error) {
+                                                        alert("error!");
+                                                        console.log(error.responseText);
+                                                    }
+                                                });
+                                                // #endregion
+
+                                                // clicked/created
+                                                if (clickedOrCreated == "clicked")
+                                                    lastClickedLink = link;
+                                                if (clickedOrCreated == "created")
+                                                    lastCreatedLink = link;
+
+                                                loadLinkModal();
+                                                toast("Drawing Upload Successful!");
+
+                                                $("#addLinkUploadDrawing").val("");
+                                                $("#linkModalSelectedImage").attr("hidden", "hidden");
                                             },
                                             error: function (error) {
                                                 alert("error!");
@@ -319,22 +347,7 @@
                             success: function (response) {
                                 var updatedFile = jQuery.parseJSON(response);
 
-                                currentQuartzLink.CurrentDrawingId = updatedFile.Id;
-                                $.ajax({
-                                    type: "POST",
-                                    url: linkController.Link.Update,
-                                    data: currentQuartzLink,
-                                    success: function (response) {
-                                        rModel = jQuery.parseJSON(response);
-                                        toast("Drawing Upload Successful!");
-                                    },
-                                    error: function (error) {
-                                        alert("error!");
-                                        console.log(error.responseText);
-                                    }
-                                });
-
-                                currentDrawingSettings.File = updatedFile.Id;
+                                currentDrawingSettings.CurrentDrawingId = updatedFile.Id;
                                 $.ajax({
                                     type: "POST",
                                     url: linkController.DrawingSettings.Update,
@@ -577,8 +590,6 @@
                     }
                 });
             }
-
-
             break;
 
         default:

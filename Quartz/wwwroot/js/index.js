@@ -314,6 +314,8 @@ var loginUserInfo;
 var currentLinkList;
 var currentItemList;
 var mainLink;
+var mainDrawingSettings;
+var projectName = "Quartz Project";
 // #endregion
 
 // #region Quartz Variables
@@ -348,14 +350,14 @@ var modify;
 
 // #region quartz.portalacbi.com Variables
 var downloadFile = "/FileUpload/DownloadFile?fileId=";
-var imageUrl = "/home/get?path=";
-var resetImageUrl = imageUrl;
+var imageUrl;
 // #endregion
 
 // #region Search Panel's Variables
 var activeSearch = null;
 
 var printDrawingModelsArray = [];
+var printLinkModelsArray = [];
 var printItemModelsArray = [];
 var printInspectionModelsArray = [];
 var printValveMaintenanceModelsArray = [];
@@ -381,10 +383,16 @@ $(function () {
     $.ajax({
         type: "GET",
         url: linkController.Link.List,
-        data: { mainLinkId: 0 },
+        data: { mainDrawingSettingsId: 1 },
         success: function (response) {
-            mainLink = jQuery.parseJSON(response);
-            mainLink = mainLink[0];
+            var linkList = jQuery.parseJSON(response);
+            linkList.forEach(function (link) {
+                if (link.TagNo == "Main") {
+                    mainLink = link;
+                    return;
+                }
+            });
+
             $.ajax({
                 type: "GET",
                 url: linkController.Link.Detail,
@@ -395,27 +403,31 @@ $(function () {
 
                     $.get({
                         url: linkController.DrawingSettings.Detail,
-                        data: { quartzLinkId: currentQuartzLink.Id },
+                        data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
                         success: function (response) {
                             currentDrawingSettings = jQuery.parseJSON(response);
+                            mainDrawingSettings = currentDrawingSettings;
+
+                            $.ajax({
+                                type: "GET",
+                                url: fileController.Detail,
+                                data: { fileId: currentDrawingSettings.CurrentDrawingId },
+                                success: function (response) {
+                                    currentDrawing = jQuery.parseJSON(response);
+                                    loadQuartz();
+                                },
+                                error: function (error) {
+                                    alert("error");
+                                    console.log(error.responseText);
+                                }
+                            });
+
                             breadCrumb();
                         }
                     });
 
                     getVectorSource();
 
-                    function wait() {
-                        $.ajax({
-                            type: "GET",
-                            url: fileController.Detail,
-                            data: { fileId: currentQuartzLink.CurrentDrawingId },
-                            success: function (result) {
-                                currentDrawing = jQuery.parseJSON(result);
-                                loadQuartz();
-                            }
-                        });
-                    }
-                    setTimeout(wait, 100);
                 },
                 error: function (error) {
                     alert("error");
@@ -462,7 +474,7 @@ function loadSearchPanelsSelectOptions() {
         type: "GET",
         url: lookupItemController.PlantArea.List,
         success: function (response) {
-            rModel = jQuery.parseJSON(response);
+            var plantAreaList = jQuery.parseJSON(response);
 
             // #region Create & Configure Select > Option
             $("#drawingFilterPlantArea").children().remove();
@@ -476,11 +488,11 @@ function loadSearchPanelsSelectOptions() {
             );
             $("#selectDrawingFilterPlantArea").attr("hidden", "");
 
-            for (var i = 0; i < rModel.length; i++) {
+            for (var i = 0; i < plantAreaList.length; i++) {
                 $("#drawingFilterPlantArea").append(
                     $('<option>', {
-                        value: rModel[i].Name,
-                        text: rModel[i].Name
+                        value: plantAreaList[i].Name,
+                        text: plantAreaList[i].Name
                     })
                 );
             }
@@ -524,6 +536,47 @@ function loadSearchPanelsSelectOptions() {
 
         }
     });
+    // #endregion
+
+    // #region Search Link
+    // Select Drawing
+    $.ajax({
+        type: "GET",
+        url: linkController.DrawingSettings.List,
+        success: function (response) {
+            var allDrawingSettings = jQuery.parseJSON(response);
+
+            // #region Create & Configure Select > Option
+            $("#linkFilterSelectDrawing").children().remove();
+
+            $("#linkFilterSelectDrawing").append(
+                $('<option>', {
+                    value: 0,
+                    text: "Select Drawing",
+                    id: "selectDrawing"
+                })
+            );
+            $("#selectDrawing").attr("hidden", "");
+
+            for (var i = 0; i < allDrawingSettings.length; i++) {
+                $("#linkFilterSelectDrawing").append(
+                    $('<option>', {
+                        value: allDrawingSettings[i].Id,
+                        text: allDrawingSettings[i].DrawingNo,
+                    })
+                );
+            }
+
+            $("#linkFilterSelectDrawing option[value='1']").remove();
+
+            // #endregion
+        },
+        error: function (error) {
+            alert("error!");
+            console.log(error.responseText);
+        }
+    });
+
     // #endregion
 
     // #region Search Tag
@@ -973,9 +1026,9 @@ function breadCrumb() {
             })
         ),
         $('<li>', {
-            text: " " + currentDrawingSettings.DrawingNo,
+            text: " " + mainDrawingSettings.DrawingNo,
             value: crumbCount,
-            onclick: "goDrawing(" + currentQuartzLink.Id + " , " + currentQuartzLink.CurrentDrawingId + " , " + crumbCount + ")",
+            onclick: "goDrawing(" + mainLink.Id + " , " + 0 + " , " + crumbCount + ")", // [DYNAMIC]
             class: "crumb"
         }).prepend(
             $('<i>', {
@@ -1127,7 +1180,6 @@ function limCancelButton(type) {
                 }
             });
             break;
-            break;
 
         case "technique":
             $.ajax({
@@ -1180,33 +1232,47 @@ function goDrawing(linkId, drawingId, thisValue) {
 
             $.ajax({
                 type: "GET",
-                url: linkController.DrawingFeatures.GetVectorSource,
-                data: { quartzLinkId: linkId },
+                url: linkController.DrawingSettings.Detail,
+                data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
                 success: function (response) {
-                    currentDrawingFeatures = jQuery.parseJSON(response);
+                    currentDrawingSettings = jQuery.parseJSON(response);
 
                     $.ajax({
                         type: "GET",
-                        url: fileController.Detail,
-                        data: { fileId: drawingId },
+                        url: linkController.DrawingFeatures.GetVectorSource,
+                        data: { drawingSettingsId: currentDrawingSettings.Id },
                         success: function (response) {
-                            currentDrawing = jQuery.parseJSON(response);
+                            currentDrawingFeatures = jQuery.parseJSON(response);
+
                             $.ajax({
                                 type: "GET",
-                                url: linkController.QuartzPartialView,
-                                success: function (html) {
-                                    $("#main").children().remove();
-                                    $("#main").html(html);
+                                url: fileController.Detail,
+                                data: { fileId: currentDrawingSettings.CurrentDrawingId },
+                                success: function (response) {
+                                    currentDrawing = jQuery.parseJSON(response);
 
-                                    $($(".crumb").get().reverse()).each(function () {
-                                        if ($(this).val() == thisValue) {
-                                            crumbCount = $(this).val();
-                                            return false;
+                                    $.ajax({
+                                        type: "GET",
+                                        url: linkController.QuartzPartialView,
+                                        success: function (html) {
+                                            $("#main").children().remove();
+                                            $("#main").html(html);
+
+                                            $($(".crumb").get().reverse()).each(function () {
+                                                if ($(this).val() == thisValue) {
+                                                    crumbCount = $(this).val();
+                                                    return false;
+                                                }
+                                                else $(this).remove();
+                                            });
+
+                                            loadQuartz();
+                                        },
+                                        error: function (error) {
+                                            alert("error!");
+                                            console.log(error.responseText);
                                         }
-                                        else $(this).remove();
                                     });
-
-                                    loadQuartz();
                                 },
                                 error: function (error) {
                                     alert("error!");
@@ -1231,108 +1297,13 @@ function goDrawing(linkId, drawingId, thisValue) {
             console.log(error.responseText);
         }
     });
-
-
-}
-
-// Go Drawing From Search
-function goDrawingFromSearch(linkId) {
-    $(".breadCrumb").children().remove();
-
-    if (linkId == mainLink.Id) {
-        $(".breadCrumb").append(
-            $('<li>,').prepend(
-                $('<i>', {
-                    onclick: "getDrawingCenter()",
-                    class: "fa-solid fa-arrows-to-circle",
-                    style: "cursor: pointer;"
-                })
-            ),
-            $('<li>', {
-                text: " " + mainLink.TagNo,
-                value: 1,
-                onclick: "goDrawing(" + mainLink.Id + " , " + mainLink.CurrentDrawingId + " , " + 1 + ")",
-                class: "crumb"
-            }).prepend(
-                $('<i>', {
-                    class: "fa fa-house"
-                })
-            )
-        );
-    }
-    else {
-        $.ajax({
-            type: "GET",
-            url: linkController.Link.Detail,
-            data: { linkId: linkId },
-            success: function (response) {
-                linkDetail = jQuery.parseJSON(response);
-
-                var hierarchies = linkDetail.Hierarchy.split(',');
-                hierarchies.shift();
-                hierarchies.shift();
-                hierarchies.push(linkDetail.Id.toString());
-
-                var value = 1;
-                $(".breadCrumb").append(
-                    $('<li>,').prepend(
-                        $('<i>', {
-                            onclick: "getDrawingCenter()",
-                            class: "fa-solid fa-arrows-to-circle",
-                            style: "cursor: pointer;"
-                        })
-                    ),
-                    $('<li>', {
-                        text: " " + mainLink.TagNo,
-                        value: value,
-                        onclick: "goDrawing(" + mainLink.Id + " , " + mainLink.CurrentDrawingId + " , " + value + ")",
-                        class: "crumb"
-                    }).prepend(
-                        $('<i>', {
-                            class: "fa fa-house"
-                        })
-                    )
-                );
-                value++;
-
-                for (var i = 0; i < hierarchies.length; i++) {
-                    $.ajax({
-                        async: false,
-                        type: "GET",
-                        url: linkController.Link.Detail,
-                        data: { linkId: hierarchies[i] },
-                        success: function (response) {
-                            var breadCrumbLinkDetail = jQuery.parseJSON(response);
-                            $(".breadCrumb").append(
-                                $('<li>', {
-                                    text: breadCrumbLinkDetail.TagNo,
-                                    value: value,
-                                    onclick: "goDrawing(" + breadCrumbLinkDetail.Id + " , " + breadCrumbLinkDetail.CurrentDrawingId + " ," + value + ")",
-                                    class: "crumb"
-                                })
-                            );
-                            value++;
-                        },
-                        error: function (error) {
-                            alert("error!");
-                            console.log(error.responseText);
-                        }
-                    });
-                }
-            },
-            error: function (error) {
-                alert("error!");
-                console.log(error.responseText);
-            }
-        });
-    }
 }
 
 // Get Vector Source
 function getVectorSource() {
     $.get({
         url: linkController.DrawingFeatures.GetVectorSource,
-        data: { quartzLinkId: currentQuartzLink.Id },
+        data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
         success: function (response) {
             if (response != 0) {
                 currentDrawingFeatures = jQuery.parseJSON(response);
@@ -1353,88 +1324,55 @@ function getVectorSource() {
 function deleteThis(objectType, objectId) {
     switch (objectType) {
         case "link":
+            var linkDeleteModel = { Id: objectId };
             $.ajax({
-                type: "GET",
-                url: "QuartzLink/GetAllLinksWithoutMainLinkId",
-                data: { mainLinkId: objectId },
+                type: "DELETE",
+                url: linkController.Link.Delete,
+                data: { model: linkDeleteModel },
                 success: function (response) {
-                    var rLinkList = jQuery.parseJSON(response);
+                    $("#linkModal").modal("hide");
+                    createList();
 
-                    rLinkList.forEach(function (link) {
-                        var hierarchy = link.Hierarchy.split(',');
-                        for (let id in hierarchy) {
-                            if (hierarchy[id] == objectId) {
-                                var linkDeleteModel = { Id: link.Id };
-                                $.ajax({
-                                    type: "DELETE",
-                                    url: linkController.Link.Delete,
-                                    data: { model: linkDeleteModel },
-                                    success: function (response) {
-                                    },
-                                    error: function (error) {
-                                        alert("error");
-                                        console.log(error.responseText);
-                                    }
-                                });
-                                break;
-                            }
-                        }
-                    });
+                    source.getFeatures().forEach(function (feature) {
+                        if (feature.get("Id") == linkDeleteModel.Id && feature.get("Type") == "link") {
+                            source.removeFeature(feature);
 
-                    var linkDeleteModel = { Id: objectId };
-                    $.ajax({
-                        type: "DELETE",
-                        url: linkController.Link.Delete,
-                        data: { model: linkDeleteModel },
-                        success: function (response) {
-                            $("#linkModal").modal("hide");
-                            createList();
+                            var json = new ol.format.GeoJSON().writeFeatures(vectorLayer.getSource().getFeatures(), {
+                                dataProjection: 'EPSG:4326',
+                                featureProjection: 'EPSG:3857'
+                            });
 
-                            source.getFeatures().forEach(function (feature) {
-                                if (feature.get("Id") == linkDeleteModel.Id && feature.get("Type") == "link") {
-                                    source.removeFeature(feature);
+                            var drawingFeaturesModel = {
+                                Id: currentDrawingFeatures.Id,
+                                Features: json,
+                                DrawingSettingsId: currentDrawingSettings.Id
+                            };
 
-                                    var json = new ol.format.GeoJSON().writeFeatures(vectorLayer.getSource().getFeatures(), {
-                                        dataProjection: 'EPSG:4326',
-                                        featureProjection: 'EPSG:3857'
-                                    });
-
-                                    var drawingFeaturesModel = {
-                                        Id: currentDrawingFeatures.Id,
-                                        Features: json,
-                                        QuartzLinkId: currentQuartzLink.Id
-                                    };
-
-                                    $.ajax({
-                                        type: "POST",
-                                        url: linkController.DrawingFeatures.Update,
-                                        data: { model: drawingFeaturesModel },
-                                        success: function (response) {
-                                            rModel = jQuery.parseJSON(response);
-                                            getVectorSource();
-                                        },
-                                        error: function (error) {
-                                            alert("error!");
-                                            console.log(error.responseText);
-                                        }
-                                    });
-
-                                    objectTypeToBeDeleted = "";
-                                    objectIdToBeDeleted = "";
-
-                                    toast("Link Deleted Successful");
+                            $.ajax({
+                                type: "POST",
+                                url: linkController.DrawingFeatures.Update,
+                                data: { model: drawingFeaturesModel },
+                                success: function () {
+                                    getVectorSource();
+                                },
+                                error: function (error) {
+                                    alert("error!");
+                                    console.log(error.responseText);
                                 }
                             });
-                        },
-                        error: function (error) {
-                            alert("error");
-                            console.log(error.responseText);
+
+                            objectTypeToBeDeleted = "";
+                            objectIdToBeDeleted = "";
+
+                            toast("Link Deleted Successful");
                         }
                     });
+                },
+                error: function (error) {
+                    alert("error");
+                    console.log(error.responseText);
                 }
             });
-
-
             break;
 
         case "attachment":
@@ -1445,7 +1383,6 @@ function deleteThis(objectType, objectId) {
                 success: function (response) {
 
                     switch (deleteThisWhichAttachment) {
-
                         case "item":
                             var item;
                             if (clickedOrCreated == "clicked")
@@ -1591,7 +1528,7 @@ function deleteThis(objectType, objectId) {
                                 type: "POST",
                                 url: linkController.DrawingSettings.Update,
                                 data: { model: currentDrawingSettings },
-                                success: function (response) {
+                                success: function () {
                                     $("#drawingSettingsModal").modal("show");
                                     loadDrawingSettingsAttachmentPage();
                                 },
@@ -1620,6 +1557,7 @@ function deleteThis(objectType, objectId) {
 
         case "item":
             var itemDeleteModel = { Id: objectId };
+
             $.ajax({
                 type: "DELETE",
                 url: itemController.Item.Delete,
@@ -1639,7 +1577,7 @@ function deleteThis(objectType, objectId) {
                             var drawingFeaturesModel = {
                                 Id: currentDrawingFeatures.Id,
                                 Features: json,
-                                QuartzLinkId: currentQuartzLink.Id
+                                DrawingSettingsId: currentDrawingSettings.Id
                             };
 
                             $.ajax({
@@ -2131,15 +2069,14 @@ function updateDrawingFeatures() {
     var drawingFeaturesModel = {
         Id: currentDrawingFeatures.Id,
         Features: json,
-        QuartzLinkId: currentQuartzLink.Id
+        drawingSettingsId: currentDrawingSettings.Id
     };
 
     $.ajax({
         type: "POST",
         url: linkController.DrawingFeatures.Update,
         data: { model: drawingFeaturesModel },
-        success: function (response) {
-            rModel = jQuery.parseJSON(response);
+        success: function () {
             getVectorSource();
         },
         error: function (error) {
@@ -2470,7 +2407,7 @@ function addFeatureToSource() {
         $.ajax({
             type: "GET",
             url: linkController.Link.List,
-            data: { mainLinkId: currentQuartzLink.Id },
+            data: { mainDrawingSettingsId: currentQuartzLink.DrawingSettingsId },
             success: function (response) {
                 currentLinkList = jQuery.parseJSON(response);
             },
@@ -2483,7 +2420,7 @@ function addFeatureToSource() {
         $.ajax({
             type: "GET",
             url: itemController.Item.List,
-            data: { linkId: currentQuartzLink.Id },
+            data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
             success: function (response) {
                 currentItemList = jQuery.parseJSON(response);
             },
@@ -2507,7 +2444,7 @@ function addFeatureToSource() {
 
                 if (featureJson.properties.Type == 'link') {
                     let link = currentLinkList.find(link => link.Id == featureJson.properties.Id);
-                    if (link.ShowLabel) {
+                    if (link != null && link.ShowLabel) {
                         TextContext = featureJson.properties.Name;
                     }
                     else TextContext = '';
@@ -2529,10 +2466,9 @@ function addFeatureToSource() {
                 feature.setProperties({ 'Id': featureJson.properties.Id });
                 feature.setProperties({ 'Name': featureJson.properties.Name });
                 feature.setProperties({ 'Type': featureJson.properties.Type });
-                feature.setProperties({ 'Hierarchy': featureJson.properties.Hierarchy });
                 feature.setProperties({ 'ShowLabel': featureJson.properties.ShowLabel });
 
-                var exampleFeatureStyle = new ol.style.Style({
+                var featureStyle = new ol.style.Style({
                     fill: new ol.style.Fill({
                         color: fillColor
                     }),
@@ -2547,7 +2483,7 @@ function addFeatureToSource() {
                         overflow: true
                     })
                 });
-                feature.setStyle(exampleFeatureStyle);
+                feature.setStyle(featureStyle);
 
                 // Add feature to the vector source
                 source.addFeature(feature);

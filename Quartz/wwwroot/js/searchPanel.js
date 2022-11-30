@@ -3,37 +3,25 @@
 
     $.ajax({
         type: "GET",
-        url: "Search/GetSearchPanelsDrawingPartialView",
+        url: "QuartzLink/GetSearchPanelsDrawingPartialView",
         success: function (html) {
             $("#searchPanelsModalPartialArea").html(html);
             $("#searchPanelsModalTitle").html("Search Drawing");
 
             var filterDrawingModel = {
-                TagNo: $("#drawingFilterTagNo").val(),
-                Description: $("#drawingFilterDescription").val(),
+                DrawingNo: $("#drawingFilterTagNo").val(),
                 PlantArea: $("#drawingFilterPlantArea").val(),
                 PlantSystem: $("#drawingFilterPlantSystem").val(),
+                Description: $("#drawingFilterDescription").val(),
             };
 
             $.ajax({
-                type: "Post",
-                url: "Search/FilterDrawing", // AJAX URL ROUTER'A EKLE
+                type: "POST",
+                url: "QuartzLink/FilterDrawing", // AJAX URL ROUTER'A EKLE
                 data: { model: filterDrawingModel },
                 success: function (response) {
                     var filteredDrawings = jQuery.parseJSON(response);
-
                     printDrawingModelsArray = [];
-
-                    var printDrawingModel = {
-                        MainLinkName: "",
-                        TagNo: "",
-                        CreatedDate: "",
-                        CreatedBy: "",
-                        Description: "",
-                        PlantSystem: "",
-                        PlantArea: "",
-                        MainLinkPlantArea: ""
-                    }
 
                     $("#searchPanelDrawingTable").children('tbody').children('tr').remove();
 
@@ -42,136 +30,31 @@
                         $("#totalSearchPanelDrawingCount").html("Total Drawing Count: " + drawingCount);
 
                         filteredDrawings.forEach(function (drawing) {
-
-                            if (drawing.MainLinkId != 0) {
-                                $.ajax({
-                                    type: "GET",
-                                    url: linkController.Link.Detail,
-                                    data: { linkId: drawing.MainLinkId },
-                                    success: function (response) {
-                                        var mainLink = jQuery.parseJSON(response);
-
-                                        $.ajax({
-                                            type: "GET",
-                                            url: linkController.DrawingSettings.Detail,
-                                            data: { quartzLinkId: mainLink.Id },
-                                            success: function (response) {
-                                                var mainLinksDrawingSettings = jQuery.parseJSON(response);
-
-                                                printDrawingModel.MainLinkName = mainLinksDrawingSettings.DrawingNo;
-                                                printDrawingModel.MainLinkPlantArea = mainLinksDrawingSettings.PlantArea;
-                                                printDrawingModel.CreatedBy = drawing.CreatedBy;
-                                                printDrawingModel.CreatedDate = drawing.CreatedDate;
-                                                printDrawingModel.Description = drawing.Description;
-                                                printDrawingModel.PlantArea = drawing.PlantArea;
-                                                printDrawingModel.PlantSystem = drawing.PlantSystem;
-                                                printDrawingModel.TagNo = drawing.TagNo;
-
-                                                printDrawingModelsArray.push(printDrawingModel);
-
-                                                printDrawingModel = {
-                                                    MainLinkName: "",
-                                                    TagNo: "",
-                                                    CreatedDate: "",
-                                                    CreatedBy: "",
-                                                    Description: "",
-                                                    PlantSystem: "",
-                                                    PlantArea: "",
-                                                    MainLinkPlantArea: ""
-                                                }
-                                            },
-                                            error: function (error) {
-                                                alert("error!");
-                                                console.log(error.responseText);
-                                            }
-                                        });
-                                    },
-                                    error: function (error) {
-                                        alert("error!");
-                                        console.log(error.responseText);
-                                    }
-                                });
-                            }
-                            else {
-                                $.ajax({
-                                    type: "GET",
-                                    url: linkController.DrawingSettings.Detail,
-                                    data: { quartzLinkId: drawing.LinkId },
-                                    success: function (response) {
-                                        var mainLinksDrawingSettings = jQuery.parseJSON(response);
-
-                                        printDrawingModel.MainLinkName = "(this link is Main Link)";
-                                        printDrawingModel.MainLinkPlantArea = mainLinksDrawingSettings.PlantArea;
-                                        printDrawingModel.CreatedBy = drawing.CreatedBy;
-                                        printDrawingModel.CreatedDate = drawing.CreatedDate;
-                                        printDrawingModel.Description = drawing.Description;
-                                        printDrawingModel.PlantArea = drawing.PlantArea;
-                                        printDrawingModel.PlantSystem = drawing.PlantSystem;
-                                        printDrawingModel.TagNo = drawing.TagNo;
-
-                                        //printDrawingModelsArray.push(printDrawingModel);
-                                        mainDrawingModel = printDrawingModel;
-
-                                        printDrawingModel = {
-                                            MainLinkName: "",
-                                            TagNo: "",
-                                            CreatedDate: "",
-                                            CreatedBy: "",
-                                            Description: "",
-                                            PlantSystem: "",
-                                            PlantArea: "",
-                                            MainLinkPlantArea: ""
-                                        }
-                                    },
-                                    error: function (error) {
-                                        alert("error!");
-                                        console.log(error.responseText);
-                                    }
-                                });
+                            var printDrawingModel = {
+                                Id: drawing.Id,
+                                DrawingNo: drawing.DrawingNo,
+                                Description: drawing.Description,
+                                PlantArea: drawing.PlantArea,
+                                PlantSystem: drawing.PlantSystem
                             }
 
-                            if (drawing.CurrentDrawingId != 0) {
-                                $("#searchPanelDrawingTable").children('tbody').append(
-                                    $('<tr>').append(
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' style='color: blue; cursor: pointer;' onclick='goSelectedLink(" + drawing.LinkId + ")' data-bs-dismiss='modal' data-bs-toggle='tooltip' data-bs-placement='right' title='Go link'><i class='fas fa-link'></i></p>"
-                                        ),
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + drawing.TagNo + "'>" + drawing.TagNo + "</p>"
-                                        ),
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + drawing.Description + "'>" + drawing.Description + "</p>"
-                                        ),
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + drawing.PlantArea + "'>" + drawing.PlantArea + "</p>"
-                                        ),
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + drawing.PlantSystem + "'>" + drawing.PlantSystem + "</p>"
-                                        )
-                                    )
-                                );
-                            }
-                            else {
-                                $("#searchPanelDrawingTable").children('tbody').append(
-                                    $('<tr>').append(
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' style='color: gray;' data-bs-toggle='tooltip' data-bs-placement='right' title='Drawing does not exist!'><i class='fas fa-link'></i></p>"
-                                        ),
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + drawing.TagNo + "'>" + drawing.TagNo + "</p>"
-                                        ),
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + drawing.Description + "'>" + drawing.Description + "</p>"
-                                        ),
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + drawing.PlantArea + "'>" + drawing.PlantArea + "</p>"
-                                        ),
-                                        $('<td>', { align: "center" }).append(
-                                            "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + drawing.PlantSystem + "'>" + drawing.PlantSystem + "</p>"
-                                        )
-                                    )
-                                );
-                            }
+                            var goDrawing = `<p class='tableColumn' style='color: blue; cursor: pointer;' onclick='goSelectedDrawing(` + drawing.Id + `)' data-bs-dismiss='modal' data-bs-toggle='tooltip' data-bs-placement='right' title='Go link'><i class='fas fa-link'></i></p>`;
+                            var drawingNo = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + drawing.DrawingNo + `'>` + drawing.DrawingNo + `</p>`;
+                            var plantArea = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + drawing.PlantArea + `'>` + drawing.PlantArea + `</p>`;
+                            var plantSystem = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + drawing.PlantSystem + `'>` + drawing.PlantSystem + `</p>`;
+                            var description = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + drawing.Description + `'>` + drawing.Description + `</p>`;
+
+                            $("#searchPanelDrawingTable").children('tbody').append(
+                                $('<tr>').append(
+                                    $('<td>', { align: "center" }).append(goDrawing),
+                                    $('<td>', { align: "center" }).append(drawingNo),
+                                    $('<td>', { align: "center" }).append(plantArea),
+                                    $('<td>', { align: "center" }).append(plantSystem),
+                                    $('<td>', { align: "center" }).append(description)
+                                )
+                            );
+
+                            printDrawingModelsArray.push(printDrawingModel);
                         });
                     }
                     else {
@@ -187,6 +70,136 @@
                     console.log(error.responseText);
                 }
             });
+        },
+        error: function (error) {
+            alert("error!");
+            console.log(error.responseText);
+        }
+    });
+}
+
+function filterLink() {
+    activeSearch = "link";
+
+    // link modal'ın içeriği
+    $.ajax({
+        type: "GET",
+        url: "QuartzLink/GetSearchPanelsLinkPartialView",
+        success: function (html) {
+            $("#searchPanelsModalPartialArea").html(html);
+            $("#searchPanelsModalTitle").html("Search Link");
+
+            var filterLinkModel = {
+                TagNo: $("#linkFilterTagNo").val(),
+                MainDrawingSettingsId: $("#linkFilterSelectDrawing").val(),
+            };
+
+            // filtrelenmiş linkler
+            $.ajax({
+                type: "Post",
+                url: "QuartzLink/FilterLink", // AJAX URL ROUTER'A EKLE
+                data: { model: filterLinkModel },
+                success: function (response) {
+                    var filteredLinks = jQuery.parseJSON(response);
+                    printLinkModelsArray = [];
+
+                    $("#searchPanelLinkTable").children('tbody').children('tr').remove();
+
+                    if (filteredLinks != "") {
+                        var linkCount = filteredLinks.length;
+                        $("#totalSearchPanelLinkCount").html("Total Filtered Link Count: " + linkCount);
+
+                        filteredLinks.forEach(function (link) {
+                            if (link.Id != 2) {
+                                var isAssigned = false;
+
+                                if (link.DrawingSettingsId != 1)
+                                    isAssigned = true;
+
+                                var printLinkModel = {
+                                    Id: link.Id,
+                                    TagNo: link.TagNo,
+                                    CreatedDate: link.CreatedDate,
+                                    CreatedBy: link.CreatedBy,
+                                    MainDrawingSettings: link.MainDrawingSettingsId,
+                                    MainDrawingSettingsId: link.MainDrawingSettingsId,
+                                    DrawingSettings: link.DrawingSettingsId
+                                }
+
+                                if (printLinkModel.MainDrawingSettings == 0) {
+                                    printLinkModel.MainDrawingSettings = "-";
+                                }
+                                else {
+                                    $.ajax({
+                                        async: false,
+                                        type: "GET",
+                                        url: linkController.DrawingSettings.Detail,
+                                        data: { drawingSettingsId: link.MainDrawingSettingsId },
+                                        success: function (response) {
+                                            var drawingSettingsDetail = jQuery.parseJSON(response);
+                                            printLinkModel.MainDrawingSettings = drawingSettingsDetail.DrawingNo;
+                                        }
+                                    });
+                                }
+
+                                if (printLinkModel.DrawingSettings == 1) {
+                                    printLinkModel.DrawingSettings = "(empty)";
+                                }
+                                else {
+                                    $.ajax({
+                                        async: false,
+                                        type: "GET",
+                                        url: linkController.DrawingSettings.Detail,
+                                        data: { drawingSettingsId: link.DrawingSettingsId },
+                                        success: function (response) {
+                                            var drawingSettingsDetail = jQuery.parseJSON(response);
+                                            printLinkModel.DrawingSettings = drawingSettingsDetail.DrawingNo;
+                                        }
+                                    });
+                                }
+
+                                // create row for filtered link table
+                                var goLink;
+                                if (isAssigned)
+                                    goLink = `<p class='tableColumn' style='color: blue; cursor: pointer;' onclick='goSelectedLink(` + printLinkModel.Id + `)' data-bs-dismiss='modal' data-bs-toggle='tooltip' data-bs-placement='right' title='Go link'><i class='fas fa-link'></i></p>`;
+                                else goLink = `<p class='tableColumn' style='color: gray;' data-bs-toggle='tooltip' data-bs-placement='right' title='Drawing does not exist!'><i class='fas fa-link'></i></p>`;
+
+                                var tagNo = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + printLinkModel.TagNo + `'>` + printLinkModel.TagNo + `</p>`;
+                                var belongsDrawing = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + printLinkModel.MainDrawingSettings + `'>` + printLinkModel.MainDrawingSettings + `</p>`;
+                                var containsDrawing = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + printLinkModel.DrawingSettings + `'>` + printLinkModel.DrawingSettings + `</p>`;
+                                var createdDate = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + printLinkModel.CreatedDate.split('T')[0] + `'>` + printLinkModel.CreatedDate.split('T')[0] + `</p>`;
+                                var createdBy = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + printLinkModel.CreatedBy + `'>` + printLinkModel.CreatedBy + `</p>`;
+
+                                var alignCenter = { align: "center" };
+                                $("#searchPanelLinkTable").children('tbody').append(
+                                    $('<tr>').append(
+                                        $('<td>', alignCenter).append(goLink),
+                                        $('<td>', alignCenter).append(tagNo),
+                                        $('<td>', alignCenter).append(belongsDrawing),
+                                        $('<td>', alignCenter).append(containsDrawing),
+                                        $('<td>', alignCenter).append(createdDate),
+                                        $('<td>', alignCenter).append(createdBy)
+                                    )
+                                );
+
+                                printLinkModelsArray.push(printLinkModel);
+                            }
+                        });
+                    }
+                    else {
+                        $("#searchPanelLinkTable").children('tbody').append(
+                            $('<tr>').append(
+                                $('<td>', { colspan: "6", class: "text-center" }).append("No data available to show!")
+                            )
+                        );
+                    }
+                },
+                error: function (error) {
+                    alert("error!");
+                    console.log(error.responseText);
+                }
+            });
+
         },
         error: function (error) {
             alert("error!");
@@ -815,8 +828,6 @@ $("#clearSearchButton").on('click', function () {
 });
 
 function goSelectedLink(linkId) {
-    goDrawingFromSearch(linkId);
-
     $.ajax({
         type: "GET",
         url: linkController.Link.Detail,
@@ -828,80 +839,33 @@ function goSelectedLink(linkId) {
 
             $.ajax({
                 type: "GET",
-                url: linkController.DrawingFeatures.GetVectorSource,
-                data: { quartzLinkId: currentQuartzLink.Id },
+                url: linkController.DrawingSettings.Detail,
+                data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
                 success: function (response) {
-                    currentDrawingFeatures = jQuery.parseJSON(response);
+                    currentDrawingSettings = jQuery.parseJSON(response);
 
-                    $.ajax({
-                        type: "GET",
-                        url: fileController.Detail,
-                        data: { fileId: currentQuartzLink.CurrentDrawingId },
-                        success: function (response) {
-                            currentDrawing = jQuery.parseJSON(response);
-                            if (currentDrawing != null) {
-                                $.ajax({
-                                    type: "GET",
-                                    url: linkController.QuartzPartialView,
-                                    success: function (html) {
-                                        $("#main").children().remove();
-                                        $("#main").html(html);
-
-                                        loadQuartz();
-                                    },
-                                    error: function (error) {
-                                        alert("error!");
-                                        console.log(error.responseText);
-                                    }
-                                });
-                            }
-                            else {
-                                alert("Drawing Is Not Exist!");
-                            }
-                        },
-                        error: function (error) {
-                            alert("error!");
-                            console.log(error.responseText);
-                        }
-                    });
-                },
-                error: function (error) {
-                    alert("error!");
-                    console.log(error.responseText);
-                }
-            });
-        }
-    });
-}
-
-function goSelectedTag(itemId, linkId) {
-    goDrawingFromSearch(linkId);
-
-    $.ajax({
-        type: "GET",
-        url: itemController.Item.Detail,
-        data: { itemId: itemId },
-        success: function (response) {
-            lastClickedItem = jQuery.parseJSON(response);
-            clickedOrCreated = "clicked";
-            $.ajax({
-                type: "GET",
-                url: linkController.Link.Detail,
-                data: { linkId: lastClickedItem.QuartzLinkId },
-                success: function (response) {
-                    currentQuartzLink = jQuery.parseJSON(response);
+                    breadCrumb();
+                    crumbCount++;
+                    $(".breadCrumb").append(
+                        $('<li>', {
+                            text: currentDrawingSettings.DrawingNo,
+                            value: crumbCount,
+                            onclick: "goDrawing(" + currentQuartzLink.Id + " , " + 0 + " ," + crumbCount + ")",
+                            class: "crumb"
+                        })
+                    );
 
                     $.ajax({
                         type: "GET",
                         url: linkController.DrawingFeatures.GetVectorSource,
-                        data: { quartzLinkId: currentQuartzLink.Id },
+                        data: { drawingSettingsId: currentDrawingSettings.Id },
                         success: function (response) {
                             currentDrawingFeatures = jQuery.parseJSON(response);
 
                             $.ajax({
                                 type: "GET",
                                 url: fileController.Detail,
-                                data: { fileId: currentQuartzLink.CurrentDrawingId },
+                                data: { fileId: currentDrawingSettings.CurrentDrawingId },
                                 success: function (response) {
                                     currentDrawing = jQuery.parseJSON(response);
                                     if (currentDrawing != null) {
@@ -913,39 +877,6 @@ function goSelectedTag(itemId, linkId) {
                                                 $("#main").html(html);
 
                                                 loadQuartz();
-
-                                                function wait() {
-                                                    source.getFeatures().forEach(function (feature) {
-                                                        if (feature.get("Id") == lastClickedItem.Id && feature.get("Type") == "item") {
-                                                            select.getFeatures().clear();
-                                                            select.getFeatures().push(feature);
-                                                            selectedFeature = select.getFeatures().item(0);
-
-                                                            view.animate({
-                                                                center: new ol.proj.fromLonLat(feature.get("LonLat")),
-                                                                zoom: 3,
-                                                                duration: 800
-                                                            });
-                                                            return;
-                                                        }
-                                                    });
-
-                                                    // Select Button from List Panel
-                                                    var buttonId = selectedFeature.get('Id');
-
-                                                    $("#" + lastClickedButtonId + "").removeAttr('style', 'background: #808080');
-                                                    lastClickedButtonId = buttonId;
-
-                                                    var buttons = $("[name='item']");
-
-                                                    for (var i = 0; i < buttons.length; i++) {
-                                                        if (buttons[i].getAttribute('Id') == buttonId) {
-                                                            buttons[i].setAttribute('style', 'background: #808080');
-                                                            return;
-                                                        }
-                                                    }
-                                                }
-                                                setTimeout(wait, 200);
                                             },
                                             error: function (error) {
                                                 alert("error!");
@@ -978,9 +909,225 @@ function goSelectedTag(itemId, linkId) {
     });
 }
 
-function goSelectedInspection(itemId, linkId) {
-    goDrawingFromSearch(linkId);
+function goSelectedDrawing(drawingId) {
+    $.ajax({
+        type: "GET",
+        url: linkController.Link.Detail,
+        data: { linkId: 2 },
+        success: function (response) {
+            currentQuartzLink = jQuery.parseJSON(response);
+            clickedOrCreated = "clicked";
+            currentQuartzLink.DrawingSettingsId = drawingId;
 
+            $.ajax({
+                type: "POST",
+                url: linkController.Link.Update,
+                data: { model: currentQuartzLink },
+                success: function (response) {
+                    lastClickedLink = jQuery.parseJSON(response);
+                }
+            })
+
+            $.ajax({
+                type: "GET",
+                url: linkController.DrawingSettings.Detail,
+                data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
+                success: function (response) {
+                    currentDrawingSettings = jQuery.parseJSON(response);
+
+                    breadCrumb();
+                    crumbCount++;
+                    $(".breadCrumb").append(
+                        $('<li>', {
+                            text: currentDrawingSettings.DrawingNo,
+                            value: crumbCount,
+                            onclick: "goDrawing(" + currentQuartzLink.Id + " , " + 0 + " ," + crumbCount + ")",
+                            class: "crumb"
+                        })
+                    );
+
+                    $.ajax({
+                        type: "GET",
+                        url: linkController.DrawingFeatures.GetVectorSource,
+                        data: { drawingSettingsId: currentDrawingSettings.Id },
+                        success: function (response) {
+                            currentDrawingFeatures = jQuery.parseJSON(response);
+
+                            $.ajax({
+                                type: "GET",
+                                url: fileController.Detail,
+                                data: { fileId: currentDrawingSettings.CurrentDrawingId },
+                                success: function (response) {
+                                    currentDrawing = jQuery.parseJSON(response);
+                                    if (currentDrawing != null) {
+                                        $.ajax({
+                                            type: "GET",
+                                            url: linkController.QuartzPartialView,
+                                            success: function (html) {
+                                                $("#main").children().remove();
+                                                $("#main").html(html);
+
+                                                loadQuartz();
+                                            },
+                                            error: function (error) {
+                                                alert("error!");
+                                                console.log(error.responseText);
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        alert("Drawing Is Not Exist!");
+                                    }
+                                },
+                                error: function (error) {
+                                    alert("error!");
+                                    console.log(error.responseText);
+                                }
+                            });
+                        },
+                        error: function (error) {
+                            alert("error!");
+                            console.log(error.responseText);
+                        }
+                    });
+                },
+                error: function (error) {
+                    alert("error!");
+                    console.log(error.responseText);
+                }
+            });
+        }
+    });
+}
+
+function goSelectedTag(itemId, linkId) {
+    $.ajax({
+        type: "GET",
+        url: itemController.Item.Detail,
+        data: { itemId: itemId },
+        success: function (response) {
+            lastClickedItem = jQuery.parseJSON(response);
+            clickedOrCreated = "clicked";
+            $.ajax({
+                type: "GET",
+                url: linkController.Link.Detail,
+                data: { linkId: lastClickedItem.QuartzLinkId },
+                success: function (response) {
+                    currentQuartzLink = jQuery.parseJSON(response);
+
+                    $.ajax({
+                        type: "GET",
+                        url: linkController.DrawingSettings.Detail,
+                        data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
+                        success: function (response) {
+                            currentDrawingSettings = jQuery.parseJSON(response);
+
+                            breadCrumb();
+                            crumbCount++;
+                            $(".breadCrumb").append(
+                                $('<li>', {
+                                    text: currentDrawingSettings.DrawingNo,
+                                    value: crumbCount,
+                                    onclick: "goDrawing(" + currentQuartzLink.Id + " , " + 0 + " ," + crumbCount + ")",
+                                    class: "crumb"
+                                })
+                            );
+
+                            $.ajax({
+                                type: "GET",
+                                url: linkController.DrawingFeatures.GetVectorSource,
+                                data: { quartzLinkId: currentQuartzLink.Id },
+                                success: function (response) {
+                                    currentDrawingFeatures = jQuery.parseJSON(response);
+
+                                    $.ajax({
+                                        type: "GET",
+                                        url: fileController.Detail,
+                                        data: { fileId: currentQuartzLink.CurrentDrawingId },
+                                        success: function (response) {
+                                            currentDrawing = jQuery.parseJSON(response);
+                                            if (currentDrawing != null) {
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: linkController.QuartzPartialView,
+                                                    success: function (html) {
+                                                        $("#main").children().remove();
+                                                        $("#main").html(html);
+
+                                                        loadQuartz();
+
+                                                        function wait() {
+                                                            source.getFeatures().forEach(function (feature) {
+                                                                if (feature.get("Id") == lastClickedItem.Id && feature.get("Type") == "item") {
+                                                                    select.getFeatures().clear();
+                                                                    select.getFeatures().push(feature);
+                                                                    selectedFeature = select.getFeatures().item(0);
+
+                                                                    view.animate({
+                                                                        center: new ol.proj.fromLonLat(feature.get("LonLat")),
+                                                                        zoom: 3,
+                                                                        duration: 800
+                                                                    });
+                                                                    return;
+                                                                }
+                                                            });
+
+                                                            // Select Button from List Panel
+                                                            var buttonId = selectedFeature.get('Id');
+
+                                                            $("#" + lastClickedButtonId + "").removeAttr('style', 'background: #808080');
+                                                            lastClickedButtonId = buttonId;
+
+                                                            var buttons = $("[name='item']");
+
+                                                            for (var i = 0; i < buttons.length; i++) {
+                                                                if (buttons[i].getAttribute('Id') == buttonId) {
+                                                                    buttons[i].setAttribute('style', 'background: #808080');
+                                                                    return;
+                                                                }
+                                                            }
+                                                        }
+                                                        setTimeout(wait, 200);
+                                                    },
+                                                    error: function (error) {
+                                                        alert("error!");
+                                                        console.log(error.responseText);
+                                                    }
+                                                });
+                                            }
+                                            else {
+                                                alert("Drawing Is Not Exist!");
+                                            }
+                                        },
+                                        error: function (error) {
+                                            alert("error!");
+                                            console.log(error.responseText);
+                                        }
+                                    });
+                                },
+                                error: function (error) {
+                                    alert("error!");
+                                    console.log(error.responseText);
+                                }
+                            });
+
+                        },
+                        error: function (error) {
+                            alert("error!");
+                            console.log(error.responseText);
+                        }
+                    });
+                },
+                error: function (error) {
+                    alert("error!");
+                    console.log(error.responseText);
+                }
+            });
+        }
+    });
+}
+
+function goSelectedInspection(itemId, linkId) {
     $.ajax({
         type: "GET",
         url: itemController.Item.Detail,
@@ -1083,8 +1230,6 @@ function goSelectedInspection(itemId, linkId) {
 }
 
 function goSelectedValveMaintenance(itemId, linkId) {
-    goDrawingFromSearch(linkId);
-
     $.ajax({
         type: "GET",
         url: itemController.Item.Detail,
@@ -1186,8 +1331,6 @@ function goSelectedValveMaintenance(itemId, linkId) {
 }
 
 function goSelectedThicknessMeasurement(itemId, linkId) {
-    goDrawingFromSearch(linkId);
-
     $.ajax({
         type: "GET",
         url: itemController.Item.Detail,

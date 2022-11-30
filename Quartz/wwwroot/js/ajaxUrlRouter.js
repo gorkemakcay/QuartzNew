@@ -204,7 +204,8 @@ const linkController = {
         Update: "QuartzLink/UpdateDrawingSettingsJSON",
         Detail: "QuartzLink/GetDrawingSettingsDetailJSON",
         DataPartialView: "QuartzLink/GetDrawingSettingsDataPartialView",
-        AttachmentPartialView: "QuartzLink/GetDrawingSettingsAttachmentPartialView"
+        AttachmentPartialView: "QuartzLink/GetDrawingSettingsAttachmentPartialView",
+        List: "QuartzLink/GetAllDrawingSettingsJSON"
     },
 
     QuartzPartialView: "QuartzLink/GetQuartz"

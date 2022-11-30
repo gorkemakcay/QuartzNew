@@ -73,9 +73,7 @@
         //extent: [-1200, -778, 3120, 2134]
     });
 
-    //imageUrl = "http://localhost:5001/home/get?path=";
-    imageUrl = resetImageUrl;
-    imageUrl = imageUrl + currentDrawing.Path;
+    imageUrl = "/home/get?path=" + currentDrawing.Path;
 
     imageLayer = new ol.layer.Image({
         source: new ol.source.ImageStatic({
@@ -101,6 +99,7 @@
     map.on('dblclick', function (evt) {
         if (typeSelect.value != 'MoveAndModify') {
             map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+
                 if (feature.get("Type") == "item") {
                     $.ajax({
                         type: "GET",
@@ -114,6 +113,7 @@
                         }
                     });
                 }
+
                 if (feature.get("Type") == "link") {
                     $.ajax({
                         type: "GET",
@@ -123,10 +123,10 @@
                             lastClickedLink = jQuery.parseJSON(response);
                             clickedOrCreated = "clicked";
 
-                            if (lastClickedLink.CurrentDrawingId == 0 || lastClickedLink.CurrentDrawingId == null) {
+                            if (lastClickedLink.DrawingSettingsId == 1) {
                                 $("#linkModal").modal('show');
 
-                                if (lastClickedLink.CurrentDrawingId != 0) {
+                                if (lastClickedLink.DrawingSettingsId != 1) {
                                     $("#createdLinkMode").attr("hidden", "");
                                     $("#clickedLinkMode").removeAttr("hidden");
                                 }
@@ -147,35 +147,48 @@
 
                                 $.ajax({
                                     type: "GET",
-                                    url: linkController.DrawingFeatures.GetVectorSource,
-                                    data: { quartzLinkId: currentQuartzLink.Id },
+                                    url: linkController.DrawingSettings.Detail,
+                                    data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
                                     success: function (response) {
-                                        currentDrawingFeatures = jQuery.parseJSON(response);
+                                        currentDrawingSettings = jQuery.parseJSON(response);
 
                                         $.ajax({
                                             type: "GET",
-                                            url: fileController.Detail,
-                                            data: { fileId: currentQuartzLink.CurrentDrawingId },
+                                            url: linkController.DrawingFeatures.GetVectorSource,
+                                            data: { drawingSettingsId: currentDrawingSettings.Id },
                                             success: function (response) {
-                                                currentDrawing = jQuery.parseJSON(response);
+                                                currentDrawingFeatures = jQuery.parseJSON(response);
+
                                                 $.ajax({
                                                     type: "GET",
-                                                    url: linkController.QuartzPartialView,
-                                                    success: function (html) {
-                                                        $("#main").children().remove();
-                                                        $("#main").html(html);
+                                                    url: fileController.Detail,
+                                                    data: { fileId: currentDrawingSettings.CurrentDrawingId },
+                                                    success: function (response) {
+                                                        currentDrawing = jQuery.parseJSON(response);
+                                                        $.ajax({
+                                                            type: "GET",
+                                                            url: linkController.QuartzPartialView,
+                                                            success: function (html) {
+                                                                $("#main").children().remove();
+                                                                $("#main").html(html);
 
-                                                        loadQuartz();
+                                                                loadQuartz();
 
-                                                        crumbCount++;
-                                                        $(".breadCrumb").append(
-                                                            $('<li>', {
-                                                                text: currentQuartzLink.TagNo,
-                                                                value: crumbCount,
-                                                                onclick: "goDrawing(" + currentQuartzLink.Id + " , " + currentQuartzLink.CurrentDrawingId + " ," + crumbCount + ")",
-                                                                class: "crumb"
-                                                            })
-                                                        );
+                                                                crumbCount++;
+                                                                $(".breadCrumb").append(
+                                                                    $('<li>', {
+                                                                        text: currentDrawingSettings.DrawingNo,
+                                                                        value: crumbCount,
+                                                                        onclick: "goDrawing(" + currentQuartzLink.Id + " , " + 0 + " ," + crumbCount + ")",
+                                                                        class: "crumb"
+                                                                    })
+                                                                );
+                                                            },
+                                                            error: function (error) {
+                                                                alert("error!");
+                                                                console.log(error.responseText);
+                                                            }
+                                                        });
                                                     },
                                                     error: function (error) {
                                                         alert("error!");
@@ -194,6 +207,8 @@
                                         console.log(error.responseText);
                                     }
                                 });
+
+
                             }
                         }
                     });
@@ -317,7 +332,7 @@
                 // #region Add QuartzLink to DB
                 if (typeSelect.value == 'BoxLink' || typeSelect.value == 'PolygonLink') {
                     linkIdCount++;
-                    linkId = "LINK" + Math.floor(Math.random() * 1000);
+                    linkId = "Link - " + Math.floor(Math.random() * 1000);
                     shapeId = linkId;
 
                     var linkModel = {
@@ -325,9 +340,8 @@
                         ShowLabel: false,
                         CreatedDate: getDate(),
                         CreatedBy: loginUserInfo.FullName,
-                        MainQuartzLinkId: currentQuartzLink.Id,
-                        CurrentDrawingId: 0,
-                        Hierarchy: currentQuartzLink.Hierarchy + ',' + currentQuartzLink.Id
+                        MainDrawingSettingsId: currentQuartzLink.DrawingSettingsId,
+                        DrawingSettingsId: 1
                     };
 
                     $.ajax({
@@ -344,7 +358,6 @@
                             evt.feature.setProperties({ 'Id': lastCreatedLink.Id });
                             evt.feature.setProperties({ 'Name': lastCreatedLink.TagNo });
                             evt.feature.setProperties({ 'Type': "link" });
-                            evt.feature.setProperties({ 'Hierarchy': currentQuartzLink.Hierarchy + ',' + currentQuartzLink.Id });
                             evt.feature.setProperties({ 'ShowLabel': lastCreatedLink.ShowLabel });
 
                             setTimeout(addDrawingFeaturesJSON, 100);
@@ -366,25 +379,6 @@
                             loadLinkModal();
                             // #endregion
 
-                            // #region Create Drawing Settings
-                            var drawingSettingsAddModel = {
-                                DrawingNo: lastCreatedLink.TagNo,
-                                QuartzLinkId: lastCreatedLink.Id
-                            }
-                            $.ajax({
-                                type: "POST",
-                                url: linkController.DrawingSettings.Add,
-                                data: { model: drawingSettingsAddModel },
-                                success: function (response) {
-                                    rModel = jQuery.parseJSON(response);
-                                },
-                                error: function (error) {
-                                    alert("error!");
-                                    console.log(error.responseText);
-                                }
-                            });
-                            // #endregion
-
                             toast("Link Add Successful!");
                         },
                         error: function (error) {
@@ -397,7 +391,7 @@
                 // #region Add QuartzItem to DB
                 if (typeSelect.value == 'BoxItem' || typeSelect.value == 'PolygonItem') {
                     itemIdCount++;
-                    itemId = "ITEM" + Math.floor(Math.random() * 1000);
+                    itemId = "Item - " + Math.floor(Math.random() * 1000);
                     shapeId = itemId;
 
                     var itemModel = {
@@ -406,7 +400,7 @@
                         CreatedBy: loginUserInfo.FullName,
                         ShowLabel: false,
                         IsInspected: false,
-                        QuartzLinkId: currentQuartzLink.Id
+                        DrawingSettingsId: currentQuartzLink.DrawingSettingsId
                     };
 
                     $.ajax({
@@ -422,17 +416,17 @@
                                 TagNo: lastCreatedItem.TagNo,
                                 QuartzItemId: lastCreatedItem.Id
                             }
+
                             $.ajax({
                                 type: "POST",
                                 url: itemController.Information.Add,
                                 data: { model: itemInformationAddModel },
-                                success: function () {
-                                },
                                 error: function (error) {
                                     alert("error!");
                                     console.log(error.responseText);
                                 }
                             });
+
                             isInformationCreated = true;
                             getVectorSource();
 
@@ -501,15 +495,14 @@
 
             var drawingFeaturesAddModel = {
                 Features: json,
-                QuartzLinkId: currentQuartzLink.Id
+                DrawingSettingsId: currentQuartzLink.DrawingSettingsId
             };
 
             $.ajax({
                 type: "POST",
                 url: linkController.DrawingFeatures.Add,
                 data: { model: drawingFeaturesAddModel },
-                success: function (response) {
-                    rModel = jQuery.parseJSON(response);
+                success: function () {
                     getVectorSource();
                 },
                 error: function (error) {

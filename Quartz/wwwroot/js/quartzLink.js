@@ -1,4 +1,6 @@
-﻿function loadLinkModal() {
+﻿//const { registerFont } = require("ol/render/canvas");
+
+function loadLinkModal() {
     switch (clickedOrCreated) {
         case "clicked":
             $("#linkModalName").html(lastClickedLink.TagNo);
@@ -8,60 +10,63 @@
                 $('#linkShowLabel').prop('checked', true);
             else $('#linkShowLabel').prop('checked', false);
 
-            // #region Get All Drawings for Select/Option
+            // #region Get All Drawing Settings for Select Drawing (Select/Option)
             $.ajax({
                 type: "GET",
-                url: fileController.GetAllDrawings,
+                url: linkController.DrawingSettings.List,
                 success: function (response) {
-                    allDrawings = jQuery.parseJSON(response);
+                    var allDrawingSettings = jQuery.parseJSON(response);
 
                     // #region Create & Configure Select > Option
                     $("#addLinkSelectDrawing").children().remove();
 
-                    $.ajax({
-                        type: "GET",
-                        url: fileController.Detail,
-                        data: { fileId: lastClickedLink.CurrentDrawingId },
-                        success: function (response) {
-                            var selectedDrawing = jQuery.parseJSON(response);
+                    if (lastClickedLink.DrawingSettingsId == 1) {
+                        $("#addLinkSelectDrawing").append(
+                            $('<option>', {
+                                value: "select",
+                                text: "Select Drawing",
+                                id: "selectDrawing1"
+                            })
+                        );
+                        $("#selectDrawing1").attr("hidden", "");
+                    }
+                    else {
+                        $.ajax({
+                            type: "GET",
+                            url: linkController.DrawingSettings.Detail,
+                            data: { drawingSettingsId: lastClickedLink.DrawingSettingsId },
+                            success: function (response) {
+                                var drawingSettingsDetail = jQuery.parseJSON(response);
 
-                            if (selectedDrawing != null) {
                                 $("#addLinkSelectDrawing").append(
                                     $('<option>', {
-                                        value: selectedDrawing.Id,
-                                        text: selectedDrawing.Name,
+                                        value: drawingSettingsDetail.Id,
+                                        text: drawingSettingsDetail.DrawingNo,
                                         id: "selectDrawing"
                                     })
                                 );
                                 $("#selectDrawing").attr("hidden", "");
+                            },
+                            error: function (error) {
+                                alert("error!");
+                                console.log(error.responseText);
                             }
-                            else {
-                                $("#addLinkSelectDrawing").append(
-                                    $('<option>', {
-                                        value: "select",
-                                        text: "Select Drawing",
-                                        id: "selectDrawing"
-                                    })
-                                );
-                                $("#selectDrawing").attr("hidden", "");
-                            }
+                        });
+                    }
 
-                            for (var i = 0; i < allDrawings.length; i++) {
-                                $("#addLinkSelectDrawing").append(
-                                    $('<option>', {
-                                        value: allDrawings[i].Id,
-                                        text: allDrawings[i].Name,
-                                    })
-                                );
-                            }
-                            // #endregion
+                    for (var i = 0; i < allDrawingSettings.length; i++) {
+                        $("#addLinkSelectDrawing").append(
+                            $('<option>', {
+                                value: allDrawingSettings[i].Id,
+                                text: allDrawingSettings[i].DrawingNo,
+                            })
+                        );
+                    }
 
-                        },
-                        error: function (error) {
-                            alert("error!");
-                            console.log(error.responseText);
-                        }
-                    });
+                    $("div.selectOpt select").val(lastClickedLink.DrawingSettingsId);
+                    $("#addLinkSelectDrawing option[value='1']").remove();
+
+                    // #endregion
                 },
                 error: function (error) {
                     alert("error!");
@@ -79,80 +84,36 @@
                 $("#linkShowLabel").prop('checked', true);
             else $("#linkShowLabel").prop('checked', false);
 
-            // #region Get All Drawings for Select/Option
+            // #region Get All Drawing Settings for Select Drawing (Select/Option)
             $.ajax({
                 type: "GET",
-                url: fileController.GetAllDrawings,
+                url: linkController.DrawingSettings.List,
                 success: function (response) {
-                    allDrawings = jQuery.parseJSON(response);
+                    var allDrawingSettings = jQuery.parseJSON(response);
 
                     // #region Create & Configure Select > Option
                     $("#addLinkSelectDrawing").children().remove();
 
-                    $.ajax({
-                        type: "GET",
-                        url: fileController.Detail,
-                        data: { fileId: lastCreatedLink.CurrentDrawingId },
-                        success: function (response) {
-                            var selectedDrawing = jQuery.parseJSON(response);
+                    $("#addLinkSelectDrawing").append(
+                        $('<option>', {
+                            value: "select",
+                            text: "Select Drawing",
+                            id: "selectDrawing2"
+                        })
+                    );
+                    $("#selectDrawing2").attr("hidden", "");
 
-                            if (selectedDrawing != null) {
-                                $("#addLinkSelectDrawing").append(
-                                    $('<option>', {
-                                        value: selectedDrawing.Id,
-                                        text: selectedDrawing.Name,
-                                        id: "selectDrawing"
-                                    })
-                                );
-                                $("#selectDrawing").attr("hidden", "");
-                            }
-                            else {
-                                $("#addLinkSelectDrawing").append(
-                                    $('<option>', {
-                                        value: "select",
-                                        text: "Select Drawing",
-                                        id: "selectDrawing"
-                                    })
-                                );
-                                $("#selectDrawing").attr("hidden", "");
-                            }
+                    for (var i = 0; i < allDrawingSettings.length; i++) {
+                        $("#addLinkSelectDrawing").append(
+                            $('<option>', {
+                                value: allDrawingSettings[i].Id,
+                                text: allDrawingSettings[i].DrawingNo,
+                            })
+                        );
+                    }
 
-                            for (var i = 0; i < allDrawings.length; i++) {
-                                $("#addLinkSelectDrawing").append(
-                                    $('<option>', {
-                                        value: allDrawings[i].Id,
-                                        text: allDrawings[i].Name,
-                                    })
-                                );
-                            }
-                            // #endregion
+                    $("#addLinkSelectDrawing option[value='1']").remove();
 
-                        },
-                        error: function (error) {
-                            alert("error!");
-                            console.log(error.responseText);
-                        }
-                    });
-
-                    //$("#addLinkSelectDrawing").children().remove();
-
-                    //$("#addLinkSelectDrawing").append(
-                    //    $('<option>', {
-                    //        value: "select",
-                    //        text: "Select Drawing",
-                    //        id: "selectDrawing"
-                    //    })
-                    //);
-                    //$("#selectDrawing").attr("hidden", "");
-
-                    //for (var i = 0; i < allDrawings.length; i++) {
-                    //    $("#addLinkSelectDrawing").append(
-                    //        $('<option>', {
-                    //            value: allDrawings[i].Id,
-                    //            text: allDrawings[i].Name
-                    //        })
-                    //    );
-                    //}
                     // #endregion
                 },
                 error: function (error) {
@@ -186,15 +147,15 @@ function linkModalSaveButton() {
     link.ShowLabel = $('#linkShowLabel').prop('checked');
 
     if ($("#addLinkSelectDrawing").val() != "select")
-        link.CurrentDrawingId = $("#addLinkSelectDrawing").val();
+        link.DrawingSettingsId = $("#addLinkSelectDrawing").val();
 
     $.ajax({
         type: "POST",
         url: linkController.Link.Update,
         data: { model: link },
-        success: function (response) {
-            rModel = jQuery.parseJSON(response);
+        success: function () {
             clickedOrCreated = "null";
+
             function wait() {
                 selectedFeature.setProperties({ 'Name': link.TagNo });
                 updateDrawingFeatures();
@@ -213,44 +174,6 @@ function linkModalSaveButton() {
         }
     });
 
-    $.ajax({
-        type: "GET",
-        url: linkController.DrawingSettings.Detail,
-        data: { quartzLinkId: link.Id },
-        success: function (response) {
-            linksDrawingSettings = jQuery.parseJSON(response);
-            linksDrawingSettings.DrawingNo = link.TagNo;
-            linksDrawingSettings.File = link.CurrentDrawingId;
-
-            $.ajax({
-                type: "POST",
-                url: linkController.DrawingSettings.Update,
-                data: { model: linksDrawingSettings },
-                success: function (response) {
-                    function wait() {
-                        selectedFeature.setProperties({ 'Name': link.TagNo });
-                        updateDrawingFeatures();
-                        //vectorLayer.getSource().removeFeature(selectedFeature);
-                        //setTimeout(() => { source.addFeature(selectedFeature); }, 750);
-                        source.clear();
-                        addFeatureToSource();
-                    }
-                    //setTimeout(wait, 200);
-                },
-                error: function (error) {
-                    alert("error!");
-                    console.log(error.responseText);
-                }
-            });
-        },
-        error: function (error) {
-            alert("error!");
-            console.log(error.responseText);
-        }
-    });
-
-
-
     document.getElementById("AddLinkUploadDrawingArea").setAttribute("hidden", "");
     document.getElementById("AddLinkUploadDrawingAreaCreatedMode").setAttribute("hidden", "");
 
@@ -260,168 +183,170 @@ function linkModalSaveButton() {
         lastCreatedLink = link;
 }
 
-function goCurrentLink() {
-    var link;
-    if (clickedOrCreated == "clicked")
-        link = lastClickedLink;
-    if (clickedOrCreated == "created")
-        link = lastCreatedLink;
+// #region Go Current Link [DISABLED]
+//function goCurrentLink() {
+//    var link;
+//    if (clickedOrCreated == "clicked")
+//        link = lastClickedLink;
+//    if (clickedOrCreated == "created")
+//        link = lastCreatedLink;
 
-    if (link.CurrentDrawingId != $("#addLinkSelectDrawing").val()) {
-        link.CurrentDrawingId = $("#addLinkSelectDrawing").val();
+//    if (link.CurrentDrawingId != $("#addLinkSelectDrawing").val()) {
+//        link.CurrentDrawingId = $("#addLinkSelectDrawing").val();
 
-        if (link.TagNo != $("#addLinkTagNo").val()) {
-            link.TagNo = $("#addLinkTagNo").val();
+//        if (link.TagNo != $("#addLinkTagNo").val()) {
+//            link.TagNo = $("#addLinkTagNo").val();
 
-            $.ajax({
-                type: "GET",
-                url: linkController.DrawingSettings.Detail,
-                data: { quartzLinkId: link.Id },
-                success: function (response) {
-                    var linksDrawingSettings = jQuery.parseJSON(response);
-                    linksDrawingSettings.DrawingNo = $("#addLinkTagNo").val();
-                    linksDrawingSettings.File = $("#addLinkSelectDrawing").val();
-                    $.ajax({
-                        type: "POST",
-                        url: linkController.DrawingSettings.Update,
-                        data: { model: linksDrawingSettings },
-                        success: function (response) {
-                        },
-                        error: function (error) {
-                            alert("error!");
-                            console.log(error.responseText);
-                        }
-                    });
-                },
-                error: function (error) {
-                    alert("error!");
-                    console.log(error.responseText);
-                }
-            });
+//            $.ajax({
+//                type: "GET",
+//                url: linkController.DrawingSettings.Detail,
+//                data: { quartzLinkId: link.Id },
+//                success: function (response) {
+//                    var linksDrawingSettings = jQuery.parseJSON(response);
+//                    linksDrawingSettings.DrawingNo = $("#addLinkTagNo").val();
+//                    linksDrawingSettings.File = $("#addLinkSelectDrawing").val();
+//                    $.ajax({
+//                        type: "POST",
+//                        url: linkController.DrawingSettings.Update,
+//                        data: { model: linksDrawingSettings },
+//                        success: function (response) {
+//                        },
+//                        error: function (error) {
+//                            alert("error!");
+//                            console.log(error.responseText);
+//                        }
+//                    });
+//                },
+//                error: function (error) {
+//                    alert("error!");
+//                    console.log(error.responseText);
+//                }
+//            });
 
-            selectedFeature.setProperties({ 'Name': $("#addLinkTagNo").val() });
+//            selectedFeature.setProperties({ 'Name': $("#addLinkTagNo").val() });
 
-            updateDrawingFeatures();
-        }
+//            updateDrawingFeatures();
+//        }
 
-        $.ajax({
-            type: "POST",
-            url: linkController.Link.Update,
-            data: { model: link },
-            succes: function (response) {
-                link = jQuery.parseJSON(response);
-            },
-            error: function (error) {
-                alert("error!");
-                console.log(error.responseText);
-            }
-        });
-    }
-    else {
-        if (link.TagNo != $("#addLinkTagNo").val()) {
-            link.TagNo = $("#addLinkTagNo").val();
-            $.ajax({
-                type: "POST",
-                url: linkController.Link.Update,
-                data: { model: link },
-                success: function (response) {
-                    link = jQuery.parseJSON(response);
-                },
-                error: function (error) {
-                    alert("error!");
-                    console.log(error.responseText);
-                }
-            });
+//        $.ajax({
+//            type: "POST",
+//            url: linkController.Link.Update,
+//            data: { model: link },
+//            succes: function (response) {
+//                link = jQuery.parseJSON(response);
+//            },
+//            error: function (error) {
+//                alert("error!");
+//                console.log(error.responseText);
+//            }
+//        });
+//    }
+//    else {
+//        if (link.TagNo != $("#addLinkTagNo").val()) {
+//            link.TagNo = $("#addLinkTagNo").val();
+//            $.ajax({
+//                type: "POST",
+//                url: linkController.Link.Update,
+//                data: { model: link },
+//                success: function (response) {
+//                    link = jQuery.parseJSON(response);
+//                },
+//                error: function (error) {
+//                    alert("error!");
+//                    console.log(error.responseText);
+//                }
+//            });
 
-            $.ajax({
-                type: "GET",
-                url: linkController.DrawingSettings.Detail,
-                data: { quartzLinkId: link.Id },
-                success: function (response) {
-                    var linksDrawingSettings = jQuery.parseJSON(response);
-                    linksDrawingSettings.DrawingNo = $("#addLinkTagNo").val();
-                    $.ajax({
-                        type: "POST",
-                        url: linkController.DrawingSettings.Update,
-                        data: { model: linksDrawingSettings },
-                        success: function (response) {
+//            $.ajax({
+//                type: "GET",
+//                url: linkController.DrawingSettings.Detail,
+//                data: { quartzLinkId: link.Id },
+//                success: function (response) {
+//                    var linksDrawingSettings = jQuery.parseJSON(response);
+//                    linksDrawingSettings.DrawingNo = $("#addLinkTagNo").val();
+//                    $.ajax({
+//                        type: "POST",
+//                        url: linkController.DrawingSettings.Update,
+//                        data: { model: linksDrawingSettings },
+//                        success: function (response) {
 
-                        },
-                        error: function (error) {
-                            alert("error!");
-                            console.log(error.responseText);
-                        }
-                    });
-                },
-                error: function (error) {
-                    alert("error!");
-                    console.log(error.responseText);
-                }
-            });
+//                        },
+//                        error: function (error) {
+//                            alert("error!");
+//                            console.log(error.responseText);
+//                        }
+//                    });
+//                },
+//                error: function (error) {
+//                    alert("error!");
+//                    console.log(error.responseText);
+//                }
+//            });
 
-            selectedFeature.setProperties({ 'Name': $("#addLinkTagNo").val() });
+//            selectedFeature.setProperties({ 'Name': $("#addLinkTagNo").val() });
 
-            updateDrawingFeatures();
-        }
-    }
+//            updateDrawingFeatures();
+//        }
+//    }
 
-    currentQuartzLink = link;
+//    currentQuartzLink = link;
 
-    $.ajax({
-        type: "GET",
-        url: linkController.DrawingFeatures.GetVectorSource,
-        data: { quartzLinkId: link.Id },
-        success: function (response) {
-            currentDrawingFeatures = jQuery.parseJSON(response);
+//    $.ajax({
+//        type: "GET",
+//        url: linkController.DrawingFeatures.GetVectorSource,
+//        data: { quartzLinkId: link.Id },
+//        success: function (response) {
+//            currentDrawingFeatures = jQuery.parseJSON(response);
 
-            $.ajax({
-                type: "GET",
-                url: fileController.Detail,
-                data: { fileId: link.CurrentDrawingId },
-                success: function (response) {
-                    currentDrawing = jQuery.parseJSON(response);
-                    $.ajax({
-                        type: "GET",
-                        url: linkController.QuartzPartialView,
-                        success: function (html) {
-                            $("#main").children().remove();
-                            $("#main").html(html);
+//            $.ajax({
+//                type: "GET",
+//                url: fileController.Detail,
+//                data: { fileId: link.CurrentDrawingId },
+//                success: function (response) {
+//                    currentDrawing = jQuery.parseJSON(response);
+//                    $.ajax({
+//                        type: "GET",
+//                        url: linkController.QuartzPartialView,
+//                        success: function (html) {
+//                            $("#main").children().remove();
+//                            $("#main").html(html);
 
-                            loadQuartz();
+//                            loadQuartz();
 
-                            crumbCount++;
-                            $(".breadCrumb").append(
-                                $('<li>', {
-                                    text: currentQuartzLink.TagNo,
-                                    value: crumbCount,
-                                    onclick: "goDrawing(" + currentQuartzLink.Id + " , " + currentQuartzLink.CurrentDrawingId + " , " + crumbCount + ")",
-                                    class: "crumb"
-                                })
-                            );
+//                            crumbCount++;
+//                            $(".breadCrumb").append(
+//                                $('<li>', {
+//                                    text: currentQuartzLink.TagNo,
+//                                    value: crumbCount,
+//                                    onclick: "goDrawing(" + currentQuartzLink.Id + " , " + currentQuartzLink.CurrentDrawingId + " , " + crumbCount + ")",
+//                                    class: "crumb"
+//                                })
+//                            );
 
-                            if (clickedOrCreated == "clicked")
-                                lastClickedLink = link;
-                            if (clickedOrCreated == "created")
-                                lastCreatedLink = link;
-                        },
-                        error: function (error) {
-                            alert("error!");
-                            console.log(error.responseText);
-                        }
-                    });
-                },
-                error: function (error) {
-                    alert("error!");
-                    console.log(error.responseText);
-                }
-            });
-        },
-        error: function (error) {
-            alert("error!");
-            console.log(error.responseText);
-        }
-    });
-}
+//                            if (clickedOrCreated == "clicked")
+//                                lastClickedLink = link;
+//                            if (clickedOrCreated == "created")
+//                                lastCreatedLink = link;
+//                        },
+//                        error: function (error) {
+//                            alert("error!");
+//                            console.log(error.responseText);
+//                        }
+//                    });
+//                },
+//                error: function (error) {
+//                    alert("error!");
+//                    console.log(error.responseText);
+//                }
+//            });
+//        },
+//        error: function (error) {
+//            alert("error!");
+//            console.log(error.responseText);
+//        }
+//    });
+//}
+// #endregion
 
 $("#deleteLink").on('click', function () {
     // clicked/created

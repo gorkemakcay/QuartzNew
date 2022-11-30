@@ -7,7 +7,73 @@
 function createPDF() {
     switch (activeSearch) {
         case "drawing":
+            // open pdf's modal
+            //$("#showPdfeModal").modal("toggle");
 
+            // #region PDF HEADER
+            $("#showPdfModalPartialArea").children().remove();
+            $("#showPdfModalPartialArea").html(`
+                <div id="drawingPDF" style="font-size: 12px;">
+                    <page size="A4">
+                        <br />
+                        <h5><strong>QUARTZ Search Report - Drawing Details</strong></h5>
+                        <br />
+                        <h6 style="color: gray;">Project: ` + projectName + `</h6>
+                        <h6 style="color: gray;">Date: `+ getDate().split('T')[0] + `</h6>
+                        <br />
+                        <br />
+                        <br />
+                        <div id="drawingTableArea">
+                        </div>
+                    </page>
+                </div>
+            `);
+            // #endregion
+
+            // #region Drawing Table
+            $("#drawingTableArea").append(`
+                <div style="border: 1px solid black">
+                    <table class="table table-hover text-sm table-responsive-sm table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 12%;">Drawing No</th>
+                                <th class="text-center" style="width: 12%;">Plant Area</th>
+                                <th class="text-center" style="width: 12%;">Plant System</th>
+                                <th class="text-center" style="width: 12%;">Description</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="drawingSettingsTablesBody">
+                        </tbody>
+                    </table>
+                </div>
+            `);
+
+            printDrawingModelsArray.forEach(function (drawing) {
+                $(".drawingSettingsTablesBody").append(
+                    $('<tr>').append(
+                        $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '12%').css('max-width', '12%').append(
+                            drawing.DrawingNo
+                        ),
+                        $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '12%').css('max-width', '12%').append(
+                            drawing.PlantArea
+                        ),
+                        $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '12%').css('max-width', '12%').append(
+                            drawing.PlantSystem
+                        ),
+                        $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '40%').css('max-width', '40%').append(
+                            drawing.Description
+                        )
+                    )
+                );
+            });
+            // #endregion
+
+            // Download PDF
+            createDrawingPDF();
+            break;
+
+        case "link":
             // open pdf's modal
             //$("#showPdfeModal").modal("toggle");
 
@@ -15,12 +81,12 @@ function createPDF() {
             $("#showPdfModalPartialArea").children().remove();
             $("#showPdfModalPartialArea").html(
                 `
-                    <div id="drawingPDF" style="font-size: 12px;">
+                    <div id="linkPDF" style="font-size: 12px;">
                         <page size="A4">
                             <br />
-                            <h5><strong>QUARTZ Search Report - Drawing Details</strong></h5>
+                            <h5><strong>QUARTZ Search Report - Link Details</strong></h5>
                             <br />
-                            <h6 style="color: gray;">Project: GORKEM'S PROJECT</h6>
+                            <h6 style="color: gray;">Project: ` + projectName + `</h6>
                             <h6 style="color: gray;">Date: `+ getDate().split('T')[0] + `</h6>
                             <br />
                             <br />
@@ -33,113 +99,110 @@ function createPDF() {
             );
             // #endregion
 
-            // #region drawing'in yapıldığı çizimlerin isimlerinin tutulduğu dizi
+            // #region link'in yapıldığı çizimlerin isimlerinin tutulduğu dizi
             allDrawingReferences = [];
             drawingsPlantAreas = [];
-            printDrawingModelsArray.forEach(function (drawing) {
-                //console.log(drawing);
-                if (!allDrawingReferences.includes(drawing.MainLinkName)) {
-                    allDrawingReferences.push(drawing.MainLinkName);
-                    drawingsPlantAreas.push(drawing.MainLinkPlantArea);
+            printLinkModelsArray.forEach(function (link) {
+                if (link.MainDrawingSettings != "-") {
+
+
+                    if (!allDrawingReferences.includes(link.MainDrawingSettings)) {
+                        $.ajax({
+                            async: false,
+                            type: "GET",
+                            url: linkController.DrawingSettings.Detail,
+                            data: { drawingSettingsId: link.MainDrawingSettingsId },
+                            success: function (response) {
+                                var drawingSettingsDetail = jQuery.parseJSON(response);
+                                allDrawingReferences.push(drawingSettingsDetail.DrawingNo);
+                                drawingsPlantAreas.push(drawingSettingsDetail.PlantArea);
+                            },
+                            error: function (error) {
+                                alert("error!");
+                                console.log(error.responseText);
+                            }
+                        });
+                    }
                 }
             });
             // #endregion
 
-            // #region Main Link's Table
-            $("#drawingTableArea").append(`
-                <div>
-                    <p class="pdfHeader"><strong>Main Link: </strong> `+ mainDrawingModel.TagNo + `</p>
-                </div>
-
-                <div style="border: 3px solid black">
-                    <table class="table table-hover text-sm table-responsive-sm table-sm mb-0">
-                        <thead>
-                            <tr>
-                                <th class="text-center" style="width: 15%;">Plant Area</th>
-                                <th class="text-center" style="width: 15%;">Plant System</th>
-                                <th class="text-center" style="width: 15%;">Created Date</th>
-                                <th class="text-center" style="width: 15%;">Created By</th>
-                                <th class="text-center" style="width: 40%;">Description</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr style="border-bottom: 0px solid white">
-                                <td class="text-center" style="word-wrap: break-word; min-width: 15%; max-width: 15%;">
-                                    `+ mainDrawingModel.PlantArea + `
-                                </td>
-                                <td class="text-center" style="word-wrap: break-word; min-width: 15%; max-width: 15%;">
-                                    `+ mainDrawingModel.PlantSystem + `
-                                </td>
-                                <td class="text-center" style="word-wrap: break-word; min-width: 15%; max-width: 15%;">
-                                    `+ mainDrawingModel.CreatedDate.split('T')[0] + `
-                                </td>
-                                <td class="text-center" style="word-wrap: break-word; min-width: 15%; max-width: 15%;">
-                                    `+ mainDrawingModel.CreatedBy + `
-                                </td>
-                                <td class="text-center" style="word-wrap: break-word; min-width: 40%; max-width: 40%;">
-                                    `+ mainDrawingModel.Description + `
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br />
-                <br />
-            `);
-            // #endregion
-
             // #region Drawing Table
             for (var i = 0; i < allDrawingReferences.length; i++) {
-                $("#drawingTableArea").append(`
-                    <div>
-                        <p class="m-0 pdfHeader"><strong>Plant Area: </strong> `+ drawingsPlantAreas[i] + `</p>
-                        <p class="pdfHeader"><strong>Drawing Location:</strong> `+ allDrawingReferences[i] + `</p>
-                    </div>
+                if (allDrawingReferences[i] == "General") {
+                    $("#drawingTableArea").append(`
+                        <div>
+                            <p class="pdfHeader"><strong>Main Link</strong></p>
+                        </div>
 
-                    <div style="border: 1px solid black">
-                        <table class="table table-hover text-sm table-responsive-sm table-sm mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="text-center" style="width: 12%;">Tag No</th>
-                                    <th class="text-center" style="width: 12%;">Plant Area</th>
-                                    <th class="text-center" style="width: 12%;">Plant System</th>
-                                    <th class="text-center" style="width: 12%;">Created Date</th>
-                                    <th class="text-center" style="width: 12%;">Created By</th>
-                                    <th class="text-center" style="width: 40%;">Description</th>
-                                </tr>
-                            </thead>
+                        <div style="border: 1px solid black">
+                            <table class="table table-hover text-sm table-responsive-sm table-sm mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 12%;">Tag No</th>
+                                        <th class="text-center" style="width: 12%;">Belongs Drawing</th>
+                                        <th class="text-center" style="width: 12%;">Contains Drawing</th>
+                                        <th class="text-center" style="width: 12%;">Created Date</th>
+                                        <th class="text-center" style="width: 12%;">Created By</th>
+                                    </tr>
+                                </thead>
 
-                            <tbody class="`+ allDrawingReferences[i] + `TablesBody">
-                            </tbody>
-                        </table>
-                    </div>
+                                <tbody class="`+ allDrawingReferences[i] + `TablesBody">
+                                </tbody>
+                            </table>
+                        </div>
 
-                    <br />
-                    <br />
+                        <br />
+                        <br />
                 `);
+                }
+                else {
+                    $("#drawingTableArea").append(`
+                        <div>
+                            <p class="m-0 pdfHeader"><strong>Plant Area: </strong> `+ drawingsPlantAreas[i] + `</p>
+                            <p class="pdfHeader"><strong>Drawing Location:</strong> `+ allDrawingReferences[i] + `</p>
+                        </div>
 
-                printDrawingModelsArray.forEach(function (drawing) {
-                    if (allDrawingReferences[i] == drawing.MainLinkName) {
+                        <div style="border: 1px solid black">
+                            <table class="table table-hover text-sm table-responsive-sm table-sm mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 12%;">Tag No</th>
+                                        <th class="text-center" style="width: 12%;">Belongs Drawing</th>
+                                        <th class="text-center" style="width: 12%;">Contains Drawing</th>
+                                        <th class="text-center" style="width: 12%;">Created Date</th>
+                                        <th class="text-center" style="width: 12%;">Created By</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="`+ allDrawingReferences[i] + `TablesBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <br />
+                        <br />
+                    `);
+                }
+
+                printLinkModelsArray.forEach(function (link) {
+                    if (allDrawingReferences[i] == link.MainDrawingSettings) {
                         $("." + allDrawingReferences[i] + "TablesBody").append(
                             $('<tr>').append(
                                 $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '12%').css('max-width', '12%').append(
-                                    drawing.TagNo
+                                    link.TagNo
                                 ),
                                 $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '12%').css('max-width', '12%').append(
-                                    drawing.PlantArea
+                                    link.MainDrawingSettings
                                 ),
                                 $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '12%').css('max-width', '12%').append(
-                                    drawing.PlantSystem
+                                    link.DrawingSettings
                                 ),
                                 $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '12%').css('max-width', '12%').append(
-                                    drawing.CreatedDate.split('T')[0]
+                                    link.CreatedDate.split('T')[0]
                                 ),
                                 $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '12%').css('max-width', '12%').append(
-                                    drawing.CreatedBy
-                                ),
-                                $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '40%').css('max-width', '40%').append(
-                                    drawing.Description
+                                    link.CreatedBy
                                 )
                             )
                         );
@@ -153,7 +216,7 @@ function createPDF() {
             drawingsPlantAreas = [];
 
             // Download PDF
-            createDrawingPDF();
+            createLinkPDF();
             break;
 
         case "item":
@@ -169,7 +232,7 @@ function createPDF() {
                         <br />
                         <h5><strong>QUARTZ Search Report - Item Details</strong></h5>
                         <br />
-                        <h6 style="color: gray;">Project: GORKEM'S PROJECT</h6>
+                        <h6 style="color: gray;">Project: ` + projectName + `</h6>
                         <h6 style="color: gray;">Date: `+ getDate().split('T')[0] + `</h6>
                         <br />
                         <div id="itemTableArea">
@@ -247,8 +310,8 @@ function createPDF() {
                 allDrawingReferences = [];
                 drawingsPlantAreas = [];
 
-            // Download PDF
-            createItemPDF();
+                // Download PDF
+                createItemPDF();
             }
             // #endregion
             break;
@@ -266,7 +329,7 @@ function createPDF() {
                         <br />
                         <h5><strong>QUARTZ Search Report - Inspection Details</strong></h5>
                         <br />
-                        <h6 style="color: gray;">Project: GORKEM'S PROJECT</h6>
+                        <h6 style="color: gray;">Project: ` + projectName + `</h6>
                         <h6 style="color: gray;">Date: `+ getDate().split('T')[0] + `</h6>
                         <br />
                         <div id="inspectionTableArea">
@@ -366,7 +429,7 @@ function createPDF() {
                         <br />
                         <h5><strong>QUARTZ Search Report - Valve Maintenance Details</strong></h5>
                         <br />
-                        <h6 style="color: gray;">Project: GORKEM'S PROJECT</h6>
+                        <h6 style="color: gray;">Project: ` + projectName + `</h6>
                         <h6 style="color: gray;">Date: `+ getDate().split('T')[0] + `</h6>
                         <br />
                         <div id="valveMaintenanceTableArea">
@@ -395,7 +458,7 @@ function createPDF() {
                         <p class="pdfHeader"><strong>Drawing Location:</strong> `+ allDrawingReferences[i] + `</p>
                     </div>
 
-                    <div class="`+ allDrawingReferences[i]+`VmArea">
+                    <div class="`+ allDrawingReferences[i] + `VmArea">
                        
                     </div>
 
@@ -410,15 +473,15 @@ function createPDF() {
                         
                                 <div class="row">
                                     <div class="col-4">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>KKS No:</strong> `+ valveMaintenance.KKSNo +`</p>
+                                        <p class="my-1" style="padding-left: 5px;"><strong>KKS No:</strong> `+ valveMaintenance.KKSNo + `</p>
                                     </div>
                         
                                     <div class="col-4">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>Serial No:</strong> `+ valveMaintenance.SerialNo +`</p>
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Serial No:</strong> `+ valveMaintenance.SerialNo + `</p>
                                     </div>
                         
                                     <div class="col-4">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>Plant Area:</strong> `+ valveMaintenance.PlantArea +`</p>
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Plant Area:</strong> `+ valveMaintenance.PlantArea + `</p>
                                     </div>
                                 </div>
                         
@@ -426,15 +489,15 @@ function createPDF() {
                         
                                 <div class="row">
                                     <div class="col-4">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>Ideal Barg:</strong> `+ valveMaintenance.IdealBarg +`</p>
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Ideal Barg:</strong> `+ valveMaintenance.IdealBarg + `</p>
                                     </div>
                                     
                                     <div class="col-4">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>Opening Pressure Barg:</strong> `+ valveMaintenance.OpeningPressureBarg +`</p>
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Opening Pressure Barg:</strong> `+ valveMaintenance.OpeningPressureBarg + `</p>
                                     </div>
                         
                                     <div class="col-4">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>Test Date:</strong> `+ valveMaintenance.TestDate +`</p>
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Test Date:</strong> `+ valveMaintenance.TestDate + `</p>
                                     </div>
                                 </div>
                         
@@ -442,11 +505,11 @@ function createPDF() {
                         
                                 <div class="row">
                                     <div class="col-6">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>Supplier Manufacturare:</strong> `+ valveMaintenance.SupplierManufacturare +`</p>
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Supplier Manufacturare:</strong> `+ valveMaintenance.SupplierManufacturare + `</p>
                                     </div>
                         
                                     <div class="col-6">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>Designation:</strong> `+ valveMaintenance.Designation +`</p>
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Designation:</strong> `+ valveMaintenance.Designation + `</p>
                                     </div>
                                 </div>
                         
@@ -454,7 +517,7 @@ function createPDF() {
                         
                                 <div class="row">
                                     <div class="col-12">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>Remarks:</strong> `+ valveMaintenance.Remarks +`</p>
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Remarks:</strong> `+ valveMaintenance.Remarks + `</p>
                                     </div>
                               </div>
                         
@@ -486,7 +549,7 @@ function createPDF() {
                         <br />
                         <h5><strong>QUARTZ Search Report - Thickness Measurement Details</strong></h5>
                         <br />
-                        <h6 style="color: gray;">Project: GORKEM'S PROJECT</h6>
+                        <h6 style="color: gray;">Project: ` + projectName + `</h6>
                         <h6 style="color: gray;">Date: `+ getDate().split('T')[0] + `</h6>
                         <br />
                         <div id="thicknessMeasurementTableArea">
@@ -586,6 +649,17 @@ function createDrawingPDF() {
     var pdf = document.getElementById("drawingPDF");
     var opt = {
         filename: 'Drawing_Report.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(pdf).save();
+}
+
+function createLinkPDF() {
+    var pdf = document.getElementById("linkPDF");
+    var opt = {
+        filename: 'Link_Report.pdf',
         image: { type: 'jpeg', quality: 1 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }

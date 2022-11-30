@@ -18,20 +18,25 @@
 
 // #region DSM - Save Button
 $("#btnDsmSave").on('click', function () {
+
+    // kaydedilecek drawing settings'in modeli
     var drawingSettingsModel = {
         Id: currentDrawingSettings.Id,
         DrawingNo: $("#dsmDrawingNo").val(),
         Description: $("#dsmDrawingDescription").val(),
-        File: $("#dsmSelectDrawing").val(),
+        CurrentDrawingId: $("#dsmSelectDrawing").val(),
         PlantArea: $("#dsmPlantArea").val(),
         PlantSystem: $("#dsmPlantSystem").val(),
-        QuartzLinkId: currentQuartzLink.Id
     }
 
-    if (currentDrawingSettings.File != $("#dsmSelectDrawing").val()) {
-        currentDrawingSettings.File = $("#dsmSelectDrawing").val();
-        drawingSettingsModel.File = currentDrawingSettings.File;
+    // kaydet butonuna basılmadan önce drawing settings'in çiziminin değiştirilip değiştirilmediğinin kontrolü
+    if (currentDrawingSettings.CurrentDrawingId != $("#dsmSelectDrawing").val()) {
 
+        // modellerin anlık çizimlerini güncelleme
+        currentDrawingSettings.CurrentDrawingId = $("#dsmSelectDrawing").val();
+        drawingSettingsModel.CurrentDrawingId = currentDrawingSettings.CurrentDrawingId;
+
+        // mevcut drawing settings güncelleme
         $.ajax({
             type: "POST",
             url: linkController.DrawingSettings.Update,
@@ -39,22 +44,20 @@ $("#btnDsmSave").on('click', function () {
             success: function (response) {
                 currentDrawingSettings = jQuery.parseJSON(response);
 
+                // mevcut çizim güncelleme
                 $.ajax({
                     type: "GET",
                     url: fileController.Detail,
-                    data: { fileId: currentDrawingSettings.File },
+                    data: { fileId: currentDrawingSettings.CurrentDrawingId },
                     success: function (response) {
                         currentDrawing = jQuery.parseJSON(response);
+
+                        // quartz ekranını güncelleme
                         $.ajax({
                             type: "GET",
                             url: linkController.QuartzPartialView,
                             success: function (html) {
                                 refreshQuartz();
-
-                                //$("#main").children().remove();
-                                //$("#main").html(html);
-
-                                //loadQuartz();
                             },
                             error: function (error) {
                                 alert("error!");
@@ -75,50 +78,13 @@ $("#btnDsmSave").on('click', function () {
             }
         });
     }
-
-    if (currentDrawingSettings.DrawingNo != $("#dsmDrawingNo").val()) {
-        currentQuartzLink.TagNo = $("#dsmDrawingNo").val();
-
-        if (currentQuartzLink.MainQuartzLinkId != 0) {
-            $.ajax({
-                type: "GET",
-                url: linkController.DrawingFeatures.GetVectorSource,
-                data: { quartzLinkId: currentQuartzLink.MainQuartzLinkId },
-                success: function (response) {
-                    var drawingFeatures = jQuery.parseJSON(response);
-                    var drawingFeaturesParse = jQuery.parseJSON(drawingFeatures.Features);
-
-                    drawingFeaturesParse.features.forEach(function (feature) {
-                        if (feature.properties.Id == currentQuartzLink.Id) {
-                            feature.properties.Name = currentQuartzLink.TagNo;
-                            drawingFeatures.Features = JSON.stringify(drawingFeaturesParse);
-                            $.ajax({
-                                type: "POST",
-                                url: linkController.DrawingFeatures.Update,
-                                data: { model: drawingFeatures },
-                                error: function (error) {
-                                    alert("error!");
-                                    console.log(error.responseText);
-                                }
-                            });
-                            return;
-                        }
-                    });
-                },
-                error: function (error) {
-                    alert("error!");
-                    console.log(error.responseText);
-                }
-            });
-        }
-
+    else {
         $.ajax({
             type: "POST",
-            url: linkController.Link.Update,
-            data: { model: currentQuartzLink },
+            url: linkController.DrawingSettings.Update,
+            data: { model: drawingSettingsModel },
             success: function (response) {
-                linkDetail = jQuery.parseJSON(response);
-                goDrawingFromSearch(linkDetail.Id);
+                currentDrawingSettings = jQuery.parseJSON(response);
             },
             error: function (error) {
                 alert("error!");
@@ -126,31 +92,6 @@ $("#btnDsmSave").on('click', function () {
             }
         });
     }
-
-    $.ajax({
-        type: "POST",
-        url: linkController.DrawingSettings.Update,
-        data: { model: drawingSettingsModel },
-        success: function (response) {
-            currentDrawingSettings = jQuery.parseJSON(response);
-            function wait() {
-                //selectedFeature.setProperties({ 'Name': link.TagNo });
-                updateDrawingFeatures();
-                source.clear();
-                addFeatureToSource();
-                $("#shapeArea").children().remove();
-                createList();
-                // Load Spinner Yap! [TAMAMLANMADI]
-            }
-            setTimeout(wait, 100);
-            toast("Drawing Settings Updated!");
-        },
-        error: function (error) {
-            alert("error!");
-            console.log(error.responseText);
-        }
-    });
-
 });
 // #endregion
 
@@ -165,8 +106,10 @@ $("#btnDrawingSettings").on('click', function () {
 
 // Data Tab [loadDrawingSettingsDataPage()]
 function loadDrawingSettingsDataPage() {
+    // modal'ın başlığını güncelleme
     $("#dsmTitle").html("Drawing Settings");
     $("#dsmSelectDrawing").removeAttr("disabled");
+
     // #region DSM - Get Drawing Settings Detail from QuartzLink Controller
 
     $.ajax({
@@ -196,7 +139,7 @@ function loadDrawingSettingsDataPage() {
             $.ajax({
                 type: "GET",
                 url: linkController.DrawingSettings.Detail,
-                data: { quartzLinkId: currentQuartzLink.Id },
+                data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
                 success: function (result) {
                     currentDrawingSettings = jQuery.parseJSON(result);
 
@@ -224,7 +167,7 @@ function loadDrawingSettingsDataPage() {
                             $.ajax({
                                 type: "GET",
                                 url: fileController.Detail,
-                                data: { fileId: currentDrawingSettings.File }, // TAMAMLANAMDI BURADA KALDIM
+                                data: { fileId: currentDrawingSettings.CurrentDrawingId }, // TAMAMLANAMDI BURADA KALDIM
                                 success: function (response) {
                                     var selectedDrawing = jQuery.parseJSON(response);
 

@@ -91,9 +91,7 @@ function itemModalSaveButton() { // [TAMAMLANMADI]
             type: "POST",
             url: itemController.Information.Add,
             data: { model: itemInformationAddModel },
-            success: function (response) {
-                rModel = jQuery.parseJSON(response);
-
+            success: function () {
                 $.get({
                     url: itemController.Item.Detail,
                     data: { itemId: item.Id },
@@ -452,7 +450,6 @@ $("#deleteItem").on('click', function () {
 
 // Select/Option's [Get Functions]
 function getInformationSelectOptions() {
-
     // #region Get Component Types for Select/Option
     $.ajax({
         type: "GET",
@@ -462,7 +459,7 @@ function getInformationSelectOptions() {
 
             // #region Create & Configure Select > Option
             $("#informationComponentType").children().remove();
-            if (lastInformationsResponseModel.ComponentType == null) {
+            if (lastInformationsResponseModel.ComponentType == null || lastInformationsResponseModel.ComponentType == "select") {
                 $("#informationComponentType").append(
                     $('<option>', {
                         value: "select",
@@ -509,8 +506,7 @@ function getInformationSelectOptions() {
 
             // #region Create & Configure Select > Option
             $("#informationSpecification").children().remove();
-
-            if (lastInformationsResponseModel.Specification == null) {
+            if (lastInformationsResponseModel.Specification == null || lastInformationsResponseModel.Specification == "select") {
                 $("#informationSpecification").append(
                     $('<option>', {
                         value: "select",
@@ -558,7 +554,7 @@ function getInformationSelectOptions() {
             // #region Create & Configure Select > Option
             $("#informationFittingType").children().remove();
 
-            if (lastInformationsResponseModel.FittingType == null) {
+            if (lastInformationsResponseModel.FittingType == null || lastInformationsResponseModel.FittingType == "select") {
                 $("#informationFittingType").append(
                     $('<option>', {
                         value: "select",
@@ -607,7 +603,7 @@ function getInformationSelectOptions() {
             // #region Create & Configure Select > Option
             $("#informationWeldType").children().remove();
 
-            if (lastInformationsResponseModel.WeldType == null) {
+            if (lastInformationsResponseModel.WeldType == null || lastInformationsResponseModel.WeldType == "select") {
                 $("#informationWeldType").append(
                     $('<option>', {
                         value: "select",
@@ -876,6 +872,27 @@ function loadInformationPage() {
                         data: { quartzItemId: lastClickedItem.Id },
                         success: function (response) {
                             lastInformationsResponseModel = jQuery.parseJSON(response);
+                            var pipeOd;
+                            var pipeThickness;
+                            var operatingTemp;
+                            var operatingPressure;
+
+                            if (lastInformationsResponseModel.PipeOdIn == 0)
+                                pipeOd = "";
+                            else pipeOd = lastInformationsResponseModel.PipeOdIn;
+
+                            if (lastInformationsResponseModel.PipeThicknessMm == 0)
+                                pipeThickness = "";
+                            else pipeThickness = lastInformationsResponseModel.PipeThicknessMm;
+
+                            if (lastInformationsResponseModel.OperatingTempC == 0)
+                                operatingTemp = "";
+                            else operatingTemp = lastInformationsResponseModel.OperatingTempC;
+
+                            if (lastInformationsResponseModel.OperatingPressureBar == 0)
+                                operatingPressure = "";
+                            else operatingPressure = lastInformationsResponseModel.OperatingPressureBar;
+
                             if (lastInformationsResponseModel != null) {
                                 $("#informationTagNo").val(lastInformationsResponseModel.TagNo);
                                 $("#informationSerialNo").val(lastInformationsResponseModel.SerialNo);
@@ -884,10 +901,10 @@ function loadInformationPage() {
                                 $("#informationSpecification").val(lastInformationsResponseModel.Specification);
                                 $("#informationFittingType").val(lastInformationsResponseModel.FittingType);
                                 $("#informationWeldType").val(lastInformationsResponseModel.WeldType);
-                                $("#informationPipeOD").val(lastInformationsResponseModel.PipeOdIn);
-                                $("#informationPipeThickness").val(lastInformationsResponseModel.PipeThicknessMm);
-                                $("#informationOperatingTemp").val(lastInformationsResponseModel.OperatingTempC);
-                                $("#informationOperatingPressute").val(lastInformationsResponseModel.OperatingPressureBar);
+                                $("#informationPipeOD").val(pipeOd);
+                                $("#informationPipeThickness").val(pipeThickness);
+                                $("#informationOperatingTemp").val(operatingTemp);
+                                $("#informationOperatingPressute").val(operatingPressure);
                                 //$("#itemShowLabel").val(lastInformationsResponseModel.ShowLabel);
                                 isInformationCreated = true;
                             }
@@ -934,7 +951,6 @@ function loadInformationPage() {
     });
 
     $("#itemModalBackButton").removeAttr("hidden");
-
 }
 
 // Inspection Page [Load Function]

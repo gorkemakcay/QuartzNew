@@ -8,9 +8,9 @@ function createList() {
     $.ajax({
         type: "GET",
         url: linkController.Link.List,
-        data: { mainLinkId: currentQuartzLink.Id },
+        data: { mainDrawingSettingsId: currentQuartzLink.DrawingSettingsId },
         success: function (response) {
-            allLinks = jQuery.parseJSON(response);
+            var allLinks = jQuery.parseJSON(response);
 
             // #region Create Link Buttons
             allLinks.forEach(function (link) {
@@ -18,6 +18,8 @@ function createList() {
 
                 $("#shapeArea").append(linkButton);
             })
+
+            $("#1").remove();
             // #endregion
         },
         error: function (error) {
@@ -31,10 +33,9 @@ function createList() {
     $.ajax({
         type: "GET",
         url: itemController.Item.List,
-        data: { linkId: currentQuartzLink.Id },
+        data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
         success: function (response) {
-            allItems = jQuery.parseJSON(response);
-
+            var allItems = jQuery.parseJSON(response);
             // #region Create Item Buttons
             allItems.forEach(function (item) {
                 var itemButton = $("<button id=" + item.Id + " name='item' type='button' class='btn text-dark listPanelButtons itemButton'><strong><i class='fa fa-tags'></i>&nbsp;" + item.TagNo + "</strong></button>");
@@ -82,7 +83,7 @@ function createList() {
                         }
                     });
 
-                    if (lastClickedLink.CurrentDrawingId != 0) {
+                    if (lastClickedLink.DrawingSettingsId != 1) {
                         $("#createdLinkMode").attr("hidden", "");
                         $("#clickedLinkMode").removeAttr("hidden");
                     }
