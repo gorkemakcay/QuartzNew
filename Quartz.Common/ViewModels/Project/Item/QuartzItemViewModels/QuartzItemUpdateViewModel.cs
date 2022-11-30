@@ -11,7 +11,7 @@ namespace Quartz.Common.ViewModels.Project.Item.QuartzItemViewModels
         public string CreatedBy { get; set; }
         public bool ShowLabel { get; set; }
         public bool IsInspected { get; set; }
-        public int QuartzLinkId { get; set; }
+        public int DrawingSettingsId { get; set; }
 
     }
 }

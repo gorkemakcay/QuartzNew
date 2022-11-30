@@ -19,7 +19,14 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
             optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
             //optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=Quartz4;uid=umutd;pwd=Ud4583!");
             //optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=Quartz123;uid=umutd;pwd=Ud4583!");
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=QuartzNew;uid=umutd;pwd=Ud4583!");
+
+
+            optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=QuartzNew2;uid=umutd;pwd=Ud4583!");
+
+
+            //optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=QuartzNew;uid=umutd;pwd=Ud4583!");
+
+
             //optionsBuilder.UseSqlServer(@"Server=94.73.170.39;Database=u0406106_Quartz;uid=u0406106_quartz;pwd=ArlentusControl2013**");
             optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             base.OnConfiguring(optionsBuilder);
@@ -53,41 +60,53 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
                 FullName = "Admin Quartz",
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = "a3635eb1-112c-4cca-9e6e-b81e636d99c2",
+                ConcurrencyStamp = "fe13649b-6a19-4964-8db8-1332ba224904",
+                PasswordHash = "AQAAAAEAACcQAAAAECnTVUK/QxKYvnJiVDztpm9YuvXVCbwiW86jvTxkNOXv/27Nzr1OVjy4hbtRdcoZjg==",
             };
 
             #region Set User Password
-            PasswordHasher<AppUser> passwordHasher = new();
-            appUser.PasswordHash = passwordHasher.HashPassword(appUser, "1");
+            //PasswordHasher<AppUser> passwordHasher = new();
+            //appUser.PasswordHash = passwordHasher.HashPassword(appUser, "1");
             #endregion
+
             #endregion
 
             #region Seed User
-            modelBuilder.Entity<AppUser>().HasData(appUser);
+            modelBuilder.Entity<AppUser>(user =>
+            {
+                user.HasData(appUser);
+            });
             #endregion
 
             #region Seed Role
 
             #region Admin
-            modelBuilder.Entity<AppRole>().HasData(
-                new AppRole
-                {
-                    Id = 1,
-                    Name = "Admin",
-                    NormalizedName = "ADMIN",
-                    ConcurrencyStamp = Guid.NewGuid().ToString()
-                });
+            modelBuilder.Entity<AppRole>(role =>
+            {
+                role.HasData(
+                    new AppRole
+                    {
+                        Id = 1,
+                        Name = "Admin",
+                        NormalizedName = "ADMIN",
+                        ConcurrencyStamp = "707b717a-d330-450f-a42c-9f2b7fcdfea1"
+                    });
+            });
             #endregion
 
             #region Operator
-            modelBuilder.Entity<AppRole>().HasData(
-                new AppRole
-                {
-                    Id = 2,
-                    Name = "Operator",
-                    NormalizedName = "OPERATOR",
-                    ConcurrencyStamp = Guid.NewGuid().ToString()
-                });
+            modelBuilder.Entity<AppRole>(role =>
+            {
+                role.HasData(
+                    new AppRole
+                    {
+                        Id = 2,
+                        Name = "Operator",
+                        NormalizedName = "OPERATOR",
+                        ConcurrencyStamp = "6eadcc3d-21a3-41b8-91bd-26988bb8d656"
+                    });
+            });
             #endregion
 
             #endregion
@@ -107,43 +126,79 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
             #region Seed Main Link & Its Relations
 
             #region Main Link
-            modelBuilder.Entity<QuartzLink>().HasData(new QuartzLink
+            modelBuilder.Entity<QuartzLink>(link =>
+            {
+                link.HasData(
+                    new QuartzLink
+                    {
+                        Id = 1,
+                        TagNo = "Main",
+                        ShowLabel = true,
+                        CreatedBy = "QUARTZ",
+                        MainDrawingSettingsId = 0,
+                        DrawingSettingsId = 2,
+                        CreatedDate = new DateTime(2022, 11, 24, 11, 40, 23, 643, DateTimeKind.Local).AddTicks(6434)
+                    });
+            });
+            #endregion
+
+            #region Temporary Link
+            modelBuilder.Entity<QuartzLink>(link =>
+            {
+                link.HasData(
+                    new QuartzLink
+                    {
+                        Id = 2,
+                        TagNo = "Temp",
+                        ShowLabel = true,
+                        CreatedBy = "QUARTZ",
+                        MainDrawingSettingsId = 0,
+                        DrawingSettingsId = 1,
+                        CreatedDate = new DateTime(2022, 11, 24, 11, 40, 23, 643, DateTimeKind.Local).AddTicks(6434)
+                    });
+            });
+            #endregion
+
+            #region General Drawing Settings
+            modelBuilder.Entity<QuartzLinksDrawingSettings>().HasData(new QuartzLinksDrawingSettings
             {
                 Id = 1,
-                TagNo = "Main",
-                ShowLabel = true,
-                CreatedDate = DateTime.Now,
-                CreatedBy = "QUARTZ",
-                MainQuartzLinkId = 0,
+                DrawingNo = "General",
+                Description = null,
                 CurrentDrawingId = 1,
-                Hierarchy = "0"
+                PlantArea = null,
+                PlantSystem = null,
+                AttachmentIds = null
             });
             #endregion
 
             #region Main Link's Drawing Settings
             modelBuilder.Entity<QuartzLinksDrawingSettings>().HasData(new QuartzLinksDrawingSettings
             {
-                Id = 1,
+                Id = 2,
                 DrawingNo = "Main",
                 Description = null,
-                File = "1",
+                CurrentDrawingId = 1,
                 PlantArea = "select",
                 PlantSystem = "select",
-                QuartzLinkId = 1,
                 AttachmentIds = null
             });
             #endregion
 
             #region Main Link's File
-            modelBuilder.Entity<FileUpload>().HasData(new FileUpload
+            modelBuilder.Entity<FileUpload>(file =>
             {
-                Id = 1,
-                Name = "MainDrawing",
-                Type = "image/jpeg",
-                Extension = ".jpg",
-                Path = "wwwroot\\Files\\MainDrawing.jpg",
-                UploadedBy = "QUARTZ",
-                CreatedDate = DateTime.Now
+                file.HasData(
+                    new FileUpload
+                    {
+                        Id = 1,
+                        Name = "MainDrawing",
+                        Type = "image/jpeg",
+                        Extension = ".jpg",
+                        Path = "wwwroot\\Files\\MainDrawing.jpg",
+                        UploadedBy = "QUARTZ",
+                        CreatedDate = new DateTime(2022, 11, 24, 11, 40, 23, 645, DateTimeKind.Local).AddTicks(4467)
+                    });
             });
             #endregion
 
@@ -152,6 +207,7 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
             base.OnModelCreating(modelBuilder);
         }
 
+        #region DbSets
         public DbSet<AppUser> AspNetUsers { get; set; }
         public DbSet<AppRole> AspNetRoles { get; set; }
 
@@ -183,5 +239,6 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
         public DbSet<SearchTag> vw_SearchTag { get; set; }
         public DbSet<SearchDrawing> vw_SearchDrawing { get; set; }
 
+        #endregion
     }
 }

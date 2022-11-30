@@ -5,6 +5,7 @@ using Quartz.DataAccess.Concrete.EntityFramworkCore.Context;
 using Quartz.DataAccess.UnitOfWorks.Interface;
 using Quartz.Entities.Concrete.Project.Link;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Quartz.BusinessLogic.Concrete.ProjectManager.LinkManager
 {
@@ -28,16 +29,14 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.LinkManager
                 ShowLabel = model.ShowLabel,
                 CreatedDate = model.CreatedDate,
                 CreatedBy = model.CreatedBy,
-                MainQuartzLinkId = model.MainQuartzLinkId,
-                CurrentDrawingId = model.CurrentDrawingId,
-                Hierarchy = model.Hierarchy
+                MainDrawingSettingsId = model.MainDrawingSettingsId,
+                DrawingSettingsId = 1
             };
 
             context.QuartzLinks.Add(link);
             context.SaveChanges();
 
             return link.Id;
-
         }
 
         public void DeleteLink(QuartzLinkDeleteViewModel model)
@@ -46,12 +45,12 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.LinkManager
             _uow.SaveChange();
         }
 
-        public List<QuartzLinkListViewModel> GetAllLinks(int mainLinkId)
+        public List<QuartzLinkListViewModel> GetAllLinks(int mainDrawingSettingsId)
         {
-            return _mapper.Map<List<QuartzLinkListViewModel>>(GetAll(I => I.MainQuartzLinkId == mainLinkId));
+            return _mapper.Map<List<QuartzLinkListViewModel>>(GetAll(I => I.MainDrawingSettingsId == mainDrawingSettingsId));
         }
 
-        public List<QuartzLinkListViewModel> GetAllLinksWithoutMainLinkId()
+        public List<QuartzLinkListViewModel> GetAllLinksWithoutParameter()
         {
             return _mapper.Map<List<QuartzLinkListViewModel>>(GetAll());
         }

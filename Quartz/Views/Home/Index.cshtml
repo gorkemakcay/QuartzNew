@@ -93,7 +93,7 @@
                                 <input type="text" id="addLinkTagNo" class="form-control">
                             </div>
 
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 selectOpt">
                                 <span style="color: #8F8F95; font-size: 1em; font-weight:500 ">Select Drawing</span>
                                 <select id="addLinkSelectDrawing" class="form-select" onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                                 </select>
@@ -108,7 +108,7 @@
 
                         <div class="row" id="clickedLinkMode">
                             <div class="text-center col-lg-6" style="border-right: 1px solid #8F8F95;">
-                                <button id="addLinkGoCurrentLinkButton" type="button" class="btn btn-dark" style="border: none; border-radius: 20px;" onclick="goCurrentLink()" data-bs-dismiss="modal"><i class="fa fa-rocket">&nbsp;</i> Go Current Link</button>
+                                <button id="addLinkGoCurrentLinkButton" type="button" class="btn btn-dark" style="border: none; border-radius: 20px;" onclick="goCurrentLink()" data-bs-dismiss="modal" disabled><i class="fa fa-rocket">&nbsp;</i> Go Current Link</button>
                             </div>
 
                             <div class="text-center col-lg-6">

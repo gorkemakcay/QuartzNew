@@ -10,8 +10,8 @@ using Quartz.DataAccess.Concrete.EntityFramworkCore.Context;
 namespace Quartz.DataAccess.Migrations
 {
     [DbContext(typeof(QuartzContext))]
-    [Migration("20220927111014_addedHierarchyPropertyToQuartzLink")]
-    partial class addedHierarchyPropertyToQuartzLink
+    [Migration("20221123124340_link_drawingsettings_drawingfeatures_tables_updated")]
+    partial class link_drawingsettings_drawingfeatures_tables_updated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -363,8 +363,14 @@ namespace Quartz.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsInspected")
+                        .HasColumnType("bit");
+
                     b.Property<int>("QuartzLinkId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("ShowLabel")
+                        .HasColumnType("bit");
 
                     b.Property<string>("TagNo")
                         .HasColumnType("nvarchar(max)");
@@ -483,11 +489,8 @@ namespace Quartz.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CurrentDrawingId")
+                    b.Property<int>("DrawingSettingsId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Hierarchy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MainQuartzLinkId")
                         .HasColumnType("int");
@@ -500,6 +503,8 @@ namespace Quartz.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DrawingSettingsId");
+
                     b.ToTable("QuartzLinks");
                 });
 
@@ -510,15 +515,16 @@ namespace Quartz.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("DrawingSettingsId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Features")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QuartzLinkId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("QuartzLinkId");
+                    b.HasIndex("DrawingSettingsId")
+                        .IsUnique();
 
                     b.ToTable("QuartzLinksDrawingFeatures");
                 });
@@ -533,13 +539,13 @@ namespace Quartz.DataAccess.Migrations
                     b.Property<string>("AttachmentIds")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CurrentDrawingId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DrawingNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("File")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PlantArea")
@@ -548,13 +554,7 @@ namespace Quartz.DataAccess.Migrations
                     b.Property<string>("PlantSystem")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QuartzLinkId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("QuartzLinkId")
-                        .IsUnique();
 
                     b.ToTable("QuartzLinksDrawingSettings");
                 });
@@ -662,10 +662,22 @@ namespace Quartz.DataAccess.Migrations
 
             modelBuilder.Entity("Quartz.Entities.Concrete.Search.SearchDrawing", b =>
                 {
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CurrentDrawingId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LinkId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MainLinkId")
                         .HasColumnType("int");
 
                     b.Property<string>("PlantArea")
@@ -688,8 +700,20 @@ namespace Quartz.DataAccess.Migrations
                     b.Property<string>("FittingType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsInspected")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ItemTagNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LinkId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LinkTagNo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PlantArea")
                         .HasColumnType("nvarchar(max)");
@@ -697,7 +721,10 @@ namespace Quartz.DataAccess.Migrations
                     b.Property<string>("PlantSystem")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TagNo")
+                    b.Property<string>("SerialNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specification")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("WeldType")
@@ -895,26 +922,26 @@ namespace Quartz.DataAccess.Migrations
                     b.Navigation("QuartzItem");
                 });
 
-            modelBuilder.Entity("Quartz.Entities.Concrete.Project.Link.QuartzLinksDrawingFeatures", b =>
+            modelBuilder.Entity("Quartz.Entities.Concrete.Project.Link.QuartzLink", b =>
                 {
-                    b.HasOne("Quartz.Entities.Concrete.Project.Link.QuartzLink", "QuartzLink")
-                        .WithMany("DrawingFeatures")
-                        .HasForeignKey("QuartzLinkId")
+                    b.HasOne("Quartz.Entities.Concrete.Project.Link.QuartzLinksDrawingSettings", "DrawingSettings")
+                        .WithMany("QuartzLinks")
+                        .HasForeignKey("DrawingSettingsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("QuartzLink");
+                    b.Navigation("DrawingSettings");
                 });
 
-            modelBuilder.Entity("Quartz.Entities.Concrete.Project.Link.QuartzLinksDrawingSettings", b =>
+            modelBuilder.Entity("Quartz.Entities.Concrete.Project.Link.QuartzLinksDrawingFeatures", b =>
                 {
-                    b.HasOne("Quartz.Entities.Concrete.Project.Link.QuartzLink", "QuartzLink")
-                        .WithOne("DrawingSettings")
-                        .HasForeignKey("Quartz.Entities.Concrete.Project.Link.QuartzLinksDrawingSettings", "QuartzLinkId")
+                    b.HasOne("Quartz.Entities.Concrete.Project.Link.QuartzLinksDrawingSettings", "DrawingSettings")
+                        .WithOne("DrawingFeatures")
+                        .HasForeignKey("Quartz.Entities.Concrete.Project.Link.QuartzLinksDrawingFeatures", "DrawingSettingsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("QuartzLink");
+                    b.Navigation("DrawingSettings");
                 });
 
             modelBuilder.Entity("Quartz.Entities.Concrete.Projects.Item.QuartzItemsInformation", b =>
@@ -948,11 +975,14 @@ namespace Quartz.DataAccess.Migrations
 
             modelBuilder.Entity("Quartz.Entities.Concrete.Project.Link.QuartzLink", b =>
                 {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Quartz.Entities.Concrete.Project.Link.QuartzLinksDrawingSettings", b =>
+                {
                     b.Navigation("DrawingFeatures");
 
-                    b.Navigation("DrawingSettings");
-
-                    b.Navigation("Items");
+                    b.Navigation("QuartzLinks");
                 });
 #pragma warning restore 612, 618
         }

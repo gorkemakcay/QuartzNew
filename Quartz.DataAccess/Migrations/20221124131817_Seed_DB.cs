@@ -12,24 +12,28 @@ namespace Quartz.DataAccess.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "e7d7c5f4-0ce5-4257-af9d-c73a46248fb6", "Admin", "ADMIN" },
-                    { 2, "7cf8b3a0-50a6-44ea-9597-85780c2c48c4", "Operator", "OPERATOR" }
+                    { 1, "707b717a-d330-450f-a42c-9f2b7fcdfea1", "Admin", "ADMIN" },
+                    { 2, "6eadcc3d-21a3-41b8-91bd-26988bb8d656", "Operator", "OPERATOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "FullName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, "a4b5dffb-a36c-4278-99e2-8a1365b14980", "admin@quartz.com", false, "Admin", "Admin Quartz", "Quartz", true, null, "ADMIN@QUARTZ.COM", "ADMIN", "AQAAAAEAACcQAAAAEPobgxnycHlVFer472HrsgpWNNrAJYNnC8fB4g2Hac5cA+ZTdkLmSJwfkJ+drH8r1Q==", null, false, "6f891b0c-d54f-4ce2-ab58-05ebe0cb65f4", false, "admin" });
+                values: new object[] { 1, 0, "fe13649b-6a19-4964-8db8-1332ba224904", "admin@quartz.com", false, "Admin", "Admin Quartz", "Quartz", true, null, "ADMIN@QUARTZ.COM", "ADMIN", "AQAAAAEAACcQAAAAECnTVUK/QxKYvnJiVDztpm9YuvXVCbwiW86jvTxkNOXv/27Nzr1OVjy4hbtRdcoZjg==", null, false, "a3635eb1-112c-4cca-9e6e-b81e636d99c2", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "FileUploads",
                 columns: new[] { "Id", "CreatedDate", "Extension", "Name", "Path", "Type", "UploadedBy" },
-                values: new object[] { 1, new DateTime(2022, 11, 21, 15, 20, 29, 705, DateTimeKind.Local).AddTicks(6581), ".jpg", "MainDrawing", "wwwroot\\Files\\MainDrawing.jpg", "image/jpeg", "QUARTZ" });
+                values: new object[] { 1, new DateTime(2022, 11, 24, 11, 40, 23, 645, DateTimeKind.Local).AddTicks(4467), ".jpg", "MainDrawing", "wwwroot\\Files\\MainDrawing.jpg", "image/jpeg", "QUARTZ" });
 
             migrationBuilder.InsertData(
-                table: "QuartzLinks",
-                columns: new[] { "Id", "CreatedBy", "CreatedDate", "CurrentDrawingId", "Hierarchy", "MainQuartzLinkId", "ShowLabel", "TagNo" },
-                values: new object[] { 1, "QUARTZ", new DateTime(2022, 11, 21, 15, 20, 29, 704, DateTimeKind.Local).AddTicks(874), 1, "0", 0, true, "Main" });
+                table: "QuartzLinksDrawingSettings",
+                columns: new[] { "Id", "AttachmentIds", "CurrentDrawingId", "Description", "DrawingNo", "PlantArea", "PlantSystem" },
+                values: new object[,]
+                {
+                    { 1, null, 1, null, "General", null, null },
+                    { 2, null, 1, null, "Main", "select", "select" }
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -37,9 +41,9 @@ namespace Quartz.DataAccess.Migrations
                 values: new object[] { 1, 1 });
 
             migrationBuilder.InsertData(
-                table: "QuartzLinksDrawingSettings",
-                columns: new[] { "Id", "AttachmentIds", "Description", "DrawingNo", "File", "PlantArea", "PlantSystem", "QuartzLinkId" },
-                values: new object[] { 1, null, null, "Main", "1", "select", "select", 1 });
+                table: "QuartzLinks",
+                columns: new[] { "Id", "CreatedBy", "CreatedDate", "DrawingSettingsId", "MainDrawingSettingsId", "ShowLabel", "TagNo" },
+                values: new object[] { 1, "QUARTZ", new DateTime(2022, 11, 24, 11, 40, 23, 643, DateTimeKind.Local).AddTicks(6434), 2, 1, true, "Main" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -60,6 +64,11 @@ namespace Quartz.DataAccess.Migrations
                 keyValue: 1);
 
             migrationBuilder.DeleteData(
+                table: "QuartzLinks",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
                 table: "QuartzLinksDrawingSettings",
                 keyColumn: "Id",
                 keyValue: 1);
@@ -75,9 +84,9 @@ namespace Quartz.DataAccess.Migrations
                 keyValue: 1);
 
             migrationBuilder.DeleteData(
-                table: "QuartzLinks",
+                table: "QuartzLinksDrawingSettings",
                 keyColumn: "Id",
-                keyValue: 1);
+                keyValue: 2);
         }
     }
 }

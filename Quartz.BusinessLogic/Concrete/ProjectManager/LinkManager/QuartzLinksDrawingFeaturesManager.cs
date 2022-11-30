@@ -27,9 +27,9 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.LinkManager
             return _mapper.Map<QuartzLinksDrawingFeaturesUpdateViewModel>(GetFirstOrDefult(I => I.Id == drawingFeaturesId));
         }
 
-        public QuartzLinksDrawingFeaturesUpdateViewModel GetVectorSource(int quartzLinkId)
+        public QuartzLinksDrawingFeaturesUpdateViewModel GetVectorSource(int drawingSettingsId)
         {
-            return _mapper.Map<QuartzLinksDrawingFeaturesUpdateViewModel>(GetFirstOrDefult(I => I.QuartzLinkId == quartzLinkId));
+            return _mapper.Map<QuartzLinksDrawingFeaturesUpdateViewModel>(GetFirstOrDefult(I => I.DrawingSettingsId == drawingSettingsId));
         }
 
         public void UpdateFeature(QuartzLinksDrawingFeaturesUpdateViewModel model)

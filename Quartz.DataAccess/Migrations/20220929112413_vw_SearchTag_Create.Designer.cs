@@ -486,9 +486,6 @@ namespace Quartz.DataAccess.Migrations
                     b.Property<int>("CurrentDrawingId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Hierarchy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("MainQuartzLinkId")
                         .HasColumnType("int");
 

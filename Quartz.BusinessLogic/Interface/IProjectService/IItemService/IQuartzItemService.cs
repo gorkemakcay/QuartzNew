@@ -10,7 +10,7 @@ namespace Quartz.BusinessLogic.Interface.IProjectService.IItemService
         int AddItem(QuartzItemAddViewModel model);
         void UpdateItem(QuartzItemUpdateViewModel model);
         void DeleteItem(QuartzItemDeleteViewModel model);
-        List<QuartzItemListViewModel> GetAllItems(int linkId);
+        List<QuartzItemListViewModel> GetAllItems(int drawingSettingsId);
         List<QuartzItemFilterViewModel> FilterItems(QuartzItemFilterViewModel model);
     }
 }

@@ -6,8 +6,8 @@ namespace Quartz.BusinessLogic.Interface.IProjectService.ILinkService
 {
     public interface IQuartzLinkService : IGenericService<QuartzLink>
     {
-        List<QuartzLinkListViewModel> GetAllLinks(int mainLinkId);
-        List<QuartzLinkListViewModel> GetAllLinksWithoutMainLinkId();
+        List<QuartzLinkListViewModel> GetAllLinks(int mainDrawingSettingsId);
+        List<QuartzLinkListViewModel> GetAllLinksWithoutParameter();
         QuartzLinkUpdateViewModel GetLinkDetail(int linkId);
         int AddLink(QuartzLinkAddViewModel model);
         void UpdateLink(QuartzLinkUpdateViewModel model);

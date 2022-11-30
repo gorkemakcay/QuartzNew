@@ -27,7 +27,7 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
                 TagNo = model.TagNo,
                 CreatedDate = model.CreatedDate,
                 CreatedBy = model.CreatedBy,
-                QuartzLinkId = model.QuartzLinkId
+                DrawingSettingsId = model.DrawingSettingsId
             };
 
             context.QuartzItems.Add(item);
@@ -54,9 +54,9 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
             return null;
         }
 
-        public List<QuartzItemListViewModel> GetAllItems(int linkId)
+        public List<QuartzItemListViewModel> GetAllItems(int drawingSettingsId)
         {
-            return _mapper.Map<List<QuartzItemListViewModel>>(GetAll(I => I.QuartzLinkId == linkId));
+            return _mapper.Map<List<QuartzItemListViewModel>>(GetAll(I => I.DrawingSettingsId == drawingSettingsId));
         }
 
         public QuartzItemUpdateViewModel GetItemDetail(int itemId)

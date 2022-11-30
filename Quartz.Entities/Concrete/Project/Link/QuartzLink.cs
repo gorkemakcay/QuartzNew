@@ -1,7 +1,6 @@
-﻿using Quartz.Entities.Concrete.Project.Item;
-using Quartz.Entities.Interface;
+﻿using Quartz.Entities.Interface;
 using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Quartz.Entities.Concrete.Project.Link
 {
@@ -12,10 +11,9 @@ namespace Quartz.Entities.Concrete.Project.Link
         public bool ShowLabel { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
-        public int MainQuartzLinkId { get; set; } // Linkin ait olduğu üst linkin Id'si
-        public string Hierarchy { get; set; }
+        [ForeignKey("DrawingSettings")]
+        public int MainDrawingSettingsId { get; set; } // Linkin ait olduğu Drawing Settings'in Id'si
         public int DrawingSettingsId { get; set; } // Foreign Key
         public QuartzLinksDrawingSettings DrawingSettings { get; set; } // Linke ait DrawingSettings (One-to-Many Relationship)
-        public List<QuartzItem> Items { get; set; } // Linkin Itemları (One-to-Many Relationship)
     }
 }

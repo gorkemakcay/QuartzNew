@@ -1,4 +1,5 @@
-﻿using Quartz.Entities.Interface;
+﻿using Quartz.Entities.Concrete.Project.Item;
+using Quartz.Entities.Interface;
 using System.Collections.Generic;
 
 namespace Quartz.Entities.Concrete.Project.Link
@@ -13,6 +14,7 @@ namespace Quartz.Entities.Concrete.Project.Link
         public string PlantSystem { get; set; }
         public string AttachmentIds { get; set; }
         public List<QuartzLink> QuartzLinks { get; set; }
+        public List<QuartzItem> QuartItems { get; set; }
         public QuartzLinksDrawingFeatures DrawingFeatures { get; set; }
     }
 }

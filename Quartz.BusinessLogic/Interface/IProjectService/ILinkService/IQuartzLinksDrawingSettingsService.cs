@@ -1,12 +1,15 @@
 ﻿using Quartz.Common.ViewModels.Project.Link.QuartzLinksDrawingSettingsViewModels;
 using Quartz.Entities.Concrete.Project.Link;
+using System.Collections.Generic;
 
 namespace Quartz.BusinessLogic.Interface.IProjectService.ILinkService
 {
     public interface IQuartzLinksDrawingSettingsService : IGenericService<QuartzLinksDrawingSettings>
     {
-        void AddDrawingSettings(QuartzLinksDrawingSettingsAddViewModel model);
+        int AddDrawingSettings(QuartzLinksDrawingSettingsAddViewModel model);
         void UpdateDrawingSettings(QuartzLinksDrawingSettingsUpdateViewModel model);
-        QuartzLinksDrawingSettingsUpdateViewModel GetDrawingSettingsDetail(int quartzLinkId);
+        QuartzLinksDrawingSettingsUpdateViewModel GetDrawingSettingsDetail(int drawingSettingsId);
+        List<QuartzLinksDrawingSettingsListViewModel> GetAllDrawingSettings();
+        List<QuartzLinksDrawingSettingsListViewModel> FilterDrawings(QuartzLinksDrawingSettingsListViewModel model);
     }
 }

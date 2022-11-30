@@ -74,6 +74,7 @@ namespace Quartz.Common.Mapping.AutoMapperProfile
             #region QuartzLinksDrawingSettings
             CreateMap<QuartzLinksDrawingSettings, QuartzLinksDrawingSettingsAddViewModel>().ReverseMap();
             CreateMap<QuartzLinksDrawingSettings, QuartzLinksDrawingSettingsUpdateViewModel>().ReverseMap();
+            CreateMap<QuartzLinksDrawingSettings, QuartzLinksDrawingSettingsListViewModel>().ReverseMap();
             #endregion
 
             #endregion

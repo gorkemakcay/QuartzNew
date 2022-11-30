@@ -33,21 +33,21 @@ namespace Quartz.Controllers.Search
             return PartialView("SearchPanelsTagPartial");
         }
 
-        [HttpPost]
-        public IActionResult FilterDrawing(SearchDrawingListViewModel model)
-        {
-            var filteredDrawings = _searchDrawingService.FilterDrawings(model);
-            var jSonModel = JsonConvert.SerializeObject(filteredDrawings, new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
-            return Json(jSonModel);
-        }
+        //[HttpPost]
+        //public IActionResult FilterDrawing(SearchDrawingListViewModel model)
+        //{
+        //    var filteredDrawings = _searchDrawingService.FilterDrawings(model);
+        //    var jSonModel = JsonConvert.SerializeObject(filteredDrawings, new JsonSerializerSettings()
+        //    {
+        //        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        //    });
+        //    return Json(jSonModel);
+        //}
 
-        [HttpGet]
-        public IActionResult GetSearchPanelsDrawingPartialView()
-        {
-            return PartialView("SearchPanelsDrawingPartial");
-        }
+        //[HttpGet]
+        //public IActionResult GetSearchPanelsDrawingPartialView()
+        //{
+        //    return PartialView("SearchPanelsDrawingPartial");
+        //}
     }
 }

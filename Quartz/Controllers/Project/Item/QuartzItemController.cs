@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Quartz.BusinessLogic.Interface.IProjectService.IItemService;
-using Quartz.BusinessLogic.Interface.ISearch;
 using Quartz.Common.ViewModels.Project.Item.QuartzItemsInformationViewModels;
 using Quartz.Common.ViewModels.Project.Item.QuartzItemsInspectionViewModels;
 using Quartz.Common.ViewModels.Project.Item.QuartzItemsThicknessMeasurement;
@@ -64,9 +63,9 @@ namespace Quartz.Controllers.Project.Item
         }
 
         [HttpGet]
-        public IActionResult GetAllItemsJSON(int linkId)
+        public IActionResult GetAllItemsJSON(int drawingSettingsId)
         {
-            var model = _itemService.GetAllItems(linkId);
+            var model = _itemService.GetAllItems(drawingSettingsId);
             var jSonModel = JsonConvert.SerializeObject(model, new JsonSerializerSettings()
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore

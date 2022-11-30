@@ -62,9 +62,9 @@ namespace Quartz.Controllers.Project.Link
         }
 
         [HttpGet]
-        public IActionResult GetAllLinksJSON(int mainLinkId)
+        public IActionResult GetAllLinksJSON(int mainDrawingSettingsId)
         {
-            var model = _linkService.GetAllLinks(mainLinkId);
+            var model = _linkService.GetAllLinks(mainDrawingSettingsId);
             var jSonModel = JsonConvert.SerializeObject(model, new JsonSerializerSettings()
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
@@ -73,9 +73,9 @@ namespace Quartz.Controllers.Project.Link
         }
 
         [HttpGet]
-        public IActionResult GetAllLinksWithoutMainLinkId()
+        public IActionResult GetAllLinksWithoutParameter()
         {
-            var model = _linkService.GetAllLinksWithoutMainLinkId();
+            var model = _linkService.GetAllLinksWithoutParameter();
             var jSonModel = JsonConvert.SerializeObject(model, new JsonSerializerSettings()
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
@@ -102,6 +102,12 @@ namespace Quartz.Controllers.Project.Link
                 _linkService.DeleteLink(model);
             }
             return Json(null);
+        }
+
+        [HttpGet]
+        public IActionResult GetSearchPanelsLinkPartialView()
+        {
+            return PartialView("SearchPanelsLinkPartial");
         }
         #endregion
 
@@ -146,6 +152,22 @@ namespace Quartz.Controllers.Project.Link
             });
             return Json(jSonModel);
         }
+
+        [HttpGet]
+        public IActionResult GetVectorSource(int drawingSettingsId)
+        {
+            var model = _drawingFeatureService.GetVectorSource(drawingSettingsId);
+            if (model == null || model.Features == null || model.Features == "")
+                return Ok(0);
+            else
+            {
+                var jSonModel = JsonConvert.SerializeObject(model, new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+                return Json(jSonModel);
+            }
+        }
         #endregion
 
         #region Drawing Settings
@@ -154,8 +176,9 @@ namespace Quartz.Controllers.Project.Link
         {
             if (ModelState.IsValid)
             {
-                _drawingSettings.AddDrawingSettings(model);
-                var jSonModel = JsonConvert.SerializeObject(model, new JsonSerializerSettings()
+                var id = _drawingSettings.AddDrawingSettings(model);
+                var responseModel = _drawingSettings.GetDrawingSettingsDetail(id);
+                var jSonModel = JsonConvert.SerializeObject(responseModel, new JsonSerializerSettings()
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 });
@@ -180,14 +203,42 @@ namespace Quartz.Controllers.Project.Link
         }
 
         [HttpGet]
-        public IActionResult GetDrawingSettingsDetailJSON(int quartzLinkId)
+        public IActionResult GetDrawingSettingsDetailJSON(int drawingSettingsId)
         {
-            var model = _drawingSettings.GetDrawingSettingsDetail(quartzLinkId);
+            var model = _drawingSettings.GetDrawingSettingsDetail(drawingSettingsId);
             var jSonModel = JsonConvert.SerializeObject(model, new JsonSerializerSettings()
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
             return Json(jSonModel);
+        }
+
+        [HttpGet]
+        public IActionResult GetAllDrawingSettingsJSON()
+        {
+            var model = _drawingSettings.GetAllDrawingSettings();
+            var jSonModel = JsonConvert.SerializeObject(model, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            return Json(jSonModel);
+        }
+
+        [HttpPost]
+        public IActionResult FilterDrawing(QuartzLinksDrawingSettingsListViewModel model)
+        {
+            var rModel = _drawingSettings.FilterDrawings(model);
+            var jSonModel = JsonConvert.SerializeObject(rModel, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            return Json(jSonModel);
+        }
+
+        [HttpGet]
+        public IActionResult GetSearchPanelsDrawingPartialView()
+        {
+            return PartialView("SearchPanelsDrawingPartial");
         }
 
         [HttpGet]
@@ -202,22 +253,6 @@ namespace Quartz.Controllers.Project.Link
             return PartialView("QuartzLinksDrawingSettingsAttachmentPartial");
         }
         #endregion
-
-        [HttpGet]
-        public IActionResult GetVectorSource(int quartzLinkId)
-        {
-            var model = _drawingFeatureService.GetVectorSource(quartzLinkId);
-            if (model == null || model.Features == null || model.Features == "")
-                return Ok(0);
-            else
-            {
-                var jSonModel = JsonConvert.SerializeObject(model, new JsonSerializerSettings()
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                });
-                return Json(jSonModel);
-            }
-        }
 
         [HttpGet]
         public IActionResult GetQuartz()
