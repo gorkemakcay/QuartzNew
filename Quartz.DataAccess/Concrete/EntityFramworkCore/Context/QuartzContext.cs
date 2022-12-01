@@ -6,7 +6,6 @@ using Quartz.Entities.Concrete.LookUpItems;
 using Quartz.Entities.Concrete.Project.Item;
 using Quartz.Entities.Concrete.Project.Link;
 using Quartz.Entities.Concrete.Projects.Item;
-using Quartz.Entities.Concrete.Search;
 using Quartz.Entities.Concrete.Users;
 using System;
 
@@ -35,17 +34,11 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Configurate View's
-            modelBuilder.Entity<SearchTag>(c =>
-            {
-                c.HasNoKey();
-                c.ToView("vw_SearchTag");
-            });
-
-            modelBuilder.Entity<SearchDrawing>(c =>
-            {
-                c.HasNoKey();
-                c.ToView("vw_SearchDrawing");
-            });
+            //modelBuilder.Entity<SearchTag>(c =>
+            //{
+            //    c.HasNoKey();
+            //    c.ToView("vw_SearchTag");
+            //});
             #endregion
 
             #region Create User
@@ -235,9 +228,6 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
         public DbSet<LookUpItemsStatus> LookupItemsStatuses { get; set; }
         public DbSet<LookUpItemsTechnique> LookupItemsTechniques { get; set; }
         public DbSet<LookUpItemsWeldType> LookupItemsWeldTypes { get; set; }
-
-        public DbSet<SearchTag> vw_SearchTag { get; set; }
-        public DbSet<SearchDrawing> vw_SearchDrawing { get; set; }
 
         #endregion
     }

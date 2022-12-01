@@ -4,14 +4,12 @@ using Quartz.BusinessLogic.Concrete.FileUploadManager;
 using Quartz.BusinessLogic.Concrete.LookUpItemsManager;
 using Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager;
 using Quartz.BusinessLogic.Concrete.ProjectManager.LinkManager;
-using Quartz.BusinessLogic.Concrete.SearchManager;
 using Quartz.BusinessLogic.Concrete.Users;
 using Quartz.BusinessLogic.Interface;
 using Quartz.BusinessLogic.Interface.IFileUploadService;
 using Quartz.BusinessLogic.Interface.ILookUpItemsService;
 using Quartz.BusinessLogic.Interface.IProjectService.IItemService;
 using Quartz.BusinessLogic.Interface.IProjectService.ILinkService;
-using Quartz.BusinessLogic.Interface.ISearch;
 using Quartz.BusinessLogic.Interface.Users;
 
 namespace Quartz.BusinessLogic.DIContainer
@@ -42,9 +40,7 @@ namespace Quartz.BusinessLogic.DIContainer
                     .AddScoped<ILookUpItemsStandardStatementService, LookUpItemsStandardStatementManager>()
                     .AddScoped<ILookUpItemsStatusService, LookUpItemsStatusManager>()
                     .AddScoped<ILookUpItemsTechniqueService, LookUpItemsTechniqueManager>()
-                    .AddScoped<ILookUpItemsWeldTypeService, LookUpItemsWeldTypeManager>()
-                    .AddScoped<ISearchTagService, SearchTagManager>()
-                    .AddScoped<ISearchDrawingService, SearchDrawingManager>();
+                    .AddScoped<ILookUpItemsWeldTypeService, LookUpItemsWeldTypeManager>();
                     
 
             services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));

@@ -20,8 +20,6 @@ using Quartz.Common.ViewModels.Project.Item.QuartzItemViewModels;
 using Quartz.Common.ViewModels.Project.Link.QuartzLinksDrawingFeaturesViewModels;
 using Quartz.Common.ViewModels.Project.Link.QuartzLinksDrawingSettingsViewModels;
 using Quartz.Common.ViewModels.Project.Link.QuartzLinkViewModels;
-using Quartz.Common.ViewModels.Search.SearchDrawing;
-using Quartz.Common.ViewModels.Search.SearchTag;
 using Quartz.Common.ViewModels.Users.AppRoleViewModels;
 using Quartz.Common.ViewModels.Users.AppUserViewModels;
 using Quartz.Entities.Concrete.FileUploads;
@@ -29,7 +27,6 @@ using Quartz.Entities.Concrete.LookUpItems;
 using Quartz.Entities.Concrete.Project.Item;
 using Quartz.Entities.Concrete.Project.Link;
 using Quartz.Entities.Concrete.Projects.Item;
-using Quartz.Entities.Concrete.Search;
 using Quartz.Entities.Concrete.Users;
 
 namespace Quartz.Common.Mapping.AutoMapperProfile
@@ -214,18 +211,6 @@ namespace Quartz.Common.Mapping.AutoMapperProfile
             CreateMap<FileUpload, FileUploadListViewModel>().ReverseMap();
             CreateMap<FileUpload, FileUploadDeleteViewModel>().ReverseMap();
             CreateMap<FileUpload, FileUploadUpdateViewModel>().ReverseMap();
-            #endregion
-
-            #region Search
-
-            #region Search Tag
-            CreateMap<SearchTag, SearchTagListViewModel>().ReverseMap();
-            #endregion
-
-            #region Search Drawing
-            CreateMap<SearchDrawing, SearchDrawingListViewModel>().ReverseMap();
-            #endregion
-
             #endregion
 
         }
