@@ -538,47 +538,6 @@ function loadSearchPanelsSelectOptions() {
     });
     // #endregion
 
-    // #region Search Link
-    // Select Drawing
-    $.ajax({
-        type: "GET",
-        url: linkController.DrawingSettings.List,
-        success: function (response) {
-            var allDrawingSettings = jQuery.parseJSON(response);
-
-            // #region Create & Configure Select > Option
-            $("#linkFilterSelectDrawing").children().remove();
-
-            $("#linkFilterSelectDrawing").append(
-                $('<option>', {
-                    value: 0,
-                    text: "Select Drawing",
-                    id: "selectDrawing"
-                })
-            );
-            $("#selectDrawing").attr("hidden", "");
-
-            for (var i = 0; i < allDrawingSettings.length; i++) {
-                $("#linkFilterSelectDrawing").append(
-                    $('<option>', {
-                        value: allDrawingSettings[i].Id,
-                        text: allDrawingSettings[i].DrawingNo,
-                    })
-                );
-            }
-
-            $("#linkFilterSelectDrawing option[value='1']").remove();
-
-            // #endregion
-        },
-        error: function (error) {
-            alert("error!");
-            console.log(error.responseText);
-        }
-    });
-
-    // #endregion
-
     // #region Search Tag
     // Fitting Type
     $.ajax({
@@ -2073,6 +2032,7 @@ function updateDrawingFeatures() {
     };
 
     $.ajax({
+        async: false,
         type: "POST",
         url: linkController.DrawingFeatures.Update,
         data: { model: drawingFeaturesModel },
@@ -2404,7 +2364,10 @@ function showFileModal(path, type) {
 // db'deki "QuartzLinkDrawingFeature" tablosunun "Features" sütununun değerlerini aldım ve bu bilgilerle feature'ları oluşturdum
 function addFeatureToSource() {
     if (currentDrawingFeatures != 0) {
+        source.clear();
+        
         $.ajax({
+            async: false,
             type: "GET",
             url: linkController.Link.List,
             data: { mainDrawingSettingsId: currentQuartzLink.DrawingSettingsId },
@@ -2418,6 +2381,7 @@ function addFeatureToSource() {
         });
 
         $.ajax({
+            async: false,
             type: "GET",
             url: itemController.Item.List,
             data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
@@ -2430,66 +2394,63 @@ function addFeatureToSource() {
             }
         });
 
-        function wait() {
-            var featuresFromDb = jQuery.parseJSON(currentDrawingFeatures.Features);
-            featureCollection[''] = featuresFromDb;
-            featureCollection[''].features.forEach(function (featureJson) {
+        var featuresFromDb = jQuery.parseJSON(currentDrawingFeatures.Features);
+        featureCollection[''] = featuresFromDb;
+        featureCollection[''].features.forEach(function (featureJson) {
 
-                var feature = new ol.Feature({
-                    geometry: (new ol.geom.Polygon(featureJson.geometry.coordinates)).transform('EPSG:4326', 'EPSG:3857')
-                });
-
-                var TextContext;
-                var fillColor = 'rgba(255,255,255,0.4)';
-
-                if (featureJson.properties.Type == 'link') {
-                    let link = currentLinkList.find(link => link.Id == featureJson.properties.Id);
-                    if (link != null && link.ShowLabel) {
-                        TextContext = featureJson.properties.Name;
-                    }
-                    else TextContext = '';
-                }
-
-                if (featureJson.properties.Type == 'item') {
-                    let item = currentItemList.find(item => item.Id == featureJson.properties.Id);
-                    if (item.ShowLabel) {
-                        TextContext = featureJson.properties.Name;
-                    }
-                    else TextContext = '';
-
-                    if (item.IsInspected) {
-                        fillColor = 'rgba(0,255,0,0.5)';
-                    }
-                }
-
-                feature.setProperties({ 'LonLat': featureJson.properties.LonLat });
-                feature.setProperties({ 'Id': featureJson.properties.Id });
-                feature.setProperties({ 'Name': featureJson.properties.Name });
-                feature.setProperties({ 'Type': featureJson.properties.Type });
-                feature.setProperties({ 'ShowLabel': featureJson.properties.ShowLabel });
-
-                var featureStyle = new ol.style.Style({
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: '#3399CC',
-                        width: 1.25
-                    }),
-                    text: new ol.style.Text({
-                        text: TextContext,
-                        font: 'bold 10px sans-serif',
-                        scale: 1.3,
-                        overflow: true
-                    })
-                });
-                feature.setStyle(featureStyle);
-
-                // Add feature to the vector source
-                source.addFeature(feature);
+            var feature = new ol.Feature({
+                geometry: (new ol.geom.Polygon(featureJson.geometry.coordinates)).transform('EPSG:4326', 'EPSG:3857')
             });
-        }
-        setTimeout(wait, 200);
+
+            var TextContext;
+            var fillColor = 'rgba(255,255,255,0.4)';
+
+            if (featureJson.properties.Type == 'link') {
+                let link = currentLinkList.find(link => link.Id == featureJson.properties.Id);
+                if (link != null && link.ShowLabel) {
+                    TextContext = featureJson.properties.Name;
+                }
+                else TextContext = '';
+            }
+
+            if (featureJson.properties.Type == 'item') {
+                let item = currentItemList.find(item => item.Id == featureJson.properties.Id);
+                if (item.ShowLabel) {
+                    TextContext = featureJson.properties.Name;
+                }
+                else TextContext = '';
+
+                if (item.IsInspected) {
+                    fillColor = 'rgba(0,255,0,0.5)';
+                }
+            }
+
+            feature.setProperties({ 'LonLat': featureJson.properties.LonLat });
+            feature.setProperties({ 'Id': featureJson.properties.Id });
+            feature.setProperties({ 'Name': featureJson.properties.Name });
+            feature.setProperties({ 'Type': featureJson.properties.Type });
+            feature.setProperties({ 'ShowLabel': featureJson.properties.ShowLabel });
+
+            var featureStyle = new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: fillColor
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#3399CC',
+                    width: 1.25
+                }),
+                text: new ol.style.Text({
+                    text: TextContext,
+                    font: 'bold 10px sans-serif',
+                    scale: 1.3,
+                    overflow: true
+                })
+            });
+            feature.setStyle(featureStyle);
+
+            // Add feature to the vector source
+            source.addFeature(feature);
+        });
     }
 }
 // #endregion

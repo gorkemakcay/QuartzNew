@@ -32,7 +32,8 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
                     Description = model.Description,
                     CreatedDate = model.CreatedDate,
                     AttachmentIds = model.AttachmentIds,
-                    QuartzItemId = model.QuartzItemId
+                    QuartzItemId = model.QuartzItemId,
+                    Status = model.Status
                 };
 
             context.QuartzItemsThicknessMeasurements.Add(thicknessMeasurement);

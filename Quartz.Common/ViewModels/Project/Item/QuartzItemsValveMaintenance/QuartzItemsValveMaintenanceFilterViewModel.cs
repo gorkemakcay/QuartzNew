@@ -9,7 +9,6 @@ namespace Quartz.Common.ViewModels.Project.Item.QuartzItemsValveMaintenance
         public string SerialNo { get; set; }
         public string SupplierManufacturare { get; set; }
         public string Designation { get; set; }
-        public string Remarks { get; set; }
         public DateTime TestDate { get; set; }
         public float IdealBarg { get; set; }
         public float OpeningPressureBarg { get; set; }

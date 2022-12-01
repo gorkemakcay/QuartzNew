@@ -159,7 +159,6 @@ function linkModalSaveButton() {
             function wait() {
                 selectedFeature.setProperties({ 'Name': link.TagNo });
                 updateDrawingFeatures();
-                source.clear();
                 addFeatureToSource();
                 $("#shapeArea").children().remove();
                 createList();

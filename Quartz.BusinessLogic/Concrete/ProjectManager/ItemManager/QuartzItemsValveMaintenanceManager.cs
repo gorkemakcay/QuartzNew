@@ -36,7 +36,8 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
                 AttachmentIds = model.AttachmentIds,
                 QuartzItemId = model.QuartzItemId,
                 PlantArea = model.PlantArea,
-                CreatedDate = model.CreatedDate
+                CreatedDate = model.CreatedDate,
+                Status = model.Status
             };
 
             context.QuartzItemsValveMaintenances.Add(valveMaintenance);
@@ -66,9 +67,6 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
 
             if (model.Designation != null)
                 filteredValveMaintenances = filteredValveMaintenances.Where(I => I.Designation != null && I.Designation.Contains(model.Designation)).ToList();
-
-            if (model.Remarks != null)
-                filteredValveMaintenances = filteredValveMaintenances.Where(I => I.Remarks != null && I.Remarks.Contains(model.Remarks)).ToList();
 
             if (model.TestDate.ToString() != "1.01.0001 00:00:00")
                 filteredValveMaintenances = filteredValveMaintenances.Where(I =>I.TestDate == model.TestDate).ToList();

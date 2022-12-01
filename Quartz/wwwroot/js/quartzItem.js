@@ -10,131 +10,64 @@ function itemModalSaveButton() { // [TAMAMLANMADI]
     if (clickedOrCreated == "clicked")
         item = lastClickedItem;
 
-    if (isInformationCreated == true) {
-        var itemInformationUpdateModel = {
-            Id: lastInformationsResponseModel.Id,
-            TagNo: $("#informationTagNo").val(),
-            SerialNo: $("#informationSerialNo").val(),
-            ComponentType: $("#informationComponentType").val(),
-            Comments: $("#informationComments").val(),
-            Specification: $("#informationSpecification").val(),
-            FittingType: $("#informationFittingType").val(),
-            WeldType: $("#informationWeldType").val(),
-            ShowLabel: true, // [TAMAMLANMADI]
-            PipeOdIn: $("#informationPipeOD").val(),
-            PipeThicknessMm: $("#informationPipeThickness").val(),
-            OperatingTempC: $("#informationOperatingTemp").val(),
-            OperatingPressureBar: $("#informationOperatingPressute").val(),
-            QuartzItemId: item.Id
-        }
-
-        $.ajax({
-            type: "POST",
-            url: itemController.Information.Update,
-            data: { model: itemInformationUpdateModel },
-            success: function (response) {
-                item.TagNo = $("#informationTagNo").val();
-                if (clickedOrCreated == "created") {
-                    lastCreatedItem = item;
-                }
-                if (clickedOrCreated == "clicked") {
-                    lastClickedItem = item;
-                }
-                $("#itemModalTitle").html(item.TagNo + " | Information");
-
-                $.post({
-                    url: itemController.Item.Update,
-                    data: { model: item },
-                    success: function () {
-                        function waitFunc() {
-                            selectedFeature.setProperties({ 'Name': item.TagNo });
-                            updateDrawingFeatures();
-                            source.clear();
-                            addFeatureToSource();
-                            $("#shapeArea").children().remove();
-                            createList();
-                            // Load Spinner Yap! [TAMAMLANMADI]
-                        }
-                        setTimeout(waitFunc, 100);
-                        toast("Item Update Successful!");
-                    },
-                    error: function (error) {
-                        alert("error!");
-                        console.log(error.responseText);
-                    }
-                });
-            },
-            error: function (error) {
-                alert("error!");
-                console.log(error.responseText);
-            }
-        });
+    // update information model
+    var itemInformationUpdateModel = {
+        Id: lastInformationsResponseModel.Id,
+        TagNo: $("#informationTagNo").val(),
+        SerialNo: $("#informationSerialNo").val(),
+        ComponentType: $("#informationComponentType").val(),
+        Comments: $("#informationComments").val(),
+        Specification: $("#informationSpecification").val(),
+        FittingType: $("#informationFittingType").val(),
+        WeldType: $("#informationWeldType").val(),
+        PipeOdIn: $("#informationPipeOD").val(),
+        PipeThicknessMm: $("#informationPipeThickness").val(),
+        OperatingTempC: $("#informationOperatingTemp").val(),
+        OperatingPressureBar: $("#informationOperatingPressute").val(),
+        QuartzItemId: item.Id
     }
-    else {
-        var itemInformationAddModel = {
-            TagNo: $("#informationTagNo").val(),
-            SerialNo: $("#informationSerialNo").val(),
-            ComponentType: $("#informationComponentType").val(),
-            Comments: $("#informationComments").val(),
-            Specification: $("#informationSpecification").val(),
-            FittingType: $("#informationFittingType").val(),
-            WeldType: $("#informationWeldType").val(),
-            ShowLabel: true, // [TAMAMLANMADI]
-            PipeOdIn: $("#informationPipeOD").val(),
-            PipeThicknessMm: $("#informationPipeThickness").val(),
-            OperatingTempC: $("#informationOperatingTemp").val(),
-            OperatingPressureBar: $("#informationOperatingPressute").val(),
-            QuartzItemId: item.Id
-        }
 
-        $.ajax({
-            type: "POST",
-            url: itemController.Information.Add,
-            data: { model: itemInformationAddModel },
-            success: function () {
-                $.get({
-                    url: itemController.Item.Detail,
-                    data: { itemId: item.Id },
-                    success: function (response) {
-                        var model = jQuery.parseJSON(response);
-                        model.TagNo = $("#informationTagNo").val();
-
-                        if (clickedOrCreated == "created") {
-                            lastCreatedItem = model;
-                            item = lastCreatedItem;
-                        }
-                        if (clickedOrCreated == "clicked") {
-                            lastClickedItem = model;
-                            item = lastClickedItem;
-                        }
-
-                        $.post({
-                            url: itemController.Item.Update,
-                            data: { model: item },
-                            success: function () {
-                                function waitFunc() {
-                                    $("#shapeArea").children().remove();
-                                    createList();
-                                    // Load Spinner Yap! [TAMAMLANMADI]
-                                }
-                                setTimeout(waitFunc, 100);
-                                isInformationCreated = true;
-                                toast("Item Update Successful!");
-                            },
-                            error: function (error) {
-                                alert("error!");
-                                console.log(error.responseText);
-                            }
-                        });
-                    }
-                });
-            },
-            error: function (error) {
-                alert("error!");
-                console.log(error.responseText);
+    // update information
+    $.ajax({
+        type: "POST",
+        url: itemController.Information.Update,
+        data: { model: itemInformationUpdateModel },
+        success: function () {
+            item.TagNo = $("#informationTagNo").val();
+            if (clickedOrCreated == "created") {
+                lastCreatedItem = item;
             }
-        });
-    }
+            if (clickedOrCreated == "clicked") {
+                lastClickedItem = item;
+            }
+            $("#itemModalTitle").html(item.TagNo + " | Information");
+
+            // update item
+            $.post({
+                url: itemController.Item.Update,
+                data: { model: item },
+                success: function () {
+                    function waitFunc() {
+                        selectedFeature.setProperties({ 'Name': item.TagNo });
+                        updateDrawingFeatures();
+                        addFeatureToSource();
+                        createList();
+                        // Load Spinner Yap! [TAMAMLANMADI]
+                    }
+                    setTimeout(waitFunc, 100);
+                    toast("Item Update Successful!");
+                },
+                error: function (error) {
+                    alert("error!");
+                    console.log(error.responseText);
+                }
+            });
+        },
+        error: function (error) {
+            alert("error!");
+            console.log(error.responseText);
+        }
+    });
 }
 
 // NavBar ---> Display PartialViews
@@ -330,7 +263,8 @@ $("#valveMaintenanceAddSaveButton").on('click', function () {
             Remarks: $("#valveMaintenanceRemarks").val(),
             TestDate: $("#valveMaintenanceTestDate").val(),
             PlantArea: $("#valveMaintenancePlantArea").val(),
-            CreatedDate: getDate(),
+            Status: $("#valveMaintenanceStatus").val(),
+            CreatedDate: currentValveMaintenance.CreatedDate,
             QuartzItemId: item.Id,
             AttachmentIds: currentValveMaintenance.AttachmentIds
         }
@@ -350,6 +284,7 @@ $("#valveMaintenanceAddSaveButton").on('click', function () {
             TestDate: $("#valveMaintenanceTestDate").val(),
             CreatedDate: getDate(),
             PlantArea: $("#valveMaintenancePlantArea").val(),
+            Status: $("#valveMaintenanceStatus").val(),
             QuartzItemId: item.Id,
             //AttachmentIds: null
         }
@@ -392,10 +327,11 @@ $("#thicknessMeasurementAddSaveButton").on('click', function () {
             PlantArea: $("#thicknessMeasurementPlantArea").val(),
             PlantSystem: $("#thicknessMeasurementPlantSystem").val(),
             Specification: $("#thicknessMeasurementSpecification").val(),
+            Status: $("#thicknessMeasurementStatus").val(),
             NominalThickness: $("#thicknessMeasurementNominalThickness").val(),
             MeasuredThickness: $("#thicknessMeasurementMeasuredThickness").val(),
             Description: $("#thicknessMeasurementDescription").val(),
-            CreatedDate: getDate(),
+            CreatedDate: currentThicknessMeasurement.CreatedDate,
             QuartzItemId: item.Id,
             AttachmentIds: currentThicknessMeasurement.AttachmentIds
         }
@@ -408,6 +344,7 @@ $("#thicknessMeasurementAddSaveButton").on('click', function () {
             PlantArea: $("#thicknessMeasurementPlantArea").val(),
             PlantSystem: $("#thicknessMeasurementPlantSystem").val(),
             Specification: $("#thicknessMeasurementSpecification").val(),
+            Status: $("#thicknessMeasurementStatus").val(),
             NominalThickness: $("#thicknessMeasurementNominalThickness").val(),
             MeasuredThickness: $("#thicknessMeasurementMeasuredThickness").val(),
             Description: $("#thicknessMeasurementDescription").val(),
@@ -751,6 +688,7 @@ function loadItemModalHomePage() {
 
                 case "created":
                     $("#itemModalTitle").html(lastCreatedItem.TagNo);
+                    $('#itemShowLabel').prop('checked', false);
 
                     // #region Information Count
                     $.ajax({
@@ -1523,6 +1461,41 @@ function loadValveMaintenancesDataPage() {
             });
             // #endregion
 
+            // #region Get Status for Select > Option
+            $.ajax({
+                type: "GET",
+                url: lookupItemController.Status.List,
+                success: function (response) {
+                    rModel = jQuery.parseJSON(response);
+
+                    // #region Create & Configure Select > Option
+                    $("#valveMaintenanceStatus").children().remove();
+
+                    $("#valveMaintenanceStatus").append(
+                        $('<option>', {
+                            value: "select",
+                            text: "Select Status",
+                            id: "selectValveMaintenanceStatus"
+                        })
+                    );
+                    $("#selectValveMaintenanceStatus").attr("hidden", "");
+
+                    for (var i = 0; i < rModel.length; i++) {
+                        $("#valveMaintenanceStatus").append(
+                            $('<option>', {
+                                value: rModel[i].Name,
+                                text: rModel[i].Name
+                            })
+                        );
+                    }
+                    // #endregion
+                },
+                error: function (error) {
+
+                }
+            });
+            // #endregion
+
         },
         error: function (error) {
             alert("error!");
@@ -1830,6 +1803,41 @@ function loadThicknessMeasurementDataPage() {
 
                     for (var i = 0; i < rModel.length; i++) {
                         $("#thicknessMeasurementPlantArea").append(
+                            $('<option>', {
+                                value: rModel[i].Name,
+                                text: rModel[i].Name
+                            })
+                        );
+                    }
+                    // #endregion
+                },
+                error: function (error) {
+
+                }
+            });
+            // #endregion
+
+            // #region Get Status for Select > Option
+            $.ajax({
+                type: "GET",
+                url: lookupItemController.Status.List,
+                success: function (response) {
+                    rModel = jQuery.parseJSON(response);
+
+                    // #region Create & Configure Select > Option
+                    $("#thicknessMeasurementStatus").children().remove();
+
+                    $("#thicknessMeasurementStatus").append(
+                        $('<option>', {
+                            value: "select",
+                            text: "Select Status",
+                            id: "selectThicknessMeasurementStatus"
+                        })
+                    );
+                    $("#selectThicknessMeasurementStatus").attr("hidden", "");
+
+                    for (var i = 0; i < rModel.length; i++) {
+                        $("#thicknessMeasurementStatus").append(
                             $('<option>', {
                                 value: rModel[i].Name,
                                 text: rModel[i].Name
@@ -2470,13 +2478,25 @@ function openEditValveMaintenanceModal(valveMaintenanceId) {
                             // #region Create & Configure Select > Option
                             $("#valveMaintenancePlantArea").children().remove();
 
-                            $("#valveMaintenancePlantArea").append(
-                                $('<option>', {
-                                    value: valveMaintenanceDetail.PlantArea,
-                                    text: valveMaintenanceDetail.PlantArea,
-                                    id: "selectValveMaintenancePlantArea"
-                                })
-                            );
+                            if (valveMaintenanceDetail.PlantArea == "select") {
+                                $("#valveMaintenancePlantArea").append(
+                                    $('<option>', {
+                                        value: "select",
+                                        text: "Select Plant Area",
+                                        id: "selectValveMaintenancePlantArea"
+                                    })
+                                );
+                            }
+                            else {
+                                $("#valveMaintenancePlantArea").append(
+                                    $('<option>', {
+                                        value: valveMaintenanceDetail.PlantArea,
+                                        text: valveMaintenanceDetail.PlantArea,
+                                        id: "selectValveMaintenancePlantArea"
+                                    })
+                                );
+                            }
+
                             $("#selectValveMaintenancePlantArea").attr("hidden", "");
 
                             for (var i = 0; i < rModel.length; i++) {
@@ -2490,7 +2510,57 @@ function openEditValveMaintenanceModal(valveMaintenanceId) {
                             // #endregion
                         },
                         error: function (error) {
+                            alert("error!");
+                            console.log(error.responseText);
+                        }
+                    });
+                    // #endregion
 
+                    // #region Get Status for Select > Option
+                    $.ajax({
+                        type: "GET",
+                        url: lookupItemController.Status.List,
+                        success: function (response) {
+                            rModel = jQuery.parseJSON(response);
+
+                            // #region Create & Configure Select > Option
+                            $("#valveMaintenanceStatus").children().remove();
+
+                            if (valveMaintenanceDetail.Status == "select") {
+                                $("#valveMaintenanceStatus").append(
+                                    $('<option>', {
+                                        value: "select",
+                                        text: "Select Status",
+                                        id: "selectValveMaintenanceStatus"
+                                    })
+                                );
+                            }
+                            else {
+                                $("#valveMaintenanceStatus").append(
+                                    $('<option>', {
+                                        value: valveMaintenanceDetail.Status,
+                                        text: valveMaintenanceDetail.Status,
+                                        id: "selectValveMaintenanceStatus"
+                                    })
+                                );
+                            }
+
+
+                            $("#selectValveMaintenanceStatus").attr("hidden", "");
+
+                            for (var i = 0; i < rModel.length; i++) {
+                                $("#valveMaintenanceStatus").append(
+                                    $('<option>', {
+                                        value: rModel[i].Name,
+                                        text: rModel[i].Name
+                                    })
+                                );
+                            }
+                            // #endregion
+                        },
+                        error: function (error) {
+                            alert("error!");
+                            console.log(error.responseText);
                         }
                     });
                     // #endregion
@@ -2534,9 +2604,6 @@ function openEditThicknessMeasurementModal(thicknessMeasurementId) {
                         currentThicknessMeasurement = thicknessMeasurementDetail;
                     }
 
-                    $("#thicknessMeasurementPlantArea").val(thicknessMeasurementDetail.PlantArea);
-                    $("#thicknessMeasurementPlantSystem").val(thicknessMeasurementDetail.PlantSystem);
-                    $("#thicknessMeasurementSpecification").val(thicknessMeasurementDetail.Specification);
                     $("#thicknessMeasurementNominalThickness").val(thicknessMeasurementDetail.NominalThickness);
                     $("#thicknessMeasurementMeasuredThickness").val(thicknessMeasurementDetail.MeasuredThickness);
                     $("#thicknessMeasurementDescription").val(thicknessMeasurementDetail.Description);
@@ -2551,13 +2618,25 @@ function openEditThicknessMeasurementModal(thicknessMeasurementId) {
                             // #region Create & Configure Select > Option
                             $("#thicknessMeasurementPlantArea").children().remove();
 
-                            $("#thicknessMeasurementPlantArea").append(
-                                $('<option>', {
-                                    value: thicknessMeasurementDetail.PlantArea,
-                                    text: thicknessMeasurementDetail.PlantArea,
-                                    id: "selectThicknessMeasurementPlantArea"
-                                })
-                            );
+                            if (thicknessMeasurementDetail.PlantArea == "select") {
+                                $("#thicknessMeasurementPlantArea").append(
+                                    $('<option>', {
+                                        value: "select",
+                                        text: "Select Plant Area",
+                                        id: "selectThicknessMeasurementPlantArea"
+                                    })
+                                );
+                            }
+                            else {
+                                $("#thicknessMeasurementPlantArea").append(
+                                    $('<option>', {
+                                        value: thicknessMeasurementDetail.PlantArea,
+                                        text: thicknessMeasurementDetail.PlantArea,
+                                        id: "selectThicknessMeasurementPlantArea"
+                                    })
+                                );
+                            }
+                           
                             $("#selectThicknessMeasurementPlantArea").attr("hidden", "");
 
                             for (var i = 0; i < rModel.length; i++) {
@@ -2586,13 +2665,25 @@ function openEditThicknessMeasurementModal(thicknessMeasurementId) {
                             // #region Create & Configure Select > Option
                             $("#thicknessMeasurementPlantSystem").children().remove();
 
-                            $("#thicknessMeasurementPlantSystem").append(
-                                $('<option>', {
-                                    value: thicknessMeasurementDetail.PlantSystem,
-                                    text: thicknessMeasurementDetail.PlantSystem,
-                                    id: "selectThicknessMeasurementPlantSystem"
-                                })
-                            );
+                            if (thicknessMeasurementDetail.PlantSystem == "select") {
+                                $("#thicknessMeasurementPlantSystem").append(
+                                    $('<option>', {
+                                        value: "select",
+                                        text: "Select Plant System",
+                                        id: "selectThicknessMeasurementPlantSystem"
+                                    })
+                                );
+                            }
+                            else {
+                                $("#thicknessMeasurementPlantSystem").append(
+                                    $('<option>', {
+                                        value: thicknessMeasurementDetail.PlantSystem,
+                                        text: thicknessMeasurementDetail.PlantSystem,
+                                        id: "selectThicknessMeasurementPlantSystem"
+                                    })
+                                );
+                            }
+
                             $("#selectThicknessMeasurementPlantSystem").attr("hidden", "");
 
                             for (var i = 0; i < rModel.length; i++) {
@@ -2621,17 +2712,76 @@ function openEditThicknessMeasurementModal(thicknessMeasurementId) {
                             // #region Create & Configure Select > Option
                             $("#thicknessMeasurementSpecification").children().remove();
 
-                            $("#thicknessMeasurementSpecification").append(
-                                $('<option>', {
-                                    value: thicknessMeasurementDetail.Specification,
-                                    text: thicknessMeasurementDetail.Specification,
-                                    id: "selectThicknessMeasurementPlantArea"
-                                })
-                            );
-                            $("#selectThicknessMeasurementPlantArea").attr("hidden", "");
+                            if (thicknessMeasurementDetail.Specification == "select") {
+                                $("#thicknessMeasurementSpecification").append(
+                                    $('<option>', {
+                                        value: "select",
+                                        text: "Select Specification",
+                                        id: "selectThicknessMeasurementSpecification"
+                                    })
+                                );
+                            }
+                            else {
+                                $("#thicknessMeasurementSpecification").append(
+                                    $('<option>', {
+                                        value: thicknessMeasurementDetail.Specification,
+                                        text: thicknessMeasurementDetail.Specification,
+                                        id: "selectThicknessMeasurementSpecification"
+                                    })
+                                );
+                            }
+
+                            $("#selectThicknessMeasurementSpecification").attr("hidden", "");
 
                             for (var i = 0; i < rModel.length; i++) {
                                 $("#thicknessMeasurementSpecification").append(
+                                    $('<option>', {
+                                        value: rModel[i].Name,
+                                        text: rModel[i].Name
+                                    })
+                                );
+                            }
+                            // #endregion
+                        },
+                        error: function (error) {
+
+                        }
+                    });
+                    // #endregion
+
+                    // #region Get Status for Select > Option
+                    $.ajax({
+                        type: "GET",
+                        url: lookupItemController.Status.List,
+                        success: function (response) {
+                            rModel = jQuery.parseJSON(response);
+
+                            // #region Create & Configure Select > Option
+                            $("#thicknessMeasurementStatus").children().remove();
+
+                            if (thicknessMeasurementDetail.Status == "select") {
+                                $("#thicknessMeasurementStatus").append(
+                                    $('<option>', {
+                                        value: "select",
+                                        text: "Select Status",
+                                        id: "selectThicknessMeasurementStatus"
+                                    })
+                                );
+                            }
+                            else {
+                                $("#thicknessMeasurementStatus").append(
+                                    $('<option>', {
+                                        value: thicknessMeasurementDetail.Status,
+                                        text: thicknessMeasurementDetail.Status,
+                                        id: "selectThicknessMeasurementStatus"
+                                    })
+                                );
+                            }
+
+                            $("#selectThicknessMeasurementStatus").attr("hidden", "");
+
+                            for (var i = 0; i < rModel.length; i++) {
+                                $("#thicknessMeasurementStatus").append(
                                     $('<option>', {
                                         value: rModel[i].Name,
                                         text: rModel[i].Name
@@ -2685,7 +2835,6 @@ $("#itemShowLabel").on('change', function () {
 
                 //selectedFeature.setProperties({ 'ShowLabel': item.ShowLabel });
                 updateDrawingFeatures();
-                source.clear();
                 addFeatureToSource();
             }
             setTimeout(wait, 100);

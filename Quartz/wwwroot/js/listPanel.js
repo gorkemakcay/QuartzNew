@@ -6,21 +6,28 @@ function createList() {
     $("#shapeArea").children().remove();
 
     $.ajax({
+        async: false,
         type: "GET",
         url: linkController.Link.List,
         data: { mainDrawingSettingsId: currentQuartzLink.DrawingSettingsId },
         success: function (response) {
             var allLinks = jQuery.parseJSON(response);
 
-            // #region Create Link Buttons
-            allLinks.forEach(function (link) {
-                var linkButton = $("<button id=" + link.Id + " name='link' type='button' class='btn text-dark listPanelButtons linkButton'><strong><i class='fa fa-link'></i>&nbsp;" + link.TagNo + "</strong></button>");
+            if (allLinks.length != 0) {
+                $("#shapeArea").append(`
+                    <span class='btn text-center listPanelHeader py-0'><strong><i class='fa fa-link'></i>&nbsp; &nbsp; LINKS &nbsp; &nbsp;<i class='fa fa-link'></i></strong></span>
+                `);
 
-                $("#shapeArea").append(linkButton);
-            })
+                // #region Create Link Buttons
+                allLinks.forEach(function (link) {
+                    var linkButton = $("<button id=" + link.Id + " name='link' type='button' class='btn text-dark listPanelButtons linkButton'><strong><i class='fa fa-link'></i>&nbsp;" + link.TagNo + "</strong></button>");
 
-            $("#1").remove();
-            // #endregion
+                    $("#shapeArea").append(linkButton);
+                })
+                // #endregion
+            }
+
+
         },
         error: function (error) {
             alert("error!");
@@ -31,18 +38,28 @@ function createList() {
 
     // #region Get All Items From DB & Display On The List Panel As A Button
     $.ajax({
+        //async: false,
         type: "GET",
         url: itemController.Item.List,
         data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },
         success: function (response) {
             var allItems = jQuery.parseJSON(response);
-            // #region Create Item Buttons
-            allItems.forEach(function (item) {
-                var itemButton = $("<button id=" + item.Id + " name='item' type='button' class='btn text-dark listPanelButtons itemButton'><strong><i class='fa fa-tags'></i>&nbsp;" + item.TagNo + "</strong></button>");
 
-                $("#shapeArea").append(itemButton);
-            });
-            // #endregion
+            if (allItems.length != 0) {
+                $("#shapeArea").append(`
+                    <span class='btn text-center listPanelHeader py-0'><strong><i class='fa fa-tags'></i>&nbsp; &nbsp; ITEMS &nbsp; &nbsp;<i class='fa fa-tags'></i></strong></span>
+                `);
+
+                // #region Create Item Buttons
+                allItems.forEach(function (item) {
+                    var itemButton = $("<button id=" + item.Id + " name='item' type='button' class='btn text-dark listPanelButtons itemButton'><strong><i class='fa fa-tags'></i>&nbsp;" + item.TagNo + "</strong></button>");
+
+                    $("#shapeArea").append(itemButton);
+                });
+                // #endregion
+            }
+
+
         },
         error: function (error) {
             alert("error!");
