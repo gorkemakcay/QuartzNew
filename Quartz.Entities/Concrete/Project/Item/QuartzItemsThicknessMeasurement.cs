@@ -14,6 +14,7 @@ namespace Quartz.Entities.Concrete.Project.Item
         public string Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public string AttachmentIds { get; set; }
+        public string Status { get; set; }
         public int QuartzItemId { get; set; } // Information'ın ait olduğu Item'ın Id'si (Foreign Key)
         public QuartzItem QuartzItem { get; set; } // Information'ın ait olduğu Item (One-to-Many Relationship)
     }

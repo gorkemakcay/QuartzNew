@@ -18,5 +18,6 @@ namespace Quartz.Common.ViewModels.Project.Item.QuartzItemsValveMaintenance
         public bool Tested { get; set; }
         public string AttachmentIds { get; set; }
         public int QuartzItemId { get; set; }
+        public string Status { get; set; }
     }
 }

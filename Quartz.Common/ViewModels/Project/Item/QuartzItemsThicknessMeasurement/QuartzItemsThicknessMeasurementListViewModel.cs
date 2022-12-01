@@ -14,5 +14,6 @@ namespace Quartz.Common.ViewModels.Project.Item.QuartzItemsThicknessMeasurement
         public DateTime CreatedDate { get; set; }
         public string AttachmentIds { get; set; }
         public int QuartzItemId { get; set; }
+        public string Status { get; set; }
     }
 }
