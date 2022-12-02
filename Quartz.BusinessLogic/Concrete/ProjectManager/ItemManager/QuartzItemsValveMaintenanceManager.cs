@@ -74,6 +74,9 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
             if (model.PlantArea != "value")
                 filteredValveMaintenances = filteredValveMaintenances.Where(I => I.PlantArea != null && I.PlantArea == model.PlantArea).ToList();
 
+            if (model.Status != "value")
+                filteredValveMaintenances = filteredValveMaintenances.Where(I => I.Status != null && I.Status == model.Status).ToList();
+
             return filteredValveMaintenances;
         }
 

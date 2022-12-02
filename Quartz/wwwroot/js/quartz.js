@@ -399,7 +399,7 @@
                         CreatedDate: getDate(),
                         CreatedBy: loginUserInfo.FullName,
                         ShowLabel: false,
-                        IsInspected: false,
+                        IsInspected: 0,
                         DrawingSettingsId: currentQuartzLink.DrawingSettingsId
                     };
 

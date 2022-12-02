@@ -849,6 +849,40 @@ function loadSearchPanelsSelectOptions() {
 
         }
     });
+
+    // Status
+    $.ajax({
+        type: "GET",
+        url: lookupItemController.Status.List,
+        success: function (response) {
+            rModel = jQuery.parseJSON(response);
+
+            // #region Create & Configure Select > Option
+            $("#valveMaintenanceFilterStatus").children().remove();
+
+            $("#valveMaintenanceFilterStatus").append(
+                $('<option>', {
+                    value: "value",
+                    text: "Select Status",
+                    id: "selectValveMaintenanceFilterStatus"
+                })
+            );
+            $("#selectValveMaintenanceFilterStatus").attr("hidden", "");
+
+            for (var i = 0; i < rModel.length; i++) {
+                $("#valveMaintenanceFilterStatus").append(
+                    $('<option>', {
+                        value: rModel[i].Name,
+                        text: rModel[i].Name
+                    })
+                );
+            }
+            // #endregion
+        },
+        error: function (error) {
+
+        }
+    });
     // #endregion
 
     // #region Thickness Measurement
@@ -941,6 +975,40 @@ function loadSearchPanelsSelectOptions() {
 
             for (var i = 0; i < rModel.length; i++) {
                 $("#thicknessMeasurementFilterPlantSystem").append(
+                    $('<option>', {
+                        value: rModel[i].Name,
+                        text: rModel[i].Name
+                    })
+                );
+            }
+            // #endregion
+        },
+        error: function (error) {
+
+        }
+    });
+
+    // Status
+    $.ajax({
+        type: "GET",
+        url: lookupItemController.Status.List,
+        success: function (response) {
+            rModel = jQuery.parseJSON(response);
+
+            // #region Create & Configure Select > Option
+            $("#thicknessMeasurementFilterStatus").children().remove();
+
+            $("#thicknessMeasurementFilterStatus").append(
+                $('<option>', {
+                    value: "value",
+                    text: "Select Status",
+                    id: "selectThicknessMeasurementFilterStatus"
+                })
+            );
+            $("#selectThicknessMeasurementFilterStatus").attr("hidden", "");
+
+            for (var i = 0; i < rModel.length; i++) {
+                $("#thicknessMeasurementFilterStatus").append(
                     $('<option>', {
                         value: rModel[i].Name,
                         text: rModel[i].Name
@@ -1588,7 +1656,7 @@ function deleteThis(objectType, objectId) {
                         success: function (response) {
                             inspectionList = jQuery.parseJSON(response);
                             if (inspectionList.length == 0) {
-                                item.IsInspected = false;
+                                item.IsInspected = 0;
 
                                 $.ajax({
                                     type: "POST",
@@ -2420,7 +2488,7 @@ function addFeatureToSource() {
                 }
                 else TextContext = '';
 
-                if (item.IsInspected) {
+                if (item.IsInspected == 1) {
                     fillColor = 'rgba(0,255,0,0.5)';
                 }
             }

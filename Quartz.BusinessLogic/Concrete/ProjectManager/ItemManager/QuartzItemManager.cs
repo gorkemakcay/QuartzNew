@@ -6,6 +6,7 @@ using Quartz.DataAccess.UnitOfWorks.Interface;
 using Quartz.Entities.Concrete.Project.Item;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
 {
@@ -28,7 +29,9 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
                 TagNo = model.TagNo,
                 CreatedDate = model.CreatedDate,
                 CreatedBy = model.CreatedBy,
-                DrawingSettingsId = model.DrawingSettingsId
+                DrawingSettingsId = model.DrawingSettingsId,
+                IsInspected = 0,
+                ShowLabel = false
             };
 
             context.QuartzItems.Add(item);
@@ -43,31 +46,39 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
             _uow.SaveChange();
         }
 
-        public List<QuartzItemFilterViewModel> FilterItems(QuartzItemFilterViewModel model)
+        public List<QuartzItemFilter> FilterItems(QuartzItemFilter model)
         {
-            var items = _mapper.Map<List<QuartzItemFilterViewModel>>(GetAll());
+            //var items = _mapper.Map<List<QuartzItemFilterViewModel>>(GetAll());
 
-            if (model.TagNo != null)
-                items = items.Where(I => I.TagNo != null && I.TagNo.ToLower().Contains(model.TagNo.ToLower())).ToList();
+            using var ctx = new QuartzContext();
+            {
+                var items = ctx.vw_SearchItem.FromSqlRaw("SELECT * FROM vw_SearchItem").ToList();
 
-            if (model.FittingType != "value")
-                items = items.Where(I => I.FittingType != "value" && I.FittingType == model.FittingType).ToList();
+                if (model.TagNo != null)
+                    items = items.Where(I => I.TagNo != null && I.TagNo.ToLower().Contains(model.TagNo.ToLower())).ToList();
 
-            if (model.WeldType != "value")
-                items = items.Where(I => I.WeldType != "value" && I.WeldType == model.WeldType).ToList();
+                if (model.FittingType != "value")
+                    items = items.Where(I => I.FittingType != "value" && I.FittingType == model.FittingType).ToList();
 
-            if (model.PlantArea != "value")
-                items = items.Where(I => I.PlantArea != "value" && I.PlantArea == model.PlantArea).ToList();
+                if (model.WeldType != "value")
+                    items = items.Where(I => I.WeldType != "value" && I.WeldType == model.WeldType).ToList();
 
-            if (model.PlantSystem != "value")
-                items = items.Where(I => I.PlantSystem != "value" && I.PlantSystem == model.PlantSystem).ToList();
+                if (model.PlantArea != "value")
+                    items = items.Where(I => I.PlantArea != "value" && I.PlantArea == model.PlantArea).ToList();
 
-            if (model.IsInspected == false)
-                items = items.Where(I => I.IsInspected == model.IsInspected).ToList();
-            if (model.IsInspected == true)
-                items = items.Where(I => I.IsInspected == model.IsInspected).ToList();
+                if (model.PlantSystem != "value")
+                    items = items.Where(I => I.PlantSystem != "value" && I.PlantSystem == model.PlantSystem).ToList();
 
-            return items;
+                if (model.IsInspected != 2)
+                {
+                    if (model.IsInspected == 0)
+                        items = items.Where(I => I.IsInspected == 0).ToList();
+                    if (model.IsInspected == 1)
+                        items = items.Where(I => I.IsInspected == 1).ToList();
+                }
+
+                return items;
+            }
         }
 
         public List<QuartzItemListViewModel> GetAllItems(int drawingSettingsId)

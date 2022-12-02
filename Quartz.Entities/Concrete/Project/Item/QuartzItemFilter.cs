@@ -10,7 +10,7 @@ namespace Quartz.Entities.Concrete.Project.Item
         public string Specification { get; set; }
         public string FittingType { get; set; }
         public string WeldType { get; set; }
-        public bool IsInspected { get; set; }
+        public int IsInspected { get; set; }
         public string DrawingNo { get; set; }
         public string PlantArea { get; set; }
         public string PlantSystem { get; set; }

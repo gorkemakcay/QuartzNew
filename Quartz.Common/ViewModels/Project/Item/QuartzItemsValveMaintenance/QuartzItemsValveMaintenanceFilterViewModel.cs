@@ -14,5 +14,6 @@ namespace Quartz.Common.ViewModels.Project.Item.QuartzItemsValveMaintenance
         public float OpeningPressureBarg { get; set; }
         public int QuartzItemId { get; set; }
         public string Status { get; set; }
+        public string Remarks { get; set; }
     }
 }

@@ -70,6 +70,9 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
             if (model.PlantSystem != "value")
                 filteredThicknessMeasurements = filteredThicknessMeasurements.Where(I => I.PlantSystem != null && I.PlantSystem == model.PlantSystem).ToList();
 
+            if (model.Status != "value")
+                filteredThicknessMeasurements = filteredThicknessMeasurements.Where(I => I.Status != null && I.Status == model.Status).ToList();
+
             return filteredThicknessMeasurements;
         }
 

@@ -92,11 +92,11 @@ namespace Quartz.Controllers.Project.Item
             {
                 _itemService.DeleteItem(model);
             }
-                return Json(null);
+            return Json(null);
         }
 
         [HttpPost]
-        public IActionResult FilterItem(QuartzItemFilterViewModel model)
+        public IActionResult FilterItem(QuartzItemFilter model)
         {
             var rModel = _itemService.FilterItems(model);
             var jSonModel = JsonConvert.SerializeObject(rModel, new JsonSerializerSettings()
@@ -132,7 +132,8 @@ namespace Quartz.Controllers.Project.Item
                 });
                 return Json(jSonModel);
             }
-            else {
+            else
+            {
                 var errors = ModelState.Values.SelectMany(v => v.Errors);
                 return Ok(errors);
             }
@@ -248,7 +249,7 @@ namespace Quartz.Controllers.Project.Item
         {
             return PartialView("QuartzItemsInspectionsDataPartial");
         }
-        
+
         [HttpGet]
         public IActionResult GetInspectionsAttachmentPartialView()
         {
@@ -280,7 +281,7 @@ namespace Quartz.Controllers.Project.Item
             }
             return Json(null);
         }
-        
+
         [HttpPost]
         public IActionResult UpdateValveMaintenanceJSON(QuartzItemsValveMaintenanceUpdateViewModel model)
         {
@@ -432,7 +433,7 @@ namespace Quartz.Controllers.Project.Item
 
         #region Search
 
-            #region Inspection
+        #region Inspection
 
         [HttpPost]
         public IActionResult FilterInspections(QuartzItemsInspectionFilterViewModel model)
@@ -453,7 +454,7 @@ namespace Quartz.Controllers.Project.Item
 
         #endregion
 
-            #region Valve Maintenance
+        #region Valve Maintenance
 
         [HttpPost]
         public IActionResult FilterValveMaintenances(QuartzItemsValveMaintenanceFilterViewModel model)

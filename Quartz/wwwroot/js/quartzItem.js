@@ -198,7 +198,7 @@ $("#inspectionAddSaveButton").on('click', function () {
                     inspectionList = jQuery.parseJSON(response);
 
                     if (inspectionList.length == 1) {
-                        item.IsInspected = true;
+                        item.IsInspected = 1;
 
                         $.ajax({
                             type: "POST",

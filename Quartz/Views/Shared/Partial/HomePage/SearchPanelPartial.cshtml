@@ -44,12 +44,12 @@
                 </select>
 
                 <select class="form-select" id="itemFilterIsInspected" style="margin-bottom: 10px;">
-                    <option value="all">All Items</option>
-                    <option value="true">Inspected Items</option>
-                    <option value="false">Not Inspected Items</option>
+                    <option value="2">All Items</option>
+                    <option value="1">Inspected Items</option>
+                    <option value="0">Not Inspected Items</option>
                 </select>
 
-                <button class="btn btn-primary" style="width: 100%; border: none; border-radius: 5px; background: #373A3E;" onclick="filterTag()" data-bs-toggle="modal" data-bs-target="#searchPanelsModal">Search</button>
+                <button class="btn btn-primary" style="width: 100%; border: none; border-radius: 5px; background: #373A3E;" onclick="filterItem()" data-bs-toggle="modal" data-bs-target="#searchPanelsModal">Search</button>
             </div>
         </div>
 
@@ -102,6 +102,9 @@
                 <select class="form-select" id="valveMaintenanceFilterPlantArea" style="margin-bottom: 10px;">
                 </select>
 
+                <select class="form-select" id="valveMaintenanceFilterStatus" style="margin-bottom: 10px;">
+                </select>
+
                 <button class="btn btn-primary" style="width: 100%; border: none; border-radius: 5px; background: #373A3E;" onclick="filterValveMaintenance()" data-bs-toggle="modal" data-bs-target="#searchPanelsModal">Search</button>
             </div>
         </div>
@@ -125,6 +128,9 @@
                 </select>
 
                 <select class="form-select" id="thicknessMeasurementFilterPlantSystem" style="margin-bottom: 10px;">
+                </select>
+
+                <select class="form-select" id="thicknessMeasurementFilterStatus" style="margin-bottom: 10px;">
                 </select>
 
                 <button class="btn btn-primary" style="width: 100%; border: none; border-radius: 5px; background: #373A3E;" onclick="filterThicknessMeasurement()" data-bs-toggle="modal" data-bs-target="#searchPanelsModal">Search</button>

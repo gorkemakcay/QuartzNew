@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quartz.DataAccess.Concrete.EntityFramworkCore.Context;
 
 namespace Quartz.DataAccess.Migrations
 {
     [DbContext(typeof(QuartzContext))]
-    partial class QuartzContextModelSnapshot : ModelSnapshot
+    [Migration("20221202124957_changed_QuartzItem_IsInspected_property_type")]
+    partial class changed_QuartzItem_IsInspected_property_type
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

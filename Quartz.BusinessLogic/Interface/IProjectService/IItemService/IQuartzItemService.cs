@@ -11,6 +11,6 @@ namespace Quartz.BusinessLogic.Interface.IProjectService.IItemService
         void UpdateItem(QuartzItemUpdateViewModel model);
         void DeleteItem(QuartzItemDeleteViewModel model);
         List<QuartzItemListViewModel> GetAllItems(int drawingSettingsId);
-        List<QuartzItemFilterViewModel> FilterItems(QuartzItemFilterViewModel model);
+        List<QuartzItemFilter> FilterItems(QuartzItemFilter model);
     }
 }
