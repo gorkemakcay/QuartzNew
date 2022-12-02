@@ -16,7 +16,7 @@ namespace Quartz.BusinessLogic.Concrete.Users
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private IPasswordHasher<AppUser> _passwordHasher;
+        private readonly IPasswordHasher<AppUser> _passwordHasher;
 
         public AppUserManager(IUnitOfWork uow,
                               IPasswordHasher<AppUser> passwordHasher,

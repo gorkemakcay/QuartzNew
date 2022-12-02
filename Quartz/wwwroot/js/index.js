@@ -538,7 +538,7 @@ function loadSearchPanelsSelectOptions() {
     });
     // #endregion
 
-    // #region Search Tag
+    // #region Search Item
     // Fitting Type
     $.ajax({
         type: "GET",

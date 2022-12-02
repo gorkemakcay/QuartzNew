@@ -15,6 +15,7 @@ namespace Quartz.DataAccess.UnitOfWorks.Interface
         IAppUserDal appUserDal { get; }
         IFileUploadDal fileUploadDal { get; }
         IQuartzItemDal quartzItemDal { get; }
+        IQuartzItemFilterDal quartzItemFilterDal { get; }
         IQuartzItemsInformationDal quartzItemsInformationDal { get; }
         IQuartzItemsInspectionDal quartzItemsInspectionDal { get; }
         IQuartzItemsValveMaintenanceDal quartzItemsValveMaintenanceDal { get; }

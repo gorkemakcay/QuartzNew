@@ -20,49 +20,28 @@ namespace Quartz.DataAccess.UnitOfWorks.Concrete
         private readonly QuartzContext _ctx;
 
         public IAppRoleDal appRoleDal { get; private set; }
-
         public IAppUserDal appUserDal { get; private set; }
-
         public IFileUploadDal fileUploadDal { get; private set; }
-
         public IQuartzItemDal quartzItemDal { get; private set; }
-
+        public IQuartzItemFilterDal quartzItemFilterDal { get; private set; }
         public IQuartzItemsInformationDal quartzItemsInformationDal { get; private set; }
-
         public IQuartzItemsInspectionDal quartzItemsInspectionDal { get; private set; }
-
         public IQuartzItemsValveMaintenanceDal quartzItemsValveMaintenanceDal { get; private set; }
-
         public IQuartzItemsThicknessMeasurementDal quartzItemsThicknessMeasurementDal { get; private set; }
-
         public IQuartzLinkDal quartzLinkDal { get; private set; }
-
         public IQuartzLinksDrawingFeaturesDal quartzLinksDrawingFeaturesDal { get; private set; }
-
         public IQuartzLinksDrawingSettingsDal quartzLinksDrawingSettingsDal { get; private set; }
-
         public ILookupItemsComponentTypeDal lookupItemsComponentTypeDal { get; private set; }
-
         public ILookupItemsFittingTypeDal lookupItemsFittingTypeDal { get; private set; }
-
         public ILookupItemsMethodDal lookupItemsMethodDal { get; private set; }
-
         public ILookupItemsOperatorDal lookupItemsOperatorDal { get; private set; }
-
         public ILookupItemsPlantAreaDal lookupItemsPlantAreaDal { get; private set; }
-
         public ILookupItemsPlantSystemDal lookupItemsPlantSystemDal { get; private set; }
-
         public ILookupItemsProcedureDal lookupItemsProcedureDal { get; private set; }
-
         public ILookupItemsSpecificationDal lookupItemsSpecificationDal { get; private set; }
-
         public ILookupItemsStandardStatementDal lookupItemsStandardStatementDal { get; private set; }
-
         public ILookupItemsStatusDal lookupItemsStatusDal { get; private set; }
-
         public ILookupItemsTechniqueDal lookupItemsTechniqueDal { get; private set; }
-
         public ILookupItemsWeldTypeDal lookupItemsWeldTypeDal { get; private set; }
 
         public UnitOfWork(QuartzContext ctx)
@@ -73,6 +52,7 @@ namespace Quartz.DataAccess.UnitOfWorks.Concrete
             appUserDal = new EfAppUserRepository(_ctx);
             fileUploadDal = new EfFileUploadRepository(_ctx);
             quartzItemDal = new EfQuartzItemRepository(_ctx);
+            quartzItemFilterDal = new EfQuartzItemFilterRepository(_ctx);
             quartzItemsInformationDal = new EfQuartzItemsInformationRepository(_ctx);
             quartzItemsInspectionDal = new EfQuartzItemsInspectionRepository(_ctx);
             quartzItemsValveMaintenanceDal = new EfQuartzItemsValveMaintenanceRepository(_ctx);

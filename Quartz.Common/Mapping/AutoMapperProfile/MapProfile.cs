@@ -83,6 +83,19 @@ namespace Quartz.Common.Mapping.AutoMapperProfile
             CreateMap<QuartzItem, QuartzItemListViewModel>().ReverseMap();
             CreateMap<QuartzItem, QuartzItemUpdateViewModel>().ReverseMap();
             CreateMap<QuartzItem, QuartzItemDeleteViewModel>().ReverseMap();
+            //CreateMap<QuartzItemFilter, QuartzItemFilterViewModel>()
+                //.ForMember(member1 => member1.Id, member2 => member2.MapFrom(x => x.Id))
+                //.ForMember(member1 => member1.TagNo, member2 => member2.MapFrom(x => x.TagNo))
+                //.ForMember(member1 => member1.SerialNo, member2 => member2.MapFrom(x => x.SerialNo))
+                //.ForMember(member1 => member1.Specification, member2 => member2.MapFrom(x => x.Specification))
+                //.ForMember(member1 => member1.FittingType, member2 => member2.MapFrom(x => x.FittingType))
+                //.ForMember(member1 => member1.WeldType, member2 => member2.MapFrom(x => x.WeldType))
+                //.ForMember(member1 => member1.IsInspected, member2 => member2.MapFrom(x => x.IsInspected))
+                //.ForMember(member1 => member1.DrawingNo, member2 => member2.MapFrom(x => x.DrawingNo))
+                //.ForMember(member1 => member1.PlantArea, member2 => member2.MapFrom(x => x.PlantArea))
+                //.ForMember(member1 => member1.PlantSystem, member2 => member2.MapFrom(x => x.PlantSystem))
+                //.ForMember(member1 => member1.Description, member2 => member2.MapFrom(x => x.Description))
+                //.ReverseMap();
             #endregion
 
             #region QuartzItemsInformation

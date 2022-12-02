@@ -1,6 +1,8 @@
-﻿namespace Quartz.Common.ViewModels.Project.Item.QuartzItemViewModels
+﻿using Quartz.Entities.Interface;
+
+namespace Quartz.Entities.Concrete.Project.Item
 {
-    public class QuartzItemFilterViewModel
+    public class QuartzItemFilter : ITable
     {
         public int Id { get; set; }
         public string TagNo { get; set; }

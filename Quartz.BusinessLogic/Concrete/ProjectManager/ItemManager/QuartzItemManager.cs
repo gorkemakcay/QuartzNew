@@ -5,6 +5,7 @@ using Quartz.DataAccess.Concrete.EntityFramworkCore.Context;
 using Quartz.DataAccess.UnitOfWorks.Interface;
 using Quartz.Entities.Concrete.Project.Item;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
 {
@@ -34,7 +35,6 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
             context.SaveChanges();
 
             return item.Id;
-
         }
 
         public void DeleteItem(QuartzItemDeleteViewModel model)
@@ -45,13 +45,29 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
 
         public List<QuartzItemFilterViewModel> FilterItems(QuartzItemFilterViewModel model)
         {
-            //var items = _mapper.Map<List<QuartzItemFilterViewModel>>(GetAll());
-            //var informations = _mapper.Map<List<QuartzI>>(GetAll());
+            var items = _mapper.Map<List<QuartzItemFilterViewModel>>(GetAll());
 
-            //if (model.ReportNo != null)
-            //    inspections = inspections.Where(I => I.ReportNo.Contains(model.ReportNo)).ToList();
+            if (model.TagNo != null)
+                items = items.Where(I => I.TagNo != null && I.TagNo.ToLower().Contains(model.TagNo.ToLower())).ToList();
 
-            return null;
+            if (model.FittingType != "value")
+                items = items.Where(I => I.FittingType != "value" && I.FittingType == model.FittingType).ToList();
+
+            if (model.WeldType != "value")
+                items = items.Where(I => I.WeldType != "value" && I.WeldType == model.WeldType).ToList();
+
+            if (model.PlantArea != "value")
+                items = items.Where(I => I.PlantArea != "value" && I.PlantArea == model.PlantArea).ToList();
+
+            if (model.PlantSystem != "value")
+                items = items.Where(I => I.PlantSystem != "value" && I.PlantSystem == model.PlantSystem).ToList();
+
+            if (model.IsInspected == false)
+                items = items.Where(I => I.IsInspected == model.IsInspected).ToList();
+            if (model.IsInspected == true)
+                items = items.Where(I => I.IsInspected == model.IsInspected).ToList();
+
+            return items;
         }
 
         public List<QuartzItemListViewModel> GetAllItems(int drawingSettingsId)

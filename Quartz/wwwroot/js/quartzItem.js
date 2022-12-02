@@ -196,6 +196,7 @@ $("#inspectionAddSaveButton").on('click', function () {
                 data: { quartzItemId: item.Id },
                 success: function (response) {
                     inspectionList = jQuery.parseJSON(response);
+
                     if (inspectionList.length == 1) {
                         item.IsInspected = true;
 

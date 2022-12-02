@@ -22,6 +22,7 @@ namespace Quartz.DataAccess.DIContainer
         {
             services.AddScoped<IFileUploadDal, EfFileUploadRepository>()
                     .AddScoped<IQuartzItemDal, EfQuartzItemRepository>()
+                    .AddScoped<IQuartzItemFilterDal, EfQuartzItemFilterRepository>()
                     .AddScoped<IQuartzItemsInformationDal, EfQuartzItemsInformationRepository>()
                     .AddScoped<IQuartzItemsInspectionDal, EfQuartzItemsInspectionRepository>()
                     .AddScoped<IQuartzItemsValveMaintenanceDal, EfQuartzItemsValveMaintenanceRepository>()

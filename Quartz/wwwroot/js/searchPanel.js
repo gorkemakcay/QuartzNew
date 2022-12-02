@@ -83,7 +83,7 @@ function filterTag() {
 
     $.ajax({
         type: "GET",
-        url: "Search/GetSearchPanelsTagPartialView",
+        url: "QuartzItem/GetSearchPanelsItemPartialView",
         success: function (html) {
             $("#searchPanelsModalPartialArea").html(html);
             $("#searchPanelsModalTitle").html("Search Item");
@@ -92,96 +92,97 @@ function filterTag() {
                 ItemTagNo: $("#itemFilterTagNo").val(),
                 FittingType: $("#itemFilterFittingType").val(),
                 WeldType: $("#itemFilterWeldType").val(),
-                plantArea: $("#itemFilterPlantArea").val(),
+                PlantArea: $("#itemFilterPlantArea").val(),
                 PlantSystem: $("#itemFilterPlantSystem").val(),
-                Description: $("#itemFilterDrawingDescription").val()
+                IsInspected: $("#itemFilterIsInspected").val()
             };
 
             $.ajax({
-                type: "Post",
-                url: "Search/FilterTag", // AJAX URL ROUTER'A EKLE
+                type: "POST",
+                url: "QuartzItem/FilterItem", // AJAX URL ROUTER'A EKLE
                 data: { model: filterTagModel },
                 success: function (response) {
                     var filteredTags = jQuery.parseJSON(response);
                     console.log(filteredTags);
-                    printItemModelsArray = [];
 
-                    var printItemModel = {
-                        MainLinkName: "",
-                        MainLinkPlantArea: "",
-                        TagNo: "",
-                        SerialNo: "",
-                        FittingType: "",
-                        Specification: "",
-                        InspectionHistory: ""
-                    }
+                    //printItemModelsArray = [];
 
-                    $("#searchPanelTagTable").children('tbody').children('tr').remove();
+                    //var printItemModel = {
+                    //    Id: "",
+                    //    MainLinkPlantArea: "",
+                    //    TagNo: "",
+                    //    SerialNo: "",
+                    //    FittingType: "",
+                    //    Specification: "",
+                    //    InspectionHistory: ""
+                    //}
 
-                    if (filteredTags != "") {
-                        var tagCount = filteredTags.length;
+                    //$("#searchPanelTagTable").children('tbody').children('tr').remove();
 
-                        $("#totalSearchPanelTagCount").html("Total Tag Count: " + tagCount);
+                    //if (filteredTags != "") {
+                    //    var tagCount = filteredTags.length;
 
-                        filteredTags.forEach(function (tag) {
-                            printItemModel.MainLinkName = tag.LinkTagNo;
-                            printItemModel.MainLinkPlantArea = tag.PlantArea;
-                            printItemModel.TagNo = tag.ItemTagNo;
-                            printItemModel.SerialNo = tag.SerialNo;
-                            printItemModel.FittingType = tag.FittingType;
-                            printItemModel.Specification = tag.Specification;
-                            if (tag.IsInspected)
-                                printItemModel.InspectionHistory = "YES";
-                            else
-                                printItemModel.InspectionHistory = "NO";
+                    //    $("#totalSearchPanelTagCount").html("Total Tag Count: " + tagCount);
 
-                            printItemModelsArray.push(printItemModel);
+                    //    filteredTags.forEach(function (tag) {
+                    //        printItemModel.MainLinkName = tag.LinkTagNo;
+                    //        printItemModel.MainLinkPlantArea = tag.PlantArea;
+                    //        printItemModel.TagNo = tag.ItemTagNo;
+                    //        printItemModel.SerialNo = tag.SerialNo;
+                    //        printItemModel.FittingType = tag.FittingType;
+                    //        printItemModel.Specification = tag.Specification;
+                    //        if (tag.IsInspected)
+                    //            printItemModel.InspectionHistory = "YES";
+                    //        else
+                    //            printItemModel.InspectionHistory = "NO";
 
-                            $("#searchPanelTagTable").children('tbody').append(
-                                $('<tr>').append(
-                                    $('<td>', { align: "center" }).append(
-                                        "<p class='tableColumn' style='color: blue; cursor: pointer;' onclick='goSelectedTag(" + tag.ItemId + ", " + tag.LinkId + ")' data-bs-dismiss='modal' data-bs-toggle='tooltip' data-bs-placement='right' title='Go link'><i class='fas fa-link'></i></p>"
-                                    ),
-                                    $('<td>', { align: "center" }).append(
-                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.ItemTagNo + "'>" + tag.ItemTagNo + "</p>"
-                                    ),
-                                    $('<td>', { align: "center" }).append(
-                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.SerialNo + "'>" + tag.SerialNo + "</p>"
-                                    ),
-                                    $('<td>', { align: "center" }).append(
-                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.LinkTagNo + "'>" + tag.LinkTagNo + "</p>"
-                                    ),
-                                    $('<td>', { align: "center" }).append(
-                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.FittingType + "'>" + tag.FittingType + "</p>"
-                                    ),
-                                    $('<td>', { align: "center" }).append(
-                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.Specification + "'>" + tag.Specification + "</p>"
-                                    ),
-                                    $('<td>', { align: "center" }).append(
-                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + printItemModel.InspectionHistory + "'>" + printItemModel.InspectionHistory + "</p>"
-                                    ),
-                                )
-                            );
+                    //        printItemModelsArray.push(printItemModel);
 
-                            printItemModel = {
-                                MainLinkName: "",
-                                MainLinkPlantArea: "",
-                                TagNo: "",
-                                SerialNo: "",
-                                FittingType: "",
-                                Specification: "",
-                                InspectionHistory: ""
-                            }
+                    //        $("#searchPanelTagTable").children('tbody').append(
+                    //            $('<tr>').append(
+                    //                $('<td>', { align: "center" }).append(
+                    //                    "<p class='tableColumn' style='color: blue; cursor: pointer;' onclick='goSelectedTag(" + tag.ItemId + ", " + tag.LinkId + ")' data-bs-dismiss='modal' data-bs-toggle='tooltip' data-bs-placement='right' title='Go link'><i class='fas fa-link'></i></p>"
+                    //                ),
+                    //                $('<td>', { align: "center" }).append(
+                    //                    "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.ItemTagNo + "'>" + tag.ItemTagNo + "</p>"
+                    //                ),
+                    //                $('<td>', { align: "center" }).append(
+                    //                    "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.SerialNo + "'>" + tag.SerialNo + "</p>"
+                    //                ),
+                    //                $('<td>', { align: "center" }).append(
+                    //                    "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.LinkTagNo + "'>" + tag.LinkTagNo + "</p>"
+                    //                ),
+                    //                $('<td>', { align: "center" }).append(
+                    //                    "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.FittingType + "'>" + tag.FittingType + "</p>"
+                    //                ),
+                    //                $('<td>', { align: "center" }).append(
+                    //                    "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + tag.Specification + "'>" + tag.Specification + "</p>"
+                    //                ),
+                    //                $('<td>', { align: "center" }).append(
+                    //                    "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + printItemModel.InspectionHistory + "'>" + printItemModel.InspectionHistory + "</p>"
+                    //                ),
+                    //            )
+                    //        );
 
-                        });
-                    }
-                    else {
-                        $("#searchPanelTagTable").children('tbody').append(
-                            $('<tr>').append(
-                                $('<td>', { colspan: "7", class: "text-center" }).append("No data available to show!")
-                            )
-                        );
-                    }
+                    //        printItemModel = {
+                    //            MainLinkName: "",
+                    //            MainLinkPlantArea: "",
+                    //            TagNo: "",
+                    //            SerialNo: "",
+                    //            FittingType: "",
+                    //            Specification: "",
+                    //            InspectionHistory: ""
+                    //        }
+
+                    //    });
+                    //}
+                    //else {
+                    //    $("#searchPanelTagTable").children('tbody').append(
+                    //        $('<tr>').append(
+                    //            $('<td>', { colspan: "7", class: "text-center" }).append("No data available to show!")
+                    //        )
+                    //    );
+                    //}
                 },
                 error: function (error) {
                     alert("error!");

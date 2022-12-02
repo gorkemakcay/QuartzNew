@@ -23,17 +23,13 @@
             </div>
         </div>
 
-        <!-- 2. Search Tag Option -->
+        <!-- 2. Search Item Option -->
         <div>
             <span class="target-fix" id="accordion2"></span>
             <a href="#accordion2" id="open-accordion2" title="open"><i class="fas fa-search">&nbsp;&nbsp;</i>Item</a>
             <a href="#accordion" id="close-accordion2" title="close"><i class="fas fa-search">&nbsp;&nbsp;</i>Item</a>
             <div class="accordion-content">
                 <input class="form-control searchInput" id="itemFilterTagNo" type="text" placeholder="Plant Ident/Tag No" style="margin-bottom: 10px;" />
-
-                @*<input class="form-control" id="itemFilterSerialNo" type="text" placeholder="Original Ident/Serial No" style="margin-bottom: 10px;" />*@
-
-                <input class="form-control searchInput" id="itemFilterDrawingDescription" type="text" placeholder="Drawing Description" style="margin-bottom: 10px;" />
 
                 <select class="form-select" id="itemFilterFittingType" style="margin-bottom: 10px;">
                 </select>
@@ -45,6 +41,12 @@
                 </select>
 
                 <select class="form-select" id="itemFilterPlantSystem" style="margin-bottom: 10px;">
+                </select>
+
+                <select class="form-select" id="itemFilterIsInspected" style="margin-bottom: 10px;">
+                    <option value="all">All Items</option>
+                    <option value="true">Inspected Items</option>
+                    <option value="false">Not Inspected Items</option>
                 </select>
 
                 <button class="btn btn-primary" style="width: 100%; border: none; border-radius: 5px; background: #373A3E;" onclick="filterTag()" data-bs-toggle="modal" data-bs-target="#searchPanelsModal">Search</button>

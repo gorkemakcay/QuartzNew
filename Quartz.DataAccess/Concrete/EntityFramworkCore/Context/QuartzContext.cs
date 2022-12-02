@@ -34,11 +34,11 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Configurate View's
-            //modelBuilder.Entity<SearchTag>(c =>
-            //{
-            //    c.HasNoKey();
-            //    c.ToView("vw_SearchTag");
-            //});
+            modelBuilder.Entity<QuartzItemFilter>(c =>
+            {
+                c.HasNoKey();
+                c.ToView("vw_SearchItem");
+            });
             #endregion
 
             #region Create User
@@ -228,6 +228,7 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
         public DbSet<LookUpItemsStatus> LookupItemsStatuses { get; set; }
         public DbSet<LookUpItemsTechnique> LookupItemsTechniques { get; set; }
         public DbSet<LookUpItemsWeldType> LookupItemsWeldTypes { get; set; }
+        public DbSet<QuartzItemFilter> vw_SearchItem { get; set; }
 
         #endregion
     }

@@ -6,6 +6,7 @@ using Quartz.Common.ViewModels.Project.Item.QuartzItemsInspectionViewModels;
 using Quartz.Common.ViewModels.Project.Item.QuartzItemsThicknessMeasurement;
 using Quartz.Common.ViewModels.Project.Item.QuartzItemsValveMaintenance;
 using Quartz.Common.ViewModels.Project.Item.QuartzItemViewModels;
+using Quartz.Entities.Concrete.Project.Item;
 using System.Linq;
 
 namespace Quartz.Controllers.Project.Item
@@ -92,6 +93,23 @@ namespace Quartz.Controllers.Project.Item
                 _itemService.DeleteItem(model);
             }
                 return Json(null);
+        }
+
+        [HttpPost]
+        public IActionResult FilterItem(QuartzItemFilterViewModel model)
+        {
+            var rModel = _itemService.FilterItems(model);
+            var jSonModel = JsonConvert.SerializeObject(rModel, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            return Json(jSonModel);
+        }
+
+        [HttpGet]
+        public IActionResult GetSearchPanelsItemPartialView()
+        {
+            return PartialView("SearchPanelsItemPartial");
         }
 
         [HttpGet]
