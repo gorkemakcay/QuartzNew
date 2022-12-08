@@ -38,7 +38,7 @@ function createList() {
 
     // #region Get All Items From DB & Display On The List Panel As A Button
     $.ajax({
-        //async: false,
+        async: false,
         type: "GET",
         url: itemController.Item.List,
         data: { drawingSettingsId: currentQuartzLink.DrawingSettingsId },

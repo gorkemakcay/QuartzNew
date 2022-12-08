@@ -155,14 +155,12 @@ function linkModalSaveButton() {
         data: { model: link },
         success: function () {
             clickedOrCreated = "null";
-
+            selectedFeature.setProperties({ 'Name': link.TagNo });
+            updateDrawingFeatures();
+            $("#shapeArea").children().remove();
+            createList();
             function wait() {
-                selectedFeature.setProperties({ 'Name': link.TagNo });
-                updateDrawingFeatures();
                 addFeatureToSource();
-                $("#shapeArea").children().remove();
-                createList();
-                // Load Spinner Yap! [TAMAMLANMADI]
             }
             setTimeout(wait, 100);
             toast("Link Update Successful!");

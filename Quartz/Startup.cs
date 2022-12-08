@@ -58,7 +58,7 @@ namespace Quartz
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
-            IdentityInitializer.SeedData(userManager, roleManager).Wait();
+            //IdentityInitializer.SeedData(userManager, roleManager).Wait();
             app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>

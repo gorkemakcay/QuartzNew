@@ -50,8 +50,9 @@ function itemModalSaveButton() { // [TAMAMLANMADI]
                     function waitFunc() {
                         selectedFeature.setProperties({ 'Name': item.TagNo });
                         updateDrawingFeatures();
-                        addFeatureToSource();
                         createList();
+
+                        setTimeout(() => { addFeatureToSource(); }, 100);
                         // Load Spinner Yap! [TAMAMLANMADI]
                     }
                     setTimeout(waitFunc, 100);

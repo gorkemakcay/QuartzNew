@@ -68,7 +68,7 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
             if (model.Designation != null)
                 filteredValveMaintenances = filteredValveMaintenances.Where(I => I.Designation != null && I.Designation.Contains(model.Designation)).ToList();
 
-            if (model.TestDate.ToString() != "1.01.0001 00:00:00")
+            if (model.TestDate.ToString() != "1.01.0001 00:00:00" && model.TestDate.ToString() != "0001.01.1 00:00:00")
                 filteredValveMaintenances = filteredValveMaintenances.Where(I =>I.TestDate == model.TestDate).ToList();
 
             if (model.PlantArea != "value")

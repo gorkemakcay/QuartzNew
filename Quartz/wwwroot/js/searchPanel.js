@@ -27,9 +27,18 @@
 
                     if (filteredDrawings != "") {
                         var drawingCount = filteredDrawings.length;
-                        $("#totalSearchPanelDrawingCount").html("Total Drawing Count: " + drawingCount);
+                        $("#totalSearchPanelDrawingCount").html("Filtered Drawing Count: " + drawingCount);
 
                         filteredDrawings.forEach(function (drawing) {
+                            if (drawing.Description == null)
+                                drawing.Description = ""
+
+                            if (drawing.PlantArea == null)
+                                drawing.PlantArea = ""
+
+                            if (drawing.PlantSystem == null)
+                                drawing.PlantSystem = ""
+
                             var printDrawingModel = {
                                 Id: drawing.Id,
                                 DrawingNo: drawing.DrawingNo,
@@ -107,9 +116,18 @@ function filterItem() {
                     $("#searchPanelItemTable").children('tbody').children('tr').remove();
                     var itemCount = filteredItems.length;
                     if (itemCount != 0) {
-                        $("#totalSearchPanelItemCount").html("Total Filtered Item Count: " + itemCount);
+                        $("#totalSearchPanelItemCount").html("Filtered Item Count: " + itemCount);
 
                         filteredItems.forEach(function (item) {
+                            if (item.FittingType == "select")
+                                item.FittingType = "";
+
+                            if (item.Specification == "select")
+                                item.Specification = "";
+
+                            if (item.SerialNo == null)
+                                item.SerialNo = "";
+
                             var printItemModel = {
                                 DrawingNo: item.DrawingNo,
                                 DrawingPlantArea: item.PlantArea,
@@ -221,7 +239,7 @@ function filterInspection() {
 
                     if (filteredInspections != "") {
                         var inspectionCount = filteredInspections.length;
-                        $("#totalSearchPanelInspectionCount").html("Number of Inspections shown: " + inspectionCount);
+                        $("#totalSearchPanelInspectionCount").html("Filtered Inspection Count: " + inspectionCount);
 
                         filteredInspections.forEach(function (inspection) {
                             var date = inspection.Date.split('T')[0];
@@ -239,6 +257,24 @@ function filterInspection() {
                                         data: { drawingSettingsId: filteredInspectionsItemDetail.DrawingSettingsId },
                                         success: function (response) {
                                             var filteredInspectionsDrawingSettingsDetail = jQuery.parseJSON(response);
+
+                                            if (filteredInspectionsDrawingSettingsDetail.PlantArea == "select")
+                                                filteredInspectionsDrawingSettingsDetail.PlantArea = "";
+
+                                            if (inspection.ReportNo == null)
+                                                inspection.ReportNo = "";
+
+                                            if (inspection.Details == null)
+                                                inspection.Details = "";
+
+                                            if (inspection.Status == "select")
+                                                inspection.Status = "";
+
+                                            if (inspection.Method == "select")
+                                                inspection.Method = "";
+
+                                            if (inspection.Procedure == "select")
+                                                inspection.Procedure = "";
 
                                             var printInspectionModel = {
                                                 PlantArea: filteredInspectionsDrawingSettingsDetail.PlantArea,
@@ -329,11 +365,10 @@ function filterValveMaintenance() {
             $("#searchPanelsModalTitle").html("Search Valve Maintenance");
 
             var testDate;
-
-            if ($("#valveMaintenanceFilterTestDate").val().toString() == "") {
-                testDate = null;
-            }
-            else testDate = $("#valveMaintenanceFilterTestDate").val();
+            if ($("#valveMaintenanceFilterTestDate").val().toString() != "")
+                //testDate = "1.01.0001 00:00:00";
+                //else testDate = $("#valveMaintenanceFilterTestDate").val();
+                testDate = $("#valveMaintenanceFilterTestDate").val();
 
             var filterValveMaintenanceModel = {
                 KKSNo: $("#valveMaintenanceFilterKKSNo").val(),
@@ -354,10 +389,9 @@ function filterValveMaintenance() {
                     printValveMaintenanceModelsArray = [];
                     $("#searchPanelValveMaintenanceTable").children('tbody').children('tr').remove();
 
-                    if (filteredValveMaintenances != "") {
-                        var valveMaintenanceCount = filteredValveMaintenances.length;
-                        $("#totalSearchPanelValveMaintenanceCount").html("Total Valve Maintenance Count: " + valveMaintenanceCount);
-
+                    var valveMaintenanceCount = filteredValveMaintenances.length;
+                    if (valveMaintenanceCount != 0) {
+                        $("#totalSearchPanelValveMaintenanceCount").html("Filtered Valve Maintenance Count: " + valveMaintenanceCount);
                         filteredValveMaintenances.forEach(function (valveMaintenance) {
                             $.ajax({
                                 type: "GET",
@@ -374,7 +408,29 @@ function filterValveMaintenance() {
                                             var drawingSettingsDetail = jQuery.parseJSON(response);
                                             var date = valveMaintenance.TestDate.split('T')[0];
 
+                                            if (drawingSettingsDetail.PlantArea == "select")
+                                                drawingSettingsDetail.PlantArea = "";
+
+                                            if (valveMaintenance.KKSNo == null)
+                                                valveMaintenance.KKSNo = "";
+
+                                            if (valveMaintenance.SerialNo == null)
+                                                valveMaintenance.SerialNo = "";
+
+                                            if (valveMaintenance.PlantArea == "select")
+                                                valveMaintenance.PlantArea = "";
+
+                                            if (valveMaintenance.SupplierManufacturare == null)
+                                                valveMaintenance.SupplierManufacturare = "";
+
+                                            if (valveMaintenance.Designation == null)
+                                                valveMaintenance.Designation = "";
+
+                                            if (valveMaintenance.Remarks == null)
+                                                valveMaintenance.Remarks = "";
+
                                             var printValveMaintenanceModel = {
+                                                PlantIdent: itemDetail.TagNo,
                                                 DrawingRef: drawingSettingsDetail.DrawingNo,
                                                 DrawingPlantArea: drawingSettingsDetail.PlantArea,
                                                 KKSNo: valveMaintenance.KKSNo,
@@ -389,32 +445,29 @@ function filterValveMaintenance() {
                                             }
                                             printValveMaintenanceModelsArray.push(printValveMaintenanceModel);
 
+                                            var templateStart = `<td align="center"><p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='`;
+                                            var templateMiddle = `'>`;
+                                            var templateEnd = `</p></td>`;
+
+                                            var goValveMaintenance = `<td align="center"><p class='tableColumn' style='color: blue; cursor: pointer;' onclick='goSelectedValveMaintenance(` + valveMaintenance.QuartzItemId + `)' data-bs-dismiss='modal' data-bs-toggle='tooltip' data-bs-placement='right' title='Go link'><i class='fas fa-link'></i></p></td>`;
+                                            var kksNo = templateStart + valveMaintenance.KKSNo + templateMiddle + valveMaintenance.KKSNo + templateEnd;
+                                            var serialNo = templateStart + valveMaintenance.SerialNo + templateMiddle + valveMaintenance.SerialNo + templateEnd;
+                                            var supplierManufacturare = templateStart + valveMaintenance.SupplierManufacturare + templateMiddle + valveMaintenance.SupplierManufacturare + templateEnd;
+                                            var designation = templateStart + valveMaintenance.Designation + templateMiddle + valveMaintenance.Designation + templateEnd;
+                                            var remarks = templateStart + valveMaintenance.Remarks + templateMiddle + valveMaintenance.Remarks + templateEnd;
+                                            var dateColumn = templateStart + date + templateMiddle + date + templateEnd;
+                                            var plantArea = templateStart + valveMaintenance.PlantArea + templateMiddle + valveMaintenance.PlantArea + templateEnd;
+
                                             $("#searchPanelValveMaintenanceTable").children('tbody').append(
                                                 $('<tr>').append(
-                                                    $('<td>', { align: "center" }).append(
-                                                        "<p class='tableColumn' style='color: blue; cursor: pointer;' onclick='goSelectedValveMaintenance(" + valveMaintenance.QuartzItemId + ")' data-bs-dismiss='modal' data-bs-toggle='tooltip' data-bs-placement='right' title='Go link'><i class='fas fa-link'></i></p>"
-                                                    ),
-                                                    $('<td>', { align: "center" }).append(
-                                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + valveMaintenance.KKSNo + "'>" + valveMaintenance.KKSNo + "</p>"
-                                                    ),
-                                                    $('<td>', { align: "center" }).append(
-                                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + valveMaintenance.SerialNo + "'>" + valveMaintenance.SerialNo + "</p>"
-                                                    ),
-                                                    $('<td>', { align: "center" }).append(
-                                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + valveMaintenance.SupplierManufacturare + "'>" + valveMaintenance.SupplierManufacturare + "</p>"
-                                                    ),
-                                                    $('<td>', { align: "center" }).append(
-                                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + valveMaintenance.Designation + "'>" + valveMaintenance.Designation + "</p>"
-                                                    ),
-                                                    $('<td>', { align: "center" }).append(
-                                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + valveMaintenance.Remarks + "'>" + valveMaintenance.Remarks + "</p>"
-                                                    ),
-                                                    $('<td>', { align: "center" }).append(
-                                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + date + "'>" + date + "</p>"
-                                                    ),
-                                                    $('<td>', { align: "center" }).append(
-                                                        "<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='" + valveMaintenance.PlantArea + "'>" + valveMaintenance.PlantArea + "</p>"
-                                                    )
+                                                    goValveMaintenance,
+                                                    kksNo,
+                                                    serialNo,
+                                                    supplierManufacturare,
+                                                    designation,
+                                                    remarks,
+                                                    dateColumn,
+                                                    plantArea
                                                 )
                                             );
                                         },
@@ -478,14 +531,12 @@ function filterThicknessMeasurement() {
                 data: { model: filterThicknessMeasurementModel },
                 success: function (response) {
                     var filteredThicknessMeasurements = jQuery.parseJSON(response);
-                    console.log(filteredThicknessMeasurements);
                     printThicknessMeasurementModelsArray = [];
                     $("#searchPanelThicknessMeasurementTable").children('tbody').children('tr').remove();
 
                     var thicknessMeasurementCount = filteredThicknessMeasurements.length;
-                    $("#totalSearchPanelThicknessMeasurementCount").html("Total Thickness Measurement Count: " + thicknessMeasurementCount);
-
                     if (thicknessMeasurementCount != 0) {
+                        $("#totalSearchPanelThicknessMeasurementCount").html("Filtered Thickness Measurement Count: " + thicknessMeasurementCount);
                         filteredThicknessMeasurements.forEach(function (thicknessMeasurement) {
                             $.ajax({
                                 type: "GET",
@@ -501,7 +552,23 @@ function filterThicknessMeasurement() {
                                         success: function (response) {
                                             var drawingSettingsDetail = jQuery.parseJSON(response);
 
+                                            if (thicknessMeasurement.PlantArea == "select")
+                                                thicknessMeasurement.PlantArea = "";
+
+                                            if (thicknessMeasurement.Specification == "select")
+                                                thicknessMeasurement.Specification = "";
+
+                                            if (thicknessMeasurement.PlantSystem == "select")
+                                                thicknessMeasurement.PlantSystem = "";
+
+                                            if (thicknessMeasurement.Description == null)
+                                                thicknessMeasurement.Description = "";
+
+                                            if (drawingSettingsDetail.PlantArea == "select")
+                                                drawingSettingsDetail.PlantArea = "";
+
                                             var printThicknessMeasurementModel = {
+                                                PlantIdent: itemDetail.TagNo,
                                                 DrawingNo: drawingSettingsDetail.DrawingNo,
                                                 DrawingPlantArea: drawingSettingsDetail.PlantArea,
                                                 PlantArea: thicknessMeasurement.PlantArea,
@@ -515,23 +582,27 @@ function filterThicknessMeasurement() {
 
                                             printThicknessMeasurementModelsArray.push(printThicknessMeasurementModel);
 
-                                            var goThicknessMeasurement = `<p class='tableColumn' style='color: blue; cursor: pointer;' onclick='goSelectedThicknessMeasurement(` + thicknessMeasurement.QuartzItemId + `)' data-bs-dismiss='modal' data-bs-toggle='tooltip' data-bs-placement='right' title='Go link'><i class='fas fa-link'></i></p>`;
-                                            var nominalThickness = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + thicknessMeasurement.NominalThickness + `'>` + thicknessMeasurement.NominalThickness + `</p>`;
-                                            var measuredThickness = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + thicknessMeasurement.MeasuredThickness + `'>` + thicknessMeasurement.MeasuredThickness + `</p>`;
-                                            var description = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + thicknessMeasurement.Description + `'>` + thicknessMeasurement.Description + `</p>`;
-                                            var specification = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + thicknessMeasurement.Specification + `'>` + thicknessMeasurement.Specification + `</p>`;
-                                            var plantArea = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + thicknessMeasurement.PlantArea + `'>` + thicknessMeasurement.PlantArea + `</p>`;
-                                            var plantSystem = `<p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='` + thicknessMeasurement.PlantSystem + `'>` + thicknessMeasurement.PlantSystem + `</p>`;
+                                            var templateStart = `<td align="center"><p class='tableColumn' data-bs-toggle='tooltip' data-bs-placement='right' title='`;
+                                            var templateMiddle = `'>`;
+                                            var templateEnd = `</p></td>`;
+
+                                            var goThicknessMeasurement = `<td align="center"><p class='tableColumn' style='color: blue; cursor: pointer;' onclick='goSelectedThicknessMeasurement(` + thicknessMeasurement.QuartzItemId + `)' data-bs-dismiss='modal' data-bs-toggle='tooltip' data-bs-placement='right' title='Go link'><i class='fas fa-link'></i></p></td>`;
+                                            var nominalThickness = templateStart + thicknessMeasurement.NominalThickness + templateMiddle + thicknessMeasurement.NominalThickness + templateEnd;
+                                            var measuredThickness = templateStart + thicknessMeasurement.MeasuredThickness + templateMiddle + thicknessMeasurement.MeasuredThickness + templateEnd;
+                                            var description = templateStart + thicknessMeasurement.Description + templateMiddle + thicknessMeasurement.Description + templateEnd;
+                                            var specification = templateStart + thicknessMeasurement.Specification + templateMiddle + thicknessMeasurement.Specification + templateEnd;
+                                            var plantArea = templateStart + thicknessMeasurement.PlantArea + templateMiddle + thicknessMeasurement.PlantArea + templateEnd;
+                                            var plantSystem = templateStart + thicknessMeasurement.PlantSystem + templateMiddle + thicknessMeasurement.PlantSystem + templateEnd;
 
                                             $("#searchPanelThicknessMeasurementTable").children('tbody').append(
                                                 $('<tr>').append(
-                                                    $('<td>', { align: "center" }).append(goThicknessMeasurement),
-                                                    $('<td>', { align: "center" }).append(nominalThickness),
-                                                    $('<td>', { align: "center" }).append(measuredThickness),
-                                                    $('<td>', { align: "center" }).append(description),
-                                                    $('<td>', { align: "center" }).append(specification),
-                                                    $('<td>', { align: "center" }).append(plantArea),
-                                                    $('<td>', { align: "center" }).append(plantSystem)
+                                                    goThicknessMeasurement,
+                                                    nominalThickness,
+                                                    measuredThickness,
+                                                    description,
+                                                    specification,
+                                                    plantArea,
+                                                    plantSystem
                                                 )
                                             );
                                         },

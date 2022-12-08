@@ -24,7 +24,7 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
             using var context = new QuartzContext();
             var thicknessMeasurement = new QuartzItemsThicknessMeasurement()
             {
-                PlantArea = model.PlantArea,
+                    PlantArea = model.PlantArea,
                     PlantSystem = model.PlantSystem,
                     Specification = model.Specification,
                     NominalThickness = model.NominalThickness,

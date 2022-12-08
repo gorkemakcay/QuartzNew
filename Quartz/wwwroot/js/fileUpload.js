@@ -79,24 +79,24 @@
                                                         var allDrawingSettings = jQuery.parseJSON(response);
 
                                                         // #region Create & Configure Select > Option
-                                                        $("#addLinkSelectDrawing").children().remove();
+                                                        //$("#addLinkSelectDrawing").children().remove();
 
-                                                        $("#addLinkSelectDrawing").append(
-                                                            $('<option>', {
-                                                                value: drawingSettingsDetail.Id,
-                                                                text: drawingSettingsDetail.DrawingNo,
-                                                                id: "selectDrawing3"
-                                                            })
-                                                        );
-                                                        $("#selectDrawing3").attr("hidden", "");
+                                                        //$("#addLinkSelectDrawing").append(
+                                                        //    $('<option>', {
+                                                        //        value: drawingSettingsDetail.Id,
+                                                        //        text: drawingSettingsDetail.DrawingNo,
+                                                        //        id: "selectDrawing3"
+                                                        //    })
+                                                        //);
+                                                        //$("#selectDrawing3").attr("hidden", "");
 
-                                                        for (var i = 0; i < allDrawingSettings.length; i++) {
-                                                            var option = `<option value="` + allDrawingSettings[i].Id + `">` + allDrawingSettings[i].DrawingNo + `</option>`
-                                                            $("#addLinkSelectDrawing").append(option);
-                                                        }
+                                                        //for (var i = 0; i < allDrawingSettings.length; i++) {
+                                                        //    var option = `<option value="` + allDrawingSettings[i].Id + `">` + allDrawingSettings[i].DrawingNo + `</option>`
+                                                        //    $("#addLinkSelectDrawing").append(option);
+                                                        //}
                                                         
-                                                        $("div.selectOpt select").val(link.DrawingSettingsId);
-                                                        $("#addLinkSelectDrawing option[value='1']").remove();
+                                                        //$("div.selectOpt select").val(link.DrawingSettingsId);
+                                                        //$("#addLinkSelectDrawing option[value='1']").remove();
                                                         // #endregion
                                                     },
                                                     error: function (error) {

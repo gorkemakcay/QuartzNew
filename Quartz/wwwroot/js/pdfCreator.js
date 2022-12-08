@@ -74,7 +74,6 @@ function createPDF() {
             break;
 
         case "item":
-
             // open pdf's modal
             //$("#showPdfeModal").modal("toggle");
 
@@ -100,19 +99,25 @@ function createPDF() {
             allDrawingReferences = [];
             drawingsPlantAreas = [];
             printItemModelsArray.forEach(function (item) {
-                if (!allDrawingReferences.includes(item.MainLinkName)) {
-                    allDrawingReferences.push(item.MainLinkName);
-                    drawingsPlantAreas.push(item.MainLinkPlantArea);
+                if (!allDrawingReferences.includes(item.DrawingNo)) {
+                    allDrawingReferences.push(item.DrawingNo);
+                    drawingsPlantAreas.push(item.DrawingPlantArea);
                 }
             });
-            // #endregion
 
+            for (var i = 0; i < drawingsPlantAreas.length; i++) {
+                if (drawingsPlantAreas[i] == null)
+                    drawingsPlantAreas[i] = "";
+            }
+            // #endregion
             // #region Item Table
-            for (var i = 0; i < allDrawingReferences.length; i++) {
+            var counter = 0;
+
+            allDrawingReferences.forEach(function (drawing) {
                 $("#itemTableArea").append(`
                     <div>
-                        <p class="m-0 pdfHeader"><strong>Plant Area: </strong> `+ drawingsPlantAreas[i] + `</p>
-                        <p class="pdfHeader"><strong>Drawing Location:</strong> `+ allDrawingReferences[i] + `</p>
+                        <p class="m-0 pdfHeader"><strong>Plant Area: </strong> `+ drawingsPlantAreas[counter] + `</p>
+                        <p class="pdfHeader"><strong>Drawing Location:</strong> `+ drawing + `</p>
                     </div>
 
                     <div style="border: 1px solid black">
@@ -127,7 +132,7 @@ function createPDF() {
                                 </tr>
                             </thead>
 
-                            <tbody class="`+ allDrawingReferences[i] + `TablesBody">
+                            <tbody class="table` + counter + `">
                             </tbody>
                         </table>
                     </div>
@@ -136,37 +141,37 @@ function createPDF() {
                     <br />
                 `);
 
-                printItemModelsArray.forEach(function (item) {
-                    if (allDrawingReferences[i] == item.MainLinkName) {
-                        $("." + allDrawingReferences[i] + "TablesBody").append(
-                            $('<tr>').append(
-                                $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '20%').css('max-width', '20%').append(
-                                    item.TagNo
-                                ),
-                                $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '20%').css('max-width', '20%').append(
-                                    item.SerialNo
-                                ),
-                                $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '20%').css('max-width', '20%').append(
-                                    item.FittingType
-                                ),
-                                $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '20%').css('max-width', '20%').append(
-                                    item.Specification
-                                ),
-                                $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '20%').css('max-width', '20%').append(
-                                    item.InspectionHistory
-                                )
-                            )
-                        );
-                    }
+                var items = printItemModelsArray.filter(item => item.DrawingNo == drawing);
+                items.forEach(function (item) {
+                    if (item.SerialNo == null)
+                        item.SerialNo = "";
+
+                    if (item.FittingType == null)
+                        item.FittingType = "";
+
+                    if (item.Specification == null)
+                        item.Specification = "";
+
+                    var tagNo = `<td style="text-align: center; word-wrap: break-word; min-width: 20%; max-width: 20%">` + item.TagNo + `</td>`;
+                    var serialNo = `<td style="text-align: center; word-wrap: break-word; min-width: 20%; max-width: 20%">` + item.SerialNo + `</td>`;
+                    var fittingType = `<td style="text-align: center; word-wrap: break-word; min-width: 20%; max-width: 20%">` + item.FittingType + `</td>`;
+                    var specification = `<td style="text-align: center; word-wrap: break-word; min-width: 20%; max-width: 20%">` + item.Specification + `</td>`;
+                    var inspectionHistory = `<td style="text-align: center; word-wrap: break-word; min-width: 20%; max-width: 20%">` + item.InspectionHistory + `</td>`;
+
+                    $(".table" + counter).append(
+                        $('<tr>').append(tagNo, serialNo, fittingType, specification, inspectionHistory)
+                    );
                 });
 
-                // arraylerin içini boşalt!
-                allDrawingReferences = [];
-                drawingsPlantAreas = [];
+                counter++;
+            });
 
-                // Download PDF
-                createItemPDF();
-            }
+            // arraylerin içini boşalt!
+            allDrawingReferences = [];
+            drawingsPlantAreas = [];
+
+            // Download PDF
+            createItemPDF();
             // #endregion
             break;
 
@@ -225,7 +230,7 @@ function createPDF() {
                                 </tr>
                             </thead>
 
-                            <tbody class="`+ allDrawingReferences[i] + `TablesBody">
+                            <tbody class="table` + i + `">
                             </tbody>
                         </table>
                     </div>
@@ -236,7 +241,7 @@ function createPDF() {
 
                 printInspectionModelsArray.forEach(function (inspection) {
                     if (allDrawingReferences[i] == inspection.DrawingRef) {
-                        $("." + allDrawingReferences[i] + "TablesBody").append(
+                        $(".table" + i).append(
                             $('<tr>').append(
                                 $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '12%').css('max-width', '12%').append(
                                     inspection.PlantIdent
@@ -296,10 +301,10 @@ function createPDF() {
             // #region valve maintenance'ın yapıldığı çizimlerin isimlerinin tutulduğu dizi
             allDrawingReferences = [];
             drawingsPlantAreas = [];
-            printValveMaintenanceModelsArray.forEach(function (inspection) {
-                if (!allDrawingReferences.includes(inspection.MainLinkName)) {
-                    allDrawingReferences.push(inspection.MainLinkName);
-                    drawingsPlantAreas.push(inspection.MainLinkPlantArea);
+            printValveMaintenanceModelsArray.forEach(function (valveMaintenance) {
+                if (!allDrawingReferences.includes(valveMaintenance.DrawingRef)) {
+                    allDrawingReferences.push(valveMaintenance.DrawingRef);
+                    drawingsPlantAreas.push(valveMaintenance.DrawingPlantArea);
                 }
             });
             // #endregion
@@ -312,7 +317,7 @@ function createPDF() {
                         <p class="pdfHeader"><strong>Drawing Location:</strong> `+ allDrawingReferences[i] + `</p>
                     </div>
 
-                    <div class="`+ allDrawingReferences[i] + `VmArea">
+                    <div class="table` + i + `">
                        
                     </div>
 
@@ -321,21 +326,21 @@ function createPDF() {
                 `);
 
                 printValveMaintenanceModelsArray.forEach(function (valveMaintenance) {
-                    if (allDrawingReferences[i] == valveMaintenance.MainLinkName) {
-                        $("." + allDrawingReferences[i] + "VmArea").append(`
+                    if (allDrawingReferences[i] == valveMaintenance.DrawingRef) {
+                        $(".table" + i).append(`
                             <div class="pageBreak" style="border: 1px solid black;">
                         
                                 <div class="row">
+                                    <div class="col-4">
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Plant Ident:</strong> `+ valveMaintenance.PlantIdent + `</p>
+                                    </div>
+                        
                                     <div class="col-4">
                                         <p class="my-1" style="padding-left: 5px;"><strong>KKS No:</strong> `+ valveMaintenance.KKSNo + `</p>
                                     </div>
                         
                                     <div class="col-4">
                                         <p class="my-1" style="padding-left: 5px;"><strong>Serial No:</strong> `+ valveMaintenance.SerialNo + `</p>
-                                    </div>
-                        
-                                    <div class="col-4">
-                                        <p class="my-1" style="padding-left: 5px;"><strong>Plant Area:</strong> `+ valveMaintenance.PlantArea + `</p>
                                     </div>
                                 </div>
                         
@@ -358,11 +363,15 @@ function createPDF() {
                                 <hr class="m-0" />
                         
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <p class="my-1" style="padding-left: 5px;"><strong>Supplier Manufacturare:</strong> `+ valveMaintenance.SupplierManufacturare + `</p>
                                     </div>
+
+                                    <div class="col-4">
+                                        <p class="my-1" style="padding-left: 5px;"><strong>Plant Area:</strong> `+ valveMaintenance.PlantArea + `</p>
+                                    </div>
                         
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <p class="my-1" style="padding-left: 5px;"><strong>Designation:</strong> `+ valveMaintenance.Designation + `</p>
                                     </div>
                                 </div>
@@ -417,9 +426,9 @@ function createPDF() {
             allDrawingReferences = [];
             drawingsPlantAreas = [];
             printThicknessMeasurementModelsArray.forEach(function (thicknessMeasurement) {
-                if (!allDrawingReferences.includes(thicknessMeasurement.MainLinkName)) {
-                    allDrawingReferences.push(thicknessMeasurement.MainLinkName);
-                    drawingsPlantAreas.push(thicknessMeasurement.MainLinkPlantArea);
+                if (!allDrawingReferences.includes(thicknessMeasurement.DrawingNo)) {
+                    allDrawingReferences.push(thicknessMeasurement.DrawingNo);
+                    drawingsPlantAreas.push(thicknessMeasurement.DrawingPlantArea);
                 }
             });
             // #endregion
@@ -436,17 +445,18 @@ function createPDF() {
                         <table class="table table-hover text-sm table-responsive-sm table-sm mb-0">
                             <thead>
                                 <tr>
+                                    <th class="text-center" style="width: 10%;">Plant Ident</th>
                                     <th class="text-center" style="width: 10%;">Plant Area</th>
                                     <th class="text-center" style="width: 12%;">Plant System</th>
                                     <th class="text-center" style="width: 10%;">Specification</th>
                                     <th class="text-center" style="width: 10%;">Nominal T.</th>
                                     <th class="text-center" style="width: 12%;">Measured T.</th>
                                     <th class="text-center" style="width: 12%;">Created Date</th>
-                                    <th class="text-center" style="width: 34%;">Description</th>
+                                    <th class="text-center" style="width: 24%;">Description</th>
                                 </tr>
                             </thead>
 
-                            <tbody class="`+ allDrawingReferences[i] + `TablesBody">
+                            <tbody class="table`+ i + `">
                             </tbody>
                         </table>
                     </div>
@@ -456,9 +466,12 @@ function createPDF() {
                 `);
 
                 printThicknessMeasurementModelsArray.forEach(function (thicknessMeasurement) {
-                    if (allDrawingReferences[i] == thicknessMeasurement.MainLinkName) {
-                        $("." + allDrawingReferences[i] + "TablesBody").append(
+                    if (allDrawingReferences[i] == thicknessMeasurement.DrawingNo) {
+                        $(".table" + i).append(
                             $('<tr>').append(
+                                $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '10%').css('max-width', '10%').append(
+                                    thicknessMeasurement.PlantIdent
+                                ),
                                 $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '10%').css('max-width', '10%').append(
                                     thicknessMeasurement.PlantArea
                                 ),
@@ -475,7 +488,7 @@ function createPDF() {
                                     thicknessMeasurement.MeasuredThickness
                                 ),
                                 $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '10%').css('max-width', '10%').append(
-                                    thicknessMeasurement.CratedDate
+                                    thicknessMeasurement.CreatedDate
                                 ),
                                 $('<td>').css('text-align', 'center').css('word-wrap', 'break-word').css('min-width', '40%').css('max-width', '40%').append(
                                     thicknessMeasurement.Description

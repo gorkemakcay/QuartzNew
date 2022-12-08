@@ -15,16 +15,20 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
+            //optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
             //optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=Quartz4;uid=umutd;pwd=Ud4583!");
             //optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=Quartz123;uid=umutd;pwd=Ud4583!");
 
+            //optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=QuartzNew2;uid=umutd;pwd=Ud4583!");
+            //optionsBuilder.UseNpgsql(@"User ID=postgres;Password=*!grkm_0;Server=localhost;Port=5432;Database=Quartz;");
 
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=QuartzNew2;uid=umutd;pwd=Ud4583!");
+            // local server connection 94.138.222.82:81
+            //optionsBuilder.UseNpgsql(@"User ID=quartz;Password=!*quartz_2022.;Server=localhost;Port=5432;Database=Quartz_22;");
 
+            // remote server connection
+            optionsBuilder.UseNpgsql(@"Host=94.138.222.82;Port=5432;Password=!*quartz_2022.;Persist Security Info=false;Username=quartz;Database=Quartz_22;Timeout=300;Keepalive=300", opt => opt.SetPostgresVersion(new Version("9.6")));
 
             //optionsBuilder.UseSqlServer(@"Server=DESKTOP-P12SOIP\SQLEXPRESS;Database=QuartzNew;uid=umutd;pwd=Ud4583!");
-
 
             //optionsBuilder.UseSqlServer(@"Server=94.73.170.39;Database=u0406106_Quartz;uid=u0406106_quartz;pwd=ArlentusControl2013**");
             optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
@@ -128,7 +132,7 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
                         TagNo = "Main",
                         ShowLabel = true,
                         CreatedBy = "QUARTZ",
-                        MainDrawingSettingsId = 0,
+                        MainDrawingSettingsId = 1,
                         DrawingSettingsId = 2,
                         CreatedDate = new DateTime(2022, 11, 24, 11, 40, 23, 643, DateTimeKind.Local).AddTicks(6434)
                     });
@@ -145,8 +149,8 @@ namespace Quartz.DataAccess.Concrete.EntityFramworkCore.Context
                         TagNo = "Temp",
                         ShowLabel = true,
                         CreatedBy = "QUARTZ",
-                        MainDrawingSettingsId = 0,
-                        DrawingSettingsId = 1,
+                        MainDrawingSettingsId = 1,
+                        DrawingSettingsId = 0,
                         CreatedDate = new DateTime(2022, 11, 24, 11, 40, 23, 643, DateTimeKind.Local).AddTicks(6434)
                     });
             });

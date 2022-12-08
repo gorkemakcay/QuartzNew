@@ -11,9 +11,9 @@ namespace Quartz.Entities.Concrete.Project.Link
         public bool ShowLabel { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
+        public int DrawingSettingsId { get; set; }
         [ForeignKey("DrawingSettings")]
-        public int MainDrawingSettingsId { get; set; } // Linkin ait olduğu Drawing Settings'in Id'si
-        public int DrawingSettingsId { get; set; } // Foreign Key
+        public int MainDrawingSettingsId { get; set; } // Linkin ait olduğu Drawing Settings'in Id'si - Foreign Key
         public QuartzLinksDrawingSettings DrawingSettings { get; set; } // Linke ait DrawingSettings (One-to-Many Relationship)
     }
 }
