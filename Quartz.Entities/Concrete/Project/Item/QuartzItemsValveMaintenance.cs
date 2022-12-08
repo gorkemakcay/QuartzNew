@@ -14,7 +14,7 @@ namespace Quartz.Entities.Concrete.Project.Item
         public float IdealBarg { get; set; }
         public float OpeningPressureBarg { get; set; }
         public string Remarks { get; set; }
-        public DateTime TestDate { get; set; } = Convert.ToDateTime("02.02.0002");
+        public DateTime TestDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool Tested { get; set; }
         public string AttachmentIds { get; set; }

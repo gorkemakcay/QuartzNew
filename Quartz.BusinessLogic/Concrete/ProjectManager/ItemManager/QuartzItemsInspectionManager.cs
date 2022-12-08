@@ -61,10 +61,10 @@ namespace Quartz.BusinessLogic.Concrete.ProjectManager.ItemManager
             if (model.Details != null)
                 inspections = inspections.Where(I => I.Details != null && I.Details.ToLower().Contains(model.Details.ToLower())).ToList();
 
-            if (model.Date.ToString() != "1.01.0001 00:00:00")
+            if (model.Date.ToString() != "11.11.1111 00:00:00")
                 inspections = inspections.Where(I => I.Date == model.Date).ToList();
 
-            if (model.DueDate.ToString() != "1.01.0001 00:00:00")
+            if (model.DueDate.ToString() != "11.11.1111 00:00:00")
                 inspections = inspections.Where(I => I.DueDate == model.DueDate).ToList();
 
             if (model.Status != "value")

@@ -9,7 +9,7 @@ namespace Quartz.Common.ViewModels.Project.Item.QuartzItemsValveMaintenance
         public string SerialNo { get; set; }
         public string SupplierManufacturare { get; set; }
         public string Designation { get; set; }
-        public DateTime TestDate { get; set; }
+        public DateTime TestDate { get; set; } = Convert.ToDateTime("11.11.1111");
         public float IdealBarg { get; set; }
         public float OpeningPressureBarg { get; set; }
         public int QuartzItemId { get; set; }

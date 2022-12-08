@@ -206,15 +206,11 @@ function filterInspection() {
             var date;
             var dueDate;
 
-            if ($("#inspectionFilterDate").val().toString() == "") {
-                date = null;
-            }
-            else date = $("#inspectionFilterDate").val();
+            if ($("#inspectionFilterDate").val().toString() != "")
+                date = $("#inspectionFilterDate").val();
 
-            if ($("#inspectionFilterDueDate").val().toString() == "") {
-                dueDate = null;
-            }
-            else dueDate = $("#inspectionFilterDueDate").val();
+            if ($("#inspectionFilterDueDate").val().toString() != "")
+                dueDate = $("#inspectionFilterDueDate").val();
 
 
             var filterInspectionModel = {
