@@ -2489,10 +2489,17 @@ function addFeatureToSource() {
                 else TextContext = '';
 
                 if (item.IsInspected == 1) {
-                    fillColor = 'rgba(0,255,0,0.5)';
+                    //fillColor = 'rgba(0,255,0,0.5)';
+                    fillColor = 'rgb(198,118,16,.5)';
                 }
             }
 
+            // If TextContext's character length greater than 50, show just first 47 character and add to the end "..."
+            if (TextContext.length > 50) {
+                TextContext = TextContext.substring(0, 47) + "...";
+            }
+
+            // Add properties to feature
             feature.setProperties({ 'LonLat': featureJson.properties.LonLat });
             feature.setProperties({ 'Id': featureJson.properties.Id });
             feature.setProperties({ 'Name': featureJson.properties.Name });

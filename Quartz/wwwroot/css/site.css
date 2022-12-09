@@ -1,4 +1,39 @@
-﻿body {
+﻿textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+input[type="button"]:focus,
+select:focus,
+button:focus,
+.text:focus,
+.textarea:focus,
+.uneditable-input:focus {
+    border-color: rgba(126, 239, 104, 0.0);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px gray;
+    outline: 0 none;
+    border: none !important;
+}
+
+input, select, text, textarea {
+    border-radius: 20px !important;
+}
+
+.navButtons:hover {
+    background-color: #F47174;
+}
+
+body {
     /*
         Cursor: url(); eklenebilir!
     */
@@ -79,30 +114,79 @@
 }
 
 .listPanelHeader {
-    border-right: 1px solid white;
-    border-radius: 0px;
-    width: 100%;
+    border-radius: 20px;
+    width: 90%;
     background-color: #373A3E;
     white-space: nowrap;
     cursor: default;
     color: white !important;
+    line-height: 40px;
+    height: 40px;
+    display: block;
+    margin: 0 auto;
+    position: relative;
 }
 
 .listPanelButtons {
-    border: 1px solid white;
+    /*border: 1px solid white;
     border-radius: 0px;
     width: 100%;
-    background: #dadcde;
+    background: #dadcde;*/
     /*background: #373A3E;*/
-    text-align: left;
+    /*text-align: left;
+    white-space: nowrap;*/
+
+    border-radius: 20px;
+    width: 90%;
+    /*background-color: #69b8db;*/
+    border: 1px solid black;
     white-space: nowrap;
+    cursor: default;
+    color: white !important;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    padding: 0;
+    margin-bottom: 5px;
+    color: black !important;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    /*max-width: 100px;*/
 }
 
     .listPanelButtons:hover {
-        background: gray;
-        border: 1px solid white;
-        border-radius: 10px;
-        color: white !important;
+        /*border: 1px solid #F3F5F7;*/
+        color: black !important;
+        /*background-color: #5494b1;*/
+        font-weight: 700;
+    }
+
+.linkButton {
+    background-color: rgb(105,184,219,.7);
+}
+
+    .linkButton:hover {
+        background-color: #5493af;
+        font-weight: 700;
+    }
+
+    .linkButton:focus {
+        background-color: #5493af;
+    }
+
+.itemButton {
+    background-color: rgb(198,118,16,.5);
+}
+
+    .itemButton:hover {
+        background-color: #c67610;
+    }
+
+    .itemButton:focus {
+        background-color: #c67610;
+        font-weight: 700;
     }
 
 .modal-body {
@@ -129,7 +213,7 @@
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -427,11 +511,17 @@ ul {
 
 .accordion {
     position: relative;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.accordionStyle {
+    border-radius: 20px;
 }
 
 [id*="open-accordion"], [id*="close-accordion"] {
     background: #373A3E;
-    border-bottom: 2px solid #fff;
+    /*border-bottom: 2px solid white;*/
     line-height: 40px;
     height: 40px;
     display: block;
@@ -451,17 +541,61 @@ ul {
     text-shadow: none;
 }
 
+.searchPanelItemStyle {
+    border-radius: 20px;
+    border: none !important;
+    /*background-color: rgb(105,184,219,.2);*/
+    background-color: rgb(244,113,116,.2);
+    color: #6C757D !important;
+}
+
+    .searchPanelItemStyle:focus {
+        border-radius: 20px;
+        border: none !important;
+        /*background-color: rgb(105,184,219,.2);*/
+        background-color: rgb(244,113,116,.4);
+        color: #6C757D !important;
+    }
+
+.searchPanelSearchButtonStyle {
+    width: 100%;
+    border: none;
+    border-radius: 20px;
+    background: #69b8db;
+    /*padding: 0;*/
+    color: white;
+}
+
+    .searchPanelSearchButtonStyle:hover {
+        color: white;
+        background-color: #5ea5c5;
+    }
+
+
+.searchPanelClearButtonStyle {
+    width: 100%;
+    border-radius: 20px;
+    background-color: #F47174;
+}
+
+    .searchPanelClearButtonStyle:hover {
+        color: white;
+        background-color: #db6568;
+    }
+
+
 [id*="open-accordion"]:after, [id*="close-accordion"]:after {
     content: "";
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-top: 10px solid rgba(255, 255, 255, 0.6);
+    border-top: 10px solid white;
     position: absolute;
     right: 5px;
     top: 15px;
     z-index: 999;
     transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
+    margin-right: 10px;
 }
 
 .target-fix {
@@ -472,20 +606,20 @@ ul {
 }
 
 .accordion-content {
-    background: #dadcde;
     height: 0;
-    padding: 0 10%;
+    padding: 0;
     position: relative;
     overflow: hidden;
     transition: all 0.1s ease;
     -webkit-transition: all 0.1s ease;
     -moz-transition: all 0.1s ease;
+    text-align: center;
 }
 
 .accordion span:target ~ .accordion-content {
     display: block;
     height: auto;
-    padding-bottom: 25px;
+    padding-bottom: 0px;
     padding-top: 10px;
 }
 
@@ -498,7 +632,8 @@ ul {
 }
 
 .accordion span:target ~ [id*="close-accordion"]:after {
-    border-top: 10px solid rgba(255, 255, 255, 0.6);
+    margin-right: 10px;
+    /*border-top: 10px solid white;*/
     -webkit-transform: rotate(0deg);
 }
 

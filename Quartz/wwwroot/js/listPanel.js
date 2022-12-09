@@ -15,19 +15,18 @@ function createList() {
 
             if (allLinks.length != 0) {
                 $("#shapeArea").append(`
-                    <span class='btn text-center listPanelHeader py-0'><strong><i class='fa fa-link'></i>&nbsp; &nbsp; LINKS &nbsp; &nbsp;<i class='fa fa-link'></i></strong></span>
+                    <div class="row" style="height: 20px;"></div>
+                    <span class='btn listPanelHeader py-0' style="margin-bottom: 5px;"><strong>Links</i></strong></span>
                 `);
 
                 // #region Create Link Buttons
                 allLinks.forEach(function (link) {
-                    var linkButton = $("<button id=" + link.Id + " name='link' type='button' class='btn text-dark listPanelButtons linkButton'><strong><i class='fa fa-link'></i>&nbsp;" + link.TagNo + "</strong></button>");
+                    var linkButton = `<button id="` + link.Id + `" name="link" type="button" class="btn listPanelButtons linkButton"><span class="float-start m-1 px-3"><i class="fa fa-link"></i>&nbsp; ` + link.TagNo + `</span></button>`;
 
                     $("#shapeArea").append(linkButton);
                 })
                 // #endregion
             }
-
-
         },
         error: function (error) {
             alert("error!");
@@ -47,12 +46,12 @@ function createList() {
 
             if (allItems.length != 0) {
                 $("#shapeArea").append(`
-                    <span class='btn text-center listPanelHeader py-0'><strong><i class='fa fa-tags'></i>&nbsp; &nbsp; ITEMS &nbsp; &nbsp;<i class='fa fa-tags'></i></strong></span>
+                    <span class='btn listPanelHeader py-0' style="margin-top: 20px; margin-bottom: 5px;"><strong>Items</strong></span>
                 `);
 
                 // #region Create Item Buttons
                 allItems.forEach(function (item) {
-                    var itemButton = $("<button id=" + item.Id + " name='item' type='button' class='btn text-dark listPanelButtons itemButton'><strong><i class='fa fa-tags'></i>&nbsp;" + item.TagNo + "</strong></button>");
+                    var itemButton = `<button id ="` + item.Id + `" name="item" type="button" class="btn listPanelButtons itemButton"><span class="float-start m-1 px-3"><i class="fa fa-tags"></i>&nbsp; ` + item.TagNo + `</span></button>`;
 
                     $("#shapeArea").append(itemButton);
                 });
@@ -71,6 +70,9 @@ function createList() {
     // #region Link & Item Button's On Click Functions
     function wait() {
         $(".linkButton").on('dblclick', function () {
+            $("#clickedLinkMode").attr("hidden", "");
+            $("#createdLinkMode").removeAttr("hidden");
+            loadLinkModal();
             $("#linkModal").modal('show');
         });
 
@@ -100,21 +102,21 @@ function createList() {
                         }
                     });
 
-                    if (lastClickedLink.DrawingSettingsId != 1) {
-                        $("#createdLinkMode").attr("hidden", "");
-                        $("#clickedLinkMode").removeAttr("hidden");
-                    }
-                    else {
-                        $("#createdLinkMode").removeAttr("hidden");
-                        $("#clickedLinkMode").attr("hidden", "");
-                    }
+                    //if (lastClickedLink.DrawingSettingsId != 1) {
+                    //    $("#createdLinkMode").attr("hidden", "");
+                    //    $("#clickedLinkMode").removeAttr("hidden");
+                    //}
+                    //else {
+                    //    $("#createdLinkMode").removeAttr("hidden");
+                    //    $("#clickedLinkMode").attr("hidden", "");
+                    //}
 
-                    addLinkUploadDrawingArea = false;
-                    document.getElementById("AddLinkUploadDrawingArea").setAttribute("hidden", "");
-                    document.getElementById("AddLinkUploadDrawingAreaCreatedMode").setAttribute("hidden", "");
-                    $("#addLinkSelectDrawing").removeAttr("disabled");
+                    //addLinkUploadDrawingArea = false;
+                    //document.getElementById("AddLinkUploadDrawingArea").setAttribute("hidden", "");
+                    //document.getElementById("AddLinkUploadDrawingAreaCreatedMode").setAttribute("hidden", "");
+                    //$("#addLinkSelectDrawing").removeAttr("disabled");
 
-                    loadLinkModal();
+                    /*loadLinkModal();*/
                 },
                 error: function (error) {
                     alert("error!");

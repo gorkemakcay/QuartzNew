@@ -53,6 +53,7 @@
                                     DrawingNo: updatedFile.Name,
                                     CurrentDrawingId: updatedFile.Id
                                 }
+
                                 $.ajax({
                                     type: "POST",
                                     url: linkController.DrawingSettings.Add,

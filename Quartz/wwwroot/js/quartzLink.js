@@ -94,14 +94,40 @@ function loadLinkModal() {
                     // #region Create & Configure Select > Option
                     $("#addLinkSelectDrawing").children().remove();
 
-                    $("#addLinkSelectDrawing").append(
-                        $('<option>', {
-                            value: "select",
-                            text: "Select Drawing",
-                            id: "selectDrawing2"
-                        })
-                    );
-                    $("#selectDrawing2").attr("hidden", "");
+
+                    if (lastCreatedLink.DrawingSettingsId == 1) {
+                        $("#addLinkSelectDrawing").append(
+                            $('<option>', {
+                                value: "select",
+                                text: "Select Drawing",
+                                id: "selectDrawing2"
+                            })
+                        );
+                        $("#selectDrawing2").attr("hidden", "");
+                    }
+                    else {
+                        $.ajax({
+                            type: "GET",
+                            url: linkController.DrawingSettings.Detail,
+                            data: { drawingSettingsId: lastCreatedLink.DrawingSettingsId },
+                            success: function (response) {
+                                var drawingSettingsDetail = jQuery.parseJSON(response);
+
+                                $("#addLinkSelectDrawing").append(
+                                    $('<option>', {
+                                        value: drawingSettingsDetail.Id,
+                                        text: drawingSettingsDetail.DrawingNo,
+                                        id: "selectDrawing"
+                                    })
+                                );
+                                $("#selectDrawing").attr("hidden", "");
+                            },
+                            error: function (error) {
+                                alert("error!");
+                                console.log(error.responseText);
+                            }
+                        });
+                    }
 
                     for (var i = 0; i < allDrawingSettings.length; i++) {
                         $("#addLinkSelectDrawing").append(
@@ -111,7 +137,7 @@ function loadLinkModal() {
                             })
                         );
                     }
-
+                    $("div.selectOpt select").val(lastCreatedLink.DrawingSettingsId);
                     $("#addLinkSelectDrawing option[value='1']").remove();
 
                     // #endregion

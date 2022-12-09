@@ -1,4 +1,6 @@
-﻿function loadQuartz() {
+﻿//const { Button } = require("../lib/bootstrap/dist/js/bootstrap.esm");
+
+function loadQuartz() {
     // #region Elements of Quartz
     select = new ol.interaction.Select({
         condition: ol.events.condition.click,
@@ -125,15 +127,8 @@
 
                             if (lastClickedLink.DrawingSettingsId == 1) {
                                 $("#linkModal").modal('show');
-
-                                if (lastClickedLink.DrawingSettingsId != 1) {
-                                    $("#createdLinkMode").attr("hidden", "");
-                                    $("#clickedLinkMode").removeAttr("hidden");
-                                }
-                                else {
-                                    $("#createdLinkMode").removeAttr("hidden");
-                                    $("#clickedLinkMode").attr("hidden", "");
-                                }
+                                $("#createdLinkMode").removeAttr("hidden");
+                                $("#clickedLinkMode").attr("hidden", "");
 
                                 addLinkUploadDrawingArea = false;
                                 document.getElementById("AddLinkUploadDrawingArea").setAttribute("hidden", "");
@@ -144,7 +139,6 @@
                             }
                             else {
                                 currentQuartzLink = lastClickedLink;
-
                                 $.ajax({
                                     type: "GET",
                                     url: linkController.DrawingSettings.Detail,
@@ -235,35 +229,32 @@
             var linkButtons = $("[name='link']");
             var itemButtons = $("[name='item']");
 
-            for (var i = 0; i < linkButtons.length; i++) {
-                linkButtons[i].setAttribute('style', 'background: #dadcde');
-            }
+            createList();
 
-            for (var i = 0; i < itemButtons.length; i++) {
-                itemButtons[i].setAttribute('style', 'background: #dadcde');
-            }
-
-
+            // seçilen feature'ın id'sini ve type'ını değişkene ata
             var buttonId = selectedFeature.get('Id');
             var buttonType = selectedFeature.get('Type');
 
+            // null check
             if (buttonId != null && buttonType != null) {
-
-                $("#" + lastClickedButtonId + "").removeAttr('style', 'background: #808080');
+                //$("#" + lastClickedButtonId + "").removeAttr('style', 'background: #5494b1');
                 lastClickedButtonId = buttonId;
                 var buttons;
+                var buttonBackground;
                 if (buttonType == "item") {
                     buttons = $("[name='item']");
+                    buttonBackground = "background: #c67610; font-weight: 700;";
                 }
 
                 if (buttonType == "link") {
                     buttons = $("[name='link']");
+                    buttonBackground = "background: #5493af; font-weight: 700;";
                 }
 
                 function wait() {
                     for (var i = 0; i < buttons.length; i++) {
                         if (buttons[i].getAttribute('Id') == buttonId) {
-                            buttons[i].setAttribute('style', 'background: #808080');
+                            buttons[i].setAttribute('style', buttonBackground);
                             return;
                         }
                     }
